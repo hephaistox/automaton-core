@@ -7,7 +7,7 @@ Check https://logging.apache.org/log4j/2.x/manual/configuration.html for configu
    [clojure.pprint :as pp]
    [clojure.tools.logging :as l]
    [clojure.string :as str]
-   [automaton-build.adapters.string :as bas]))
+   [automaton-core.adapters.string :as bas]))
 
 (defn prettify-elt
   "Prepare the element `elt` to display in the log

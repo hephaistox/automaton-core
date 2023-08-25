@@ -2,7 +2,6 @@
   "Adapter for `bb.edn`"
   (:require
    [automaton-core.adapters.edn-utils :as edn-utils]
-   [automaton-build.tasks :as tasks]
    [automaton-core.adapters.files :as files]))
 
 (def bb-edn-filename
@@ -14,12 +13,9 @@
   Params:
   * `bb-edn-dir` name of the dir where the bb.edn is
   * `tasks` list of tasks to push in the `bb.edn` file"
-  [bb-edn-dir tasks]
+  [bb-edn-dir update-bb-edn-fn]
   (let [bb-edn-filename (files/create-file-path bb-edn-dir bb-edn-filename)
         bb-edn (edn-utils/read-edn bb-edn-filename)
-        updated-bb-edn (assoc bb-edn
-                              :tasks (merge (select-keys (:tasks bb-edn)
-                                                         [:init :requires])
-                                            (tasks/create-bb-tasks tasks)))]
+        updated-bb-edn (update-bb-edn-fn bb-edn)]
     (edn-utils/spit-edn bb-edn-filename
                         updated-bb-edn)))

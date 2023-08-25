@@ -7,7 +7,7 @@
    [zprint.core :as zp]
 
    [automaton-core.adapters.files :as files]
-   [automaton-build.adapters.time :as time]))
+   [automaton-core.adapters.time :as time]))
 
 (defn format-content
   "Format the data structure"

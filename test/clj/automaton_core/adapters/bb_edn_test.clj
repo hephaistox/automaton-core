@@ -2,7 +2,7 @@
   (:require
    [clojure.test :refer [deftest is testing]]
 
-   [automaton-build.adapters.bb-edn :as sut]
+   [automaton-core.adapters.bb-edn :as sut]
    [automaton-core.adapters.files :as files]))
 
 (deftest update-bb-edn-test
