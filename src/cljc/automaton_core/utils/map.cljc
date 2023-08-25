@@ -3,16 +3,6 @@
   (:require [clojure.set]
             [clojure.walk]))
 
-;; See https://gist.github.com/danielpcox/c70a8aa2c36766200a95
-(defn deep-merge
-  "Deep merge nested maps"
-  [& maps]
-  (apply merge-with (fn [& args]
-                      (if (every? #(or (map? %) (nil? %)) args)
-                        (apply deep-merge args)
-                        (last args)))
-         maps))
-
 (defn idx-of
   "Return the index of the first found value in the sequence"
   [v value]
@@ -29,9 +19,19 @@
      (filter #(pred (second %))
              (map-indexed vector v)))))
 
+;; See https://gist.github.com/danielpcox/c70a8aa2c36766200a95
+(defn deep-merge
+  "Deep merge nested maps"
+  [& maps]
+  (apply merge-with (fn [& args]
+                      (if (every? #(or (map? %) (nil? %)) args)
+                        (apply deep-merge args)
+                        (last args)))
+         maps))
+
 (defn prefixify-map [prefix thing]
   (if (map? thing)
-    (clojure.set/rename-keys
+    (set/rename-keys
      thing
      (->> (keys thing)
           (map (fn [k]
@@ -44,7 +44,7 @@
   (let [rename (fn [el]
                  (if (map? el)
                    (seq
-                    (clojure.set/rename-keys
+                    (set/rename-keys
                      el
                      (->> (keys el)
                           (map (fn [k]
@@ -91,7 +91,7 @@
   "Crush the map"
   [m]
   (when (map? m)
-    (->> (clojure.walk/postwalk prefixify-children m)
+    (->> (walk/postwalk prefixify-children m)
          (map (fn [[k v]]
 
                 {k (if (sequential? v)

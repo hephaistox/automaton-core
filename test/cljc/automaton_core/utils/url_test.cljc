@@ -1,7 +1,6 @@
 (ns automaton-core.utils.url-test
-  (:require
-   [automaton-core.utils.url :as sut]
-   [clojure.test :refer [deftest is testing]]))
+  (:require [automaton-core.utils.url :as sut]
+            [clojure.test :refer [deftest is testing]]))
 
 (deftest extract-path
   (testing "extract no path"

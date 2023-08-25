@@ -1,8 +1,6 @@
 (ns automaton-core.utils.uuid-gen-test
-  (:require
-   [clojure.test :refer [testing deftest is]]
-
-   [automaton-core.utils.uuid-gen :as sut]))
+  (:require [automaton-core.utils.uuid-gen :as sut]
+            [clojure.test :refer [testing deftest is]]))
 
 (deftest unguessable
   (testing "check that generates proper uuid"

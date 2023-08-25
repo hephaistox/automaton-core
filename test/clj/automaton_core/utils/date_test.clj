@@ -2,8 +2,7 @@
   (:require
    [clojure.test :refer [deftest is testing]]
 
-   [automaton-core.utils.date :as sut]
-   ))
+   [automaton-core.utils.date :as sut]))
 
 (deftest this-year
   (testing "Check now"

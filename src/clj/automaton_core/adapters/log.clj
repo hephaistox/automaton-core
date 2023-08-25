@@ -5,19 +5,29 @@
 Check https://logging.apache.org/log4j/2.x/manual/configuration.html for configuration details"
   (:require
    [clojure.pprint :as pp]
-   [clojure.tools.logging :as l]))
+   [clojure.tools.logging :as l]
+   [clojure.string :as str]
+   [automaton-build.adapters.string :as bas]))
 
-(defn prettify
-  "Transform all "
+(defn prettify-elt
+  "Prepare the element `elt` to display in the log
+  Params:
+  * `elt` data to show, which type will be checked"
+  [elt]
+  (if (or (map? elt)
+          (set? elt)
+          (vector? elt))
+    (-> elt
+        pp/pprint
+        with-out-str
+        bas/remove-last-character)
+    elt))
+
+(defmacro prettify
   [& args]
-  (map (fn [elt]
-         (if (or (map? elt)
-                 (set? elt)
-                 (vector? elt))
-           (with-out-str
-             (pp/pprint elt))
-           elt))
-       args))
+  `(str/join ""
+             (map prettify-elt
+                  [~@args])))
 
 (defmacro trace [& message]
   `(l/trace (prettify ~@message)))
