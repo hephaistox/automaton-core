@@ -1,7 +1,7 @@
 (ns automaton-core.utils.map
   "Utility for map data structure"
-  (:require [clojure.set]
-            [clojure.walk]))
+  (:require [clojure.set :as set]
+            [clojure.walk :as walk]))
 
 (defn idx-of
   "Return the index of the first found value in the sequence"
