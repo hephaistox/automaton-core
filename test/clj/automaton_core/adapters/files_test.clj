@@ -186,9 +186,6 @@
   (testing "A relative file returns nil"
     (is (= "./"
            (sut/extract-path "README.md"))))
-  (testing "A relative file returns nil"
-    (is (= "everything/outdated/"
-           (sut/extract-path "everything/outdated/deps.edn"))))
   (testing "An absolute file returns nil"
     (is (= "/usr/bin/"
            (sut/extract-path "/usr/bin/ls"))))

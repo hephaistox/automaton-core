@@ -92,7 +92,7 @@
   * `edn-filename` the name of the file to update
   * `update-fn` function updating the content (fn [edn-content] (assoc edn-content ...))
   * `header` optional is a string added at the top of the file
-  Note: the content will be formatted thanks to `build.adapters.code-formatter`
+  Note: the content will be formatted thanks to `automaton.core.adapters.code-formatter`
   "
   ([edn-filename update-fn header]
    (let [bb-config (read-edn edn-filename)]

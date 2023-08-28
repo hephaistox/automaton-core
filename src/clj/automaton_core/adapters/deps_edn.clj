@@ -71,7 +71,7 @@
                                       updated-deps-edn)
                   (code-formatter/format-file deps-edn-filename
                                         ;; `deps.edn` is a particular case, they are hard coded to be marked
-                                              "Template-app manages this namespace\n;; This file is automatically updated by `build.adapters.deps-edn/updated-deps-edn`, at time ")))))
+                                              "Template-app manages this namespace\n;; This file is automatically updated by `automaton-build.adapters.deps-edn/updated-deps-edn`, at time ")))))
 
 (defn update-commit-id
   "Update the `deps-edn` with the `commit-id` for the dependency `as-lib`
