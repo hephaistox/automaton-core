@@ -2,13 +2,11 @@
   "Tools to manipulate local files
   Is a proxy to babashka.fs tools"
   (:require
-   [clojure.string :as str]
-
-   [babashka.fs :as fs]
-
+   [automaton-core.configuration.core :as conf]
    [automaton-core.log :as log]
    [automaton-core.utils.uuid-gen :as uuid]
-   [automaton-core.env-setup :as env-setup]))
+   [babashka.fs :as fs]
+   [clojure.string :as str]))
 
 (def file-separator
   "Symbol to separate directories.
@@ -367,8 +365,7 @@
   * none
   Returns the string of the directory path"
   []
-  (let [tmp-dir (apply create-dir-path [(get-in env-setup/env-setup
-                                                [:tests :tmp-dirs])
+  (let [tmp-dir (apply create-dir-path [(conf/read-param [:tests :tmp-dirs])
                                         (str (uuid/time-based-uuid))])]
     (fs/create-dirs tmp-dir)
     tmp-dir))

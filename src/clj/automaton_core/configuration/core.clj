@@ -6,10 +6,9 @@
   * Create the parameter, in the current implementation, in the `util/conf.clj`
   * Read the parameter with  `conf/read-param`"
   (:require
-   [automaton-core.configuration.simple-files :as simple-files]
    [automaton-core.configuration.protocol :as prot]
+   [automaton-core.configuration.simple-files :as simple-files]
    [automaton-core.log :as log]
-
    [mount.core :refer [defstate in-cljc-mode]]))
 
 ;; Force the use of `cljc mode` in mount library, so call to `@` will work

@@ -1,11 +1,11 @@
 (ns automaton-core.configuration.simple-files
   (:require
-   [automaton-core.adapters.edn-utils :as edn-utils]
    [automaton-core.configuration.protocol :as protocol]
+   [automaton-core.configuration.edn-read :as conf-edn-read]
    [clojure.java.io :as io]))
 
 (def config-edn
-  (edn-utils/read-edn
+  (conf-edn-read/read-edn
    (or (io/resource "config.edn")
        (io/file "config.edn"))))
 

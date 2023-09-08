@@ -24,6 +24,7 @@
                              "-Dclojure.spec.compile-asserts=true"],
                   :extra-deps {nrepl/nrepl #:mvn{:version "1.0.0"},
                                refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"},
+                               org.clojure/core.async {:mvn/version "1.6.681"}
                                djblue/portal {:mvn/version "0.46.0"}
                                cider/cider-nrepl #:mvn{:version "0.30.0"}}}
            :runner {:exec-fn cognitect.test-runner.api/test,

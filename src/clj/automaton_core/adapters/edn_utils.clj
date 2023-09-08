@@ -1,15 +1,12 @@
 (ns automaton-core.adapters.edn-utils
   "Edn file manipulation"
   (:require
-   [clojure.edn :as edn]
-
-   [automaton-core.adapters.files :as files]
-   [automaton-core.log :as log]
-
    [automaton-core.adapters.code-formatter :as code-formatter]
-
+   [automaton-core.adapters.files :as files]
+   [automaton-core.configuration.core :as conf]
+   [automaton-core.log :as log]
    [automaton-core.utils.uuid-gen :as uuid]
-   [automaton-core.env-setup :as env-setup]))
+   [clojure.edn :as edn]))
 
 (defn is-clojure-like-file
   "Returns true if the file's extension is clojure like"
@@ -112,8 +109,7 @@
 (defn create-tmp-edn
   "Create a temporary file directory string with edn extension"
   []
-  (let [edn-file (files/create-file-path (get-in env-setup/env-setup
-                                                 [:log :spitted-edns])
+  (let [edn-file (files/create-file-path (conf/read-param [:log :spitted-edns])
                                          (str (uuid/time-based-uuid) ".edn"))]
     (files/create-dirs (files/extract-path edn-file))
     edn-file))
