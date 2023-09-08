@@ -1,8 +1,7 @@
 (ns automaton-core.adapters.code-formatter-test
   (:require
-   [clojure.test :refer [deftest is testing]]
-
-   [automaton-core.adapters.code-formatter :as sut]))
+   [automaton-core.adapters.code-formatter :as sut]
+   [clojure.test :refer [deftest is testing]]))
 
 (deftest format-content-test
   (testing "Simple test"

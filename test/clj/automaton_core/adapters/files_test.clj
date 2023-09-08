@@ -47,9 +47,9 @@
     (is (not
          (sut/directory-exists? "deps.edn"))))
   (testing "An existing directory is detected"
-    (is (sut/directory-exists? "everything")))
+    (is (sut/directory-exists? ".clj-kondo")))
   (testing "An existing directory inside directory is detected"
-    (is (sut/directory-exists? "everything/src"))))
+    (is (sut/directory-exists? ".clj-kondo/rewrite-clj"))))
 
 (deftest is-existing-file?
   (testing "A non existing path is accepted"
@@ -163,8 +163,8 @@
     (is (= "foo"
            (sut/file-in-same-dir "" "foo"))))
   (testing "If the source is directory, the files are stored in it"
-    (is (= "automaton/automaton-web/src/clj/foo"
-           (sut/file-in-same-dir "automaton/automaton-web/src/clj" "foo"))))
+    (is (= ".clj-kondo/foo"
+           (sut/file-in-same-dir ".clj-kondo" "foo"))))
   (testing "If the source is file, stored in the same parent"
     (is (= "automaton/automaton-web/foo"
            (sut/file-in-same-dir "automaton/automaton-web/deps.edn" "foo"))))
@@ -173,12 +173,12 @@
            (sut/file-in-same-dir "automaton/automaton-web/deps-does-not-exist.edn" "foo")))))
 
 (deftest file-ized-test
-  (testing ""
+  (testing "- is replaced with _"
     (is (= "foo_bar"
            (sut/file-ized "foo-bar")))))
 
 (deftest add-suffix-test
-  (testing ""
+  (testing "Add a suffix to file, between the name and the extension"
     (is (= "core.mustache.clj"
            (sut/add-suffix "core.clj" ".mustache")))))
 
@@ -197,9 +197,9 @@
 
 (deftest filter-existing-dir-test
   (testing "Only existing dir are filtered"
-    (is (= 2
+    (is (= 1
            (count
-            (sut/filter-existing-dir ["automaton/automaton-web" "template_app" "non-existing-dir-filtered"]))))))
+            (sut/filter-existing-dir [".clj-kondo" "non-existing-dir-filtered"]))))))
 
 (deftest empty-path?
   (testing "Empty path"

@@ -1,10 +1,10 @@
 (ns automaton-core.adapters.deps-edn
-  "Proxy to deps.edn file"
+  "Proxy to read of deps.edn file
+  Modification of it is pushed to automaton-build"
   (:require
    [automaton-core.adapters.edn-utils :as edn-utils]
-   [automaton-core.adapters.code-formatter :as code-formatter]
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.log :as log]))
+   [automaton-core.log :as log]))
 
 (def deps-edn
   "deps.edn")
@@ -16,24 +16,6 @@
   [app-dir]
   (files/create-file-path app-dir
                           deps-edn))
-
-(defn spit-deps-edn
-  "Spit the `content` in `deps.edn` file
-  Params:
-  * `app-dir` where to spit the deps.edn file'
-  * `content` what to write in the file
-  * `header` (optional) header is automatically preceded with ;;
-  Returns the content of the file"
-  [app-dir content header]
-  (let [deps-edn-filename (get-deps-filename app-dir)]
-    (log/trace "Write `" (files/absolutize deps-edn-filename) "`")
-    (files/create-dirs app-dir)
-    (let [content (edn-utils/spit-edn deps-edn-filename
-                                      content
-                                      (or header
-                                          "Modify application directly, touched at "))]
-      (code-formatter/format-file deps-edn-filename)
-      content)))
 
 (defn load-deps
   "Load the current project `deps.edn` files"
@@ -47,31 +29,6 @@
   Returns nil if the file does not exists or is malformed"
   [app-dir]
   (edn-utils/read-edn-or-nil (get-deps-filename app-dir)))
-
-(defn update-deps-edn
-  "Update the `deps.edn` file from `app-name`
-  Params:
-  * `app-dir` is where `deps.edn` file should be updated
-  * `update-edn-fn` is the function to update the content, is used with `(update-edn-fn content)`"
-  [app-dir update-edn-fn]
-  (let [deps-edn-filename (get-deps-filename app-dir)
-        _ (log/debug "Update deps file : " (files/absolutize deps-edn-filename))
-        original-deps-edn (edn-utils/read-edn deps-edn-filename)
-        original-deps-edn (when (map? original-deps-edn)
-                            original-deps-edn)
-        updated-deps-edn (when original-deps-edn
-                           (update-edn-fn original-deps-edn))]
-    (cond (= original-deps-edn
-             updated-deps-edn) (log/warn "Update skipped, values are identical")
-          (not (map? original-deps-edn)) (log/warn "Update skipped, deps.edn is not a map")
-          (nil? update-deps-edn) (log/trace "Update aborded, updated content is empty")
-          :else (do
-                  (log/trace "Update new `" deps-edn-filename "`")
-                  (edn-utils/spit-edn deps-edn-filename
-                                      updated-deps-edn)
-                  (code-formatter/format-file deps-edn-filename
-                                        ;; `deps.edn` is a particular case, they are hard coded to be marked
-                                              "Template-app manages this namespace\n;; This file is automatically updated by `automaton-build.adapters.deps-edn/updated-deps-edn`, at time ")))))
 
 (defn update-commit-id
   "Update the `deps-edn` with the `commit-id` for the dependency `as-lib`

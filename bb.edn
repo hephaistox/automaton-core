@@ -1,0 +1,66 @@
+{:paths []
+ :deps {}
+ :tasks {:init (do
+                 (defn to-log
+                   "Generate map for process to write in logs."
+                   [msg log-filename]
+                   (fs/create-dirs "logs")
+                   (println msg ", see " log-filename " for details")
+                   {:out :write
+                    :err :write
+                    :err-file log-filename
+                    :out-file log-filename
+                    :shutdown p/destroy-tree})
+                 (defn to-out
+                   "Generate map for process to write in std"
+                   []
+                   {:out :inherit
+                    :in :inherit
+                    :err :inherit
+                    :shutdown p/destroy-tree})
+                 (defn run-process
+                   "Run a process with logs features"
+                   [process]
+                   (try
+                     (p/check (process))
+                     (catch Exception e
+                       (println (str "Error during execution of `" (:name (current-task)) "`"))
+                       (let [file (fs/create-temp-file)]
+                         (println "See details in `" (.toString (.toAbsolutePath file)) "`")
+                         (spit (fs/file file) (prn-str e))
+                         "")
+                       (System/exit 1)))))
+         :requires [[babashka.process :as p]
+                    [babashka.fs :as fs]]
+         test {:doc "Test"
+               :task (run-process (fn []
+                                    (-> (p/process ["clj" "-M:runner"]
+                                                   (to-out)))))}
+         lint {:doc "Lint"
+               :task (run-process (fn []
+                                    (-> (p/process ["clj-kondo"
+                                                    "--lint"
+                                                    "src/clj" "src/cljc"
+                                                    ;"resources"
+                                                    "env/dev/src/clj" "env/dev/resources"
+                                                    ;"env/dev/src/cljc"
+                                                    "test/clj" "test/cljc" "test/resources"]
+                                                   (to-out)))))}
+         repl {:doc "Repl"
+               :task (run-process (fn []
+                                    (-> (p/process ["clj" "-M:repl"]
+                                                   (to-out)))))}
+         manual-push {:doc "Workaround - use at your own risks"
+                      :task (run-process (fn []
+                                           (-> (p/process ["clj" "-M:repl"]
+                                                          (to-out)))))}
+
+         #_(comment
+             test-frontend {:doc "Test frontend"
+                            :task (run-process (fn []
+                                                 (-> (p/process ["npm" "install"]
+                                                                (to-out)))
+                                                 (-> (p/process ["npx" "shadow-cljs" "compile" "karma-test"]
+                                                                (to-out)))
+                                                 (-> (p/process ["npx" "karma" "start" "--single-run"]
+                                                                (to-out)))))})}}

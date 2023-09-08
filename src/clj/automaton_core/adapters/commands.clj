@@ -7,7 +7,7 @@
    [babashka.process :as p]
 
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.log :as log]
+   [automaton-core.log :as log]
    [automaton-core.adapters.schema :as schema]
    [automaton-core.adapters.string :as string]
    [automaton-core.adapters.edn-utils :as edn-utils]))

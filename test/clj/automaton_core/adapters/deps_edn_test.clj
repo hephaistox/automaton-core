@@ -3,36 +3,14 @@
    [clojure.test :refer [deftest is testing]]
 
    [automaton-core.adapters.deps-edn :as sut]
-   [automaton-core.adapters.files :as files]
-   [automaton-core.utils.uuid-gen :as uuid-gen]))
+   [automaton-core.adapters.files :as files]))
 
 (def tmp-dir
   (files/create-temp-dir))
 
-(def rnd-value
-  (uuid-gen/time-based-uuid))
-
 (deftest get-deps-filename-test
   (testing "Get deps is working"
     (is (string? (sut/get-deps-filename tmp-dir)))))
-
-(deftest spit-deps-edn-test
-  (testing "Testing the creation, load and update cycle"
-    (sut/spit-deps-edn tmp-dir
-                       {:value rnd-value}
-                       ";;Test file")
-    (is (= {:value rnd-value}
-           (sut/load-deps-edn tmp-dir)))
-    (sut/update-deps-edn tmp-dir
-                         #(assoc % :value "toto"))
-    (is (= {:value "toto"}
-           (sut/load-deps-edn tmp-dir)))))
-
-(deftest update-deps-edn-test
-  (testing "Non existing file is detected "
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"Unable to load the file"
-                          (sut/update-deps-edn "this-app-obvisouly-does-not-exist" identity)))))
 
 (deftest update-commit-id-test
   (testing "The commit id of a lib is updated when exists"
@@ -108,12 +86,3 @@
                                     'foo/bar #:mvn{:version "1.1.0"}
                                     'bar/foo #:mvn{:version "1.1.0"}}}
                             ['bar/foo2])))))
-
-(comment
-  (sut/update-deps-edn "."
-                       #(assoc-in %
-                                  [:aliases :test]
-                                  {:foo false}))
-
-;
-  )

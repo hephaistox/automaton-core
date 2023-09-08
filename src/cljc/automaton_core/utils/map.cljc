@@ -93,7 +93,6 @@
   (when (map? m)
     (->> (walk/postwalk prefixify-children m)
          (map (fn [[k v]]
-
                 {k (if (sequential? v)
                      (flatten v)
                      v)}))

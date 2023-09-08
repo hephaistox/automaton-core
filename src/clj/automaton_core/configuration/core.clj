@@ -15,16 +15,9 @@
 ;; Force the use of `cljc mode` in mount library, so call to `@` will work
 (in-cljc-mode)
 
-;; Options:
-;;     See http://realworldclojure.com/application-configuration/
-;;     Design decision: outpace is kept as a configuration management tool.
-;;     The objectives we have: be able to have local deps, environment dependent, able to get environment variables, with a centralized and controlled values
-;;     Outpace is chosen for that, gathering declarations in the same namespace prevent adherance to the lib,
-;;     Its configuration file and the namespace allow a centralized definition of the parameters
-
 (defn start-conf []
   (log/info "Starting configuration component")
-  (let [conf (simple-files/->OutpaceConf {})]
+  (let [conf (simple-files/->SimpleConf {})]
     (log/trace "Configuration component is started")
     conf))
 

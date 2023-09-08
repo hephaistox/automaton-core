@@ -2,17 +2,16 @@
   "Format code
   Proxy to zprint"
   (:require
-   [clojure.string :as str]
-
-   [zprint.core :as zp]
-
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.time :as time]))
+   [automaton-core.adapters.time :as time]
+   [clojure.string :as str]
+   [zprint.core :as zp]))
 
 (defn format-content
   "Format the data structure"
   [content]
   (zp/zprint-str content))
+
 
 (defn format-file
   "Format the `clj` or `edn` file

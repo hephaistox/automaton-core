@@ -3,11 +3,10 @@
   Is a proxy to babashka.fs tools"
   (:require
    [clojure.string :as str]
-   [clojure.java.io :as io]
 
    [babashka.fs :as fs]
 
-   [automaton-core.adapters.log :as log]
+   [automaton-core.log :as log]
    [automaton-core.utils.uuid-gen :as uuid]
    [automaton-core.env-setup :as env-setup]))
 
@@ -272,11 +271,6 @@
       (throw (ex-info "Impossible to load the file"
                       {:target-filename target-filename
                        :exception e})))))
-
-(defn file-path
-  [target-filename]
-  (or (io/resource target-filename)
-      (io/file target-filename)))
 
 (defn file-ized
   "Transform a name, like a namespace name or application name, in a directory compatible names"

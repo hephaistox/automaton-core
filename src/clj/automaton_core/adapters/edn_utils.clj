@@ -4,7 +4,7 @@
    [clojure.edn :as edn]
 
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.log :as log]
+   [automaton-core.log :as log]
 
    [automaton-core.adapters.code-formatter :as code-formatter]
 

@@ -1,5 +1,7 @@
 (ns automaton-core.utils.url
-  "Manage url")
+  "Manage url"
+  (:require
+   [clojure.string :as cs]))
 
 ;; From lambdaisland.url/url-regex
 (def url-regex #?(:clj #"\A(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)?(?:\?([^#]*))?(?:#(.*))?\z"
@@ -47,3 +49,6 @@
    (first
     (re-seq uri-regex
             url))))
+
+(defn split-slash [url]
+  (cs/split (str url) #"/"))
