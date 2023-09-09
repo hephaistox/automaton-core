@@ -166,11 +166,11 @@
     (is (= ".clj-kondo/foo"
            (sut/file-in-same-dir ".clj-kondo" "foo"))))
   (testing "If the source is file, stored in the same parent"
-    (is (= "automaton/automaton-web/foo"
-           (sut/file-in-same-dir "automaton/automaton-web/deps.edn" "foo"))))
+    (is (= "automaton/automaton-core/foo"
+           (sut/file-in-same-dir "automaton/automaton-core/deps.edn" "foo"))))
   (testing "If the source is file does not exist, store in the same parent"
-    (is (= "automaton/automaton-web/foo"
-           (sut/file-in-same-dir "automaton/automaton-web/deps-does-not-exist.edn" "foo")))))
+    (is (= "automaton/automaton-core/foo"
+           (sut/file-in-same-dir "automaton/automaton-core/deps-does-not-exist.edn" "foo")))))
 
 (deftest file-ized-test
   (testing "- is replaced with _"

@@ -15,8 +15,14 @@
   (read-conf-param [_this key-path]
     (try
       (try
-        (get-in config-edn
-                key-path)
+        (let [val (get-in config-edn
+                          key-path
+                          :value-not-set)]
+          (when (= val :value-not-set)
+            (throw (ex-info "Parameter is not found"
+                                {:key-path key-path
+                                 :config-edn config-edn})))
+          val)
         (catch Exception e
           (throw (ex-info "Parameter not defined: " {:error e
                                                      :key-path key-path}))))

@@ -1,6 +1,5 @@
 (ns automaton-core.adapters.deps-edn
-  "Proxy to read of deps.edn file
-  Modification of it is pushed to automaton-build"
+  "Proxy to read of deps.edn file"
   (:require
    [automaton-core.adapters.edn-utils :as edn-utils]
    [automaton-core.adapters.files :as files]

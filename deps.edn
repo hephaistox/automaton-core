@@ -9,6 +9,7 @@
         org.apache.logging.log4j/log4j-core #:mvn{:version "2.20.0"},
         com.taoensso/tempura #:mvn{:version "1.5.3"},
         nrepl/nrepl #:mvn{:version "1.0.0"},
+        cider/cider-nrepl #:mvn{:version "0.30.0"}
         refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"},
         org.clojure/clojure #:mvn{:version "1.11.1"},
         org.clojure/tools.logging #:mvn{:version "1.2.4"}
@@ -22,11 +23,9 @@
                   :jvm-opts ["-Dlog4j2.configurationFile=log4j2.xml"
                              "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"
                              "-Dclojure.spec.compile-asserts=true"],
-                  :extra-deps {nrepl/nrepl #:mvn{:version "1.0.0"},
-                               refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"},
+                  :extra-deps {refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"},
                                org.clojure/core.async {:mvn/version "1.6.681"}
-                               djblue/portal {:mvn/version "0.46.0"}
-                               cider/cider-nrepl #:mvn{:version "0.30.0"}}}
+                               djblue/portal {:mvn/version "0.46.0"}}}
            :runner {:exec-fn cognitect.test-runner.api/test,
                     :extra-deps {org.clojure/tools.namespace #:mvn {:version "1.4.4"}
                                  com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner",

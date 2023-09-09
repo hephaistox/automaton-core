@@ -50,11 +50,6 @@
                :task (run-process (fn []
                                     (-> (p/process ["clj" "-M:repl"]
                                                    (to-out)))))}
-         manual-push {:doc "Workaround - use at your own risks"
-                      :task (run-process (fn []
-                                           (-> (p/process ["clj" "-M:repl"]
-                                                          (to-out)))))}
-
          #_(comment
              test-frontend {:doc "Test frontend"
                             :task (run-process (fn []
