@@ -34,28 +34,33 @@
                     [babashka.fs :as fs]]
          test {:doc "Test"
                :task (run-process (fn []
-                                    (-> (p/process ["clj" "-M:runner"]
-                                                   (to-out)))))}
+                                    (p/process ["clj" "-M:runner"]
+                                               (to-out))))}
          lint {:doc "Lint"
                :task (run-process (fn []
-                                    (-> (p/process ["clj-kondo"
-                                                    "--lint"
-                                                    "src/clj" "src/cljc"
-                                                    ;"resources"
-                                                    "env/dev/src/clj" "env/dev/resources"
-                                                    ;"env/dev/src/cljc"
-                                                    "test/clj" "test/cljc" "test/resources"]
-                                                   (to-out)))))}
+                                    (p/process ["clj-kondo"
+                                                "--lint"
+                                                "src/clj" "src/cljc"
+                                        ;"resources"
+                                                "env/dev/src/clj"
+                                                "env/dev/resources"
+                                                "env/test/resources"
+                                                ;"env/test/src/clj"
+                                                ;"env/test/src/cljc"
+                                        ;"env/dev/src/cljc"
+                                                "test/clj" "test/cljc"
+                                                "test/resources"]
+                                               (to-out))))}
          repl {:doc "Repl"
                :task (run-process (fn []
-                                    (-> (p/process ["clj" "-M:repl"]
-                                                   (to-out)))))}
-         #_(comment
-             test-frontend {:doc "Test frontend"
-                            :task (run-process (fn []
-                                                 (-> (p/process ["npm" "install"]
-                                                                (to-out)))
-                                                 (-> (p/process ["npx" "shadow-cljs" "compile" "karma-test"]
-                                                                (to-out)))
-                                                 (-> (p/process ["npx" "karma" "start" "--single-run"]
-                                                                (to-out)))))})}}
+                                    (p/process ["clj" "-M:repl"]
+                                               (to-out))))}
+         ;; (test-frontend {:doc "Test frontend"
+         ;;                    :task (run-process (fn []
+         ;;                                         (-> (p/process ["npm" "install"]
+         ;;                                                        (to-out)))
+         ;;                                         (-> (p/process ["npx" "shadow-cljs" "compile" "karma-test"]
+         ;;                                                        (to-out)))
+         ;;                                         (-> (p/process ["npx" "karma" "start" "--single-run"]
+         ;;                                                       (to-out)))))})
+         }}

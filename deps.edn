@@ -19,7 +19,7 @@
  :aliases {:cljs-paths {:extra-paths []}
            :repl {:extra-paths ["env/dev/src/clj" "env/dev/src/cljc" "env/dev/resources"
                                 "test/clj" "test/cljc" "test/resources"]
-                  :main-opts ["-m" "automaton-core.core"],
+                  :main-opts ["-m" "automaton-core.repl-core"],
                   :jvm-opts ["-Dlog4j2.configurationFile=log4j2.xml"
                              "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"
                              "-Dclojure.spec.compile-asserts=true"],
@@ -32,6 +32,7 @@
                                                             :sha "7284cda41fb9edc0f3bc6b6185cfb7138fc8a023"},
                                  org.clojure/tools.reader #:mvn{:version "1.3.6"}},
                     :extra-paths ["env/dev/src/clj" "env/dev/src/cljc" "env/dev/resources"
+                                  "env/test/resources"
                                   "test/clj" "test/cljc" "test/resources"]
                     :jvm-opts ["-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"
                                "-Dlog4j.configurationFile=log4j2-silent.xml"],

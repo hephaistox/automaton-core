@@ -15,12 +15,14 @@
   Useful to discover applications
   Search in the local directory, useful for application repo
   and in subdir, useful for monorepo
+
+  It is important not to search everywehere in the paths as `tmp` directories may contains unwanted `build_config.edn` files
   Params:
   * none
   Returns the list of directories with `build_config.edn` in it"
   ([config-path]
    (->> (files/search-files config-path
-                            (str "**" build-config-filename))
+                            (str "{*/" build-config-filename ",*/*/" build-config-filename "}"))
         flatten
         (filter (comp not nil?))))
   ([] (search-for-build-config "")))

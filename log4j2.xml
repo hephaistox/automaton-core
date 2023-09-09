@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration status="WARN" monitorInterval="1">
   <Properties>
-    <Property name="basePath">logs/</Property>
+	  <Property name="basePath">tmp/logs/</Property>
   </Properties>
 
   <Appenders>
