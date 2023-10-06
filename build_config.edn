@@ -1,5 +1,6 @@
 {:publication {:as-lib hephaistox/automaton-core
                :repo-address "git@github.com:hephaistox/automaton-core.git"
+               :repo-name "automaton-core"
                :branch "main"}
  :app-name "automaton-core"
- :monorepo {:app-dir "automaton/automaton-core"}}
+ :monorepo {:app-dir "automaton/automaton_core"}}

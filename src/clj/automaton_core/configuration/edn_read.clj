@@ -10,7 +10,6 @@
   "Read the `.edn` file,
   Params:
   * `edn-filename` name of the edn file to load
-
   Errors:
   * throws an exception if the file is not found
   * throws an exception if the file is a valid edn
@@ -22,13 +21,11 @@
         _ (log/trace "Load file:" edn-filename)
         edn-content (try
                       (slurp edn-filename)
-                      (catch Exception e
-                        (throw (ex-info (format "Unable to load the file `%s`" edn-filename)
-                                        {:caused-by e
-                                         :file-name edn-filename}))))]
+                      (catch Exception _
+                        (log/warn-format "Unable to load the file `%s`" edn-filename)
+                        nil))]
     (try
       (edn/read-string edn-content)
-      (catch Exception e
-        (throw (ex-info (format "File `%s` is not an edn" edn-filename)
-                        {:caused-by e
-                         :file-name edn-filename}))))))
+      (catch Exception _
+        (log/warn-format "File `%s` is not a valid edn" edn-filename)
+        nil))))

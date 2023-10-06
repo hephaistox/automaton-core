@@ -1,12 +1,14 @@
 (ns automaton-core.repl
-  "REPL component"
+  "REPL component
+  Design decision:
+  * The repl could have pushed to dev, but leaving it here allows to remotely connect to the remote repl, like la or production"
   (:require
-   [cider.nrepl :as nrepl-mw]
-   [nrepl.server :refer [default-handler start-server stop-server]]
-
    [automaton-core.adapters.files :as files]
+   [automaton-core.configuration :as conf]
    [automaton-core.log :as log]
-   [automaton-core.configuration.core :as conf]))
+   [cider.nrepl :as nrepl-mw]
+   [clojure.core.async :refer [<!! chan]]
+   [nrepl.server :refer [default-handler start-server stop-server]]))
 
 (def nrepl-port-filename
   "Name of the `.nrepl-port` file"
@@ -24,7 +26,8 @@
 
 (defn get-nrepl-port-parameter
   []
-  (conf/read-param [:dev :clj-nrepl-port]))
+  (conf/read-param [:dev :clj-nrepl-port]
+                   8000))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn get-active-nrepl-port
@@ -64,7 +67,7 @@
 
     (.addShutdownHook (Runtime/getRuntime)
                       (Thread. #(do
-                                  (log/info "SHUTDOWN in progress" repl-port)
+                                  (log/info "SHUTDOWN in progress, stop repl on port `" repl-port "`")
                                   (-> (files/search-files "" (str "**" nrepl-port-filename))
                                       (files/delete-files))
                                   (stop-repl repl-port))))))
@@ -76,4 +79,11 @@
     (start-repl* {:middleware (conj nrepl-mw/cider-middleware 'refactor-nrepl.middleware/wrap-refactor)})
     :started
     (catch Exception e
-      (log/error "Uncaught exception" e))))
+      (log/error (ex-info "Uncaught exception" {:error e})))))
+
+(defn -main
+  "Entry point for simple / emergency repl"
+  [& _args]
+  (let [c (chan)]
+    (start-repl)
+    (<!! c)))
