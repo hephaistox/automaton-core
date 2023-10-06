@@ -22,10 +22,10 @@
         edn-content (try
                       (slurp edn-filename)
                       (catch Exception _
-                        (log/warn-format "Unable to load the file `%s`" edn-filename)
+                        #_(log/warn-format "Unable to load the file `%s`" edn-filename)
                         nil))]
     (try
       (edn/read-string edn-content)
       (catch Exception _
-        (log/warn-format "File `%s` is not a valid edn" edn-filename)
+        #_(log/warn-format "File `%s` is not a valid edn" edn-filename)
         nil))))
