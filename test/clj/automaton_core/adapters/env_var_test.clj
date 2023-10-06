@@ -5,7 +5,7 @@
 
 (deftest get-env-var-test
   (testing "Find the shell name in environment variable"
-    (is (string? (sut/get-env "SHELL")))))
+    (is (string? (sut/get-env "TERM")))))
 
 (deftest get-env-vars-test
   (testing "Env vars are ok"
