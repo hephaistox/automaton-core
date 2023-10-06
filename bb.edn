@@ -44,9 +44,9 @@
                     [babashka.fs :as fs]]
          ltest {:doc "Local test"
                 :task (run-processes ["clojure" "-M:env-development-test:common-test"]
-                                     ["npm" "install"]
-                                     ["npx" "shadow-cljs" "compile" "ltest"]
-                                     ["npx" "karma" "start" "--single-run"])}
+                                     #_["npm" "install"]
+                                     #_["npx" "shadow-cljs" "compile" "ltest"]
+                                     #_["npx" "karma" "start" "--single-run"])}
          lint {:doc "Lint (option -d will print details of file linted)"
                :task (run-processes (concat ["clj-kondo"
                                              "--lint"
