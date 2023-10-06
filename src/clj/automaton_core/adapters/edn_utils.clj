@@ -3,7 +3,7 @@
   (:require
    [automaton-core.adapters.code-formatter :as code-formatter]
    [automaton-core.adapters.files :as files]
-   [automaton-core.configuration.core :as conf]
+   [automaton-core.configuration :as conf]
    [automaton-core.log :as log]
    [automaton-core.utils.uuid-gen :as uuid]
    [clojure.edn :as edn]))
@@ -118,11 +118,16 @@
   "Spit the data given as a parameter to a temporary file which adress is given
   This function has a trick to print exception and its stacktrace
   Params:
-  * `data` the data to spit"
-  [data]
-  (let [filename (create-tmp-edn)
-        ;; Important to print exception properly
-        formatted-data (code-formatter/format-content data)]
-    (files/spit-file filename formatted-data)
-    (format " See file `%s` for details"
-            (files/absolutize filename))))
+  * `data` the data to spit
+  * `formatting?` (Optional, default = true) is the content formatted"
+  ([data formatting?]
+   (let [filename (create-tmp-edn)
+         ;; Important to print exception properly
+         formatted-data (if formatting?
+                          (code-formatter/format-content data)
+                          data)]
+     (files/spit-file filename formatted-data)
+     (format " See file `%s` for details"
+             (files/absolutize filename))))
+  ([data]
+   (spit-in-tmp-file data true)))
