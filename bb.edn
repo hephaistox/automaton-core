@@ -34,7 +34,7 @@
                      (catch Exception e
                        (println (str "Error during execution of `" (:name (current-task)) "`"))
                        (if (cicd?)
-                         (prn-str e)
+                         (println e)
                          (let [file (fs/create-temp-file)]
                            (println "See details in `" (.toString (.toAbsolutePath file)) "`")
                            (spit (fs/file file) (prn-str e))
