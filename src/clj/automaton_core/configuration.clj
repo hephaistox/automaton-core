@@ -43,11 +43,13 @@
 
 (defn read-param
   ([key-path default-value]
-   (cond (not (vector? key-path)) (do
-                                    #_(log/warn-format "Key path should be a vector. I found " key-path)
-                                    default-value)
-         (instance? mount.core.NotStartedState @conf-state) (do
-                                     #_                         (log/warn-format "Unexpected error in configuration, component configuration is not started" @conf-state)
+   (cond (not (vector? key-path)) default-value
+         #_(do
+                                    (log/warn-format "Key path should be a vector. I found " key-path)
+                                    )
+         (instance? mount.core.NotStartedState @conf-state) default-value
+         #_(do
+                                                              (log/warn-format "Unexpected error in configuration, component configuration is not started" @conf-state)
                                                               default-value)
          :else (let [value (prot/read-conf-param @conf-state key-path)]
                  (log/trace "Read key-path " key-path " = " value)
