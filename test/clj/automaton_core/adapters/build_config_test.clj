@@ -20,4 +20,4 @@
                              ";; Hey!")
       (is (= content
              (edn-utils/read-edn-or-nil (files/create-file-path tmp-dir
-                                            sut/build-config-filename)))))))
+                                                                sut/build-config-filename)))))))

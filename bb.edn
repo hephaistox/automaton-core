@@ -18,6 +18,9 @@
                     :in :inherit
                     :err :inherit
                     :shutdown p/destroy-tree})
+                 (defn- cicd?
+                   []
+                   (System/getenv "CI"))
                  (defn run-processes
                    "Run processes with logs features
                     Params:
@@ -30,10 +33,12 @@
                            p/check))
                      (catch Exception e
                        (println (str "Error during execution of `" (:name (current-task)) "`"))
-                       (let [file (fs/create-temp-file)]
-                         (println "See details in `" (.toString (.toAbsolutePath file)) "`")
-                         (spit (fs/file file) (prn-str e))
-                         "")
+                       (if (cicd?)
+                         (prn-str e)
+                         (let [file (fs/create-temp-file)]
+                           (println "See details in `" (.toString (.toAbsolutePath file)) "`")
+                           (spit (fs/file file) (prn-str e))
+                           ""))
                        (System/exit 1)))))
          :requires [[babashka.process :as p]
                     [babashka.fs :as fs]]
@@ -43,14 +48,13 @@
                                      ["npx" "shadow-cljs" "compile" "ltest"]
                                      ["npx" "karma" "start" "--single-run"])}
          lint {:doc "Lint (option -d will print details of file linted)"
-               :task (run-processes (apply concat
-                                           ["clj-kondo"
-                                            "--lint"
-                                            "env/development/src"
-                                            "src"
-                                            "test"]
-                                           (when (= "-d" (first *command-line-args*))
-                                             "--debug")))}
+               :task (run-processes (concat ["clj-kondo"
+                                             "--lint"
+                                             "env/development/src"
+                                             "src"
+                                             "test"]
+                                            (when (= "-d" (first *command-line-args*))
+                                              ["--debug"])))}
          gha {:doc "Github action command - is launched automatically by github"
               :task (run-processes ["bb" "lint"]
                                    ["bb" "ltest"])}
