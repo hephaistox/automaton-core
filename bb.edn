@@ -38,7 +38,7 @@
          :requires [[babashka.process :as p]
                     [babashka.fs :as fs]]
          ltest {:doc "Local test"
-                :task (run-processes ["clj" "-M:env-development-test:common-test"]
+                :task (run-processes ["clojure" "-M:env-development-test:common-test"]
                                      ["npm" "install"]
                                      ["npx" "shadow-cljs" "compile" "ltest"]
                                      ["npx" "karma" "start" "--single-run"])}
@@ -55,4 +55,4 @@
               :task (run-processes ["bb" "lint"]
                                    ["bb" "ltest"])}
          repl {:doc "Repl"
-               :task (run-processes ["clj" "-M:env-development-repl"])}}}
+               :task (run-processes ["clojure" "-M:env-development-repl"])}}}
