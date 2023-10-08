@@ -52,15 +52,15 @@
       deps-edn)))
 
 (defn extract-paths
-  "Extracts the paths from a given `deps.edn`
+  "Extracts the `:paths` and `:extra-paths` from a given `deps.edn`
    e.g. {:run {...}}
   Params:
   * `deps-edn` content the deps edn file to search extract path in
-  * `aliases` is a collection of aliases to exclude"
+  * `excluded-aliases` is a collection of aliases to exclude"
   ([{:keys [paths aliases]
-     :as _deps-edn} exclude-aliases]
+     :as _deps-edn} excluded-aliases]
    (let [selected-aliases (apply dissoc aliases
-                                 exclude-aliases)
+                                 excluded-aliases)
          alias-paths (mapcat (fn [[_alias-name paths]]
                                (apply concat
                                       (vals (select-keys paths [:extra-paths :paths]))))
@@ -76,17 +76,19 @@
 (defn extract-deps
   "Extract dependencies in a `deps.edn` file
   Params:
-  * `deps-edn` is the content of the file to search dependencies in"
-  [{:keys [deps aliases] :as _deps-edn}]
-  (map (fn [[deps-name deps-map]]
-         [deps-name deps-map])
-       (concat deps
-               (into {}
-                     (apply concat
-                            (map (fn [[_ alias-defs]]
-                                   (vals
-                                    (select-keys alias-defs [:extra-deps :deps])))
-                                 aliases))))))
+  * `deps-edn` is the content of the file to search dependencies in
+  * `excluded-aliases` is a collection of aliases to exclude"
+  [{:keys [deps aliases] :as _deps-edn} excluded-aliases]
+  (let [selected-aliases (apply dissoc aliases excluded-aliases)]
+    (->> selected-aliases
+         (map (fn [[_ alias-defs]]
+                (vals
+                 (select-keys alias-defs [:extra-deps :deps]))))
+         (apply concat)
+         (into {})
+         (concat deps)
+         (map (fn [[deps-name deps-map]]
+                [deps-name deps-map])))))
 
 (defn remove-deps
   "Remove the dependency called `dep-lib-to-remove` in the `deps`

@@ -102,3 +102,38 @@
             {:one 2 :two {:three 4}}
             {:one 3 :two {:three 5}}
             {:one 4 :two {:three 6}})))))
+
+(deftest add-ids-test
+  (testing "Simple maps"
+    (is (= {:foo {:bar "bar"
+                  :id :foo}
+            :bar {:foo "foo"
+                  :id :bar}}
+           (sut/add-ids {:foo {:bar "bar"}
+                         :bar {:foo "foo"}}))))
+  (testing "Non map values are unchanged"
+    (is (= {:foo "bar"
+            :bar "foo"}
+           (sut/add-ids {:foo "bar"
+                         :bar "foo"}))))
+  (testing "Empty maps are ok"
+    (is (= {}
+           (sut/add-ids {})))))
+
+(deftest update-kw-test
+  (testing "Update is ok, non selected keys are excluded"
+    (is (= {:foo "arg"
+            :foo2 :bar2}
+           (sut/update-kw {:foo :bar
+                           :foo2 :bar2}
+                          [:foo]
+                          (fn [_]
+                            "arg")))))
+  (testing "No keyword doesn't modify the map"
+    (is (= {:foo :bar
+            :foo2 :bar2}
+           (sut/update-kw {:foo :bar
+                           :foo2 :bar2}
+                          []
+                          (fn [_]
+                            "arg"))))))

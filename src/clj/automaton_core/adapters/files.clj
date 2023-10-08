@@ -2,7 +2,7 @@
   "Tools to manipulate local files
   Is a proxy to babashka.fs tools"
   (:require
-   [automaton-core.configuration.core :as conf]
+   [automaton-core.configuration :as conf]
    [automaton-core.log :as log]
    [automaton-core.utils.uuid-gen :as uuid]
    [babashka.fs :as fs]
@@ -125,16 +125,12 @@
   Removes the empty strings, add needed separators"
   [& dirs]
   (if (some? dirs)
-    (do
-      (when-not (every? string?
-                        dirs)
-        (throw (ex-info "The directories can't be casted in string"
-                        {:dirs dirs})))
-      (->> dirs
-           (filter #(not (str/blank? %)))
-           (map remove-trailing-separator)
-           (interpose file-separator)
-           (apply str)))
+    (->> dirs
+         (map str)
+         (filter #(not (str/blank? %)))
+         (map remove-trailing-separator)
+         (interpose file-separator)
+         (apply str))
     "."))
 
 (defn create-dir-path
@@ -365,7 +361,8 @@
   * none
   Returns the string of the directory path"
   []
-  (let [tmp-dir (apply create-dir-path [(conf/read-param [:tests :tmp-dirs])
+  (let [tmp-dir (apply create-dir-path [(conf/read-param [:tests :tmp-dirs]
+                                                         "tmp/tests")
                                         (str (uuid/time-based-uuid))])]
     (fs/create-dirs tmp-dir)
     tmp-dir))

@@ -1,6 +1,6 @@
 (ns automaton-core.adapters.code-formatter
   "Format code
-  Proxy to zprint"
+  Proxy to [zprint](https://github.com/kkinnear/zprint)"
   (:require
    [automaton-core.adapters.files :as files]
    [automaton-core.adapters.time :as time]

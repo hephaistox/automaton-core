@@ -7,7 +7,7 @@
    [automaton-core.adapters.edn-utils :as edn-utils]))
 
 (deftest search-for-build-config-test
-  (testing "Are projects found"
+  (testing "At least current project should be found"
     (is (> (count (sut/search-for-build-config))
            0))))
 
@@ -20,4 +20,4 @@
                              ";; Hey!")
       (is (= content
              (edn-utils/read-edn-or-nil (files/create-file-path tmp-dir
-                                            sut/build-config-filename)))))))
+                                                                sut/build-config-filename)))))))
