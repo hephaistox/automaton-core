@@ -33,14 +33,17 @@
                        (System/exit 1)))))
          :requires [[babashka.process :as p]
                     [babashka.fs :as fs]]
+
          clean-hard {:doc "Clean hard"
                      :task ()}
+
          ltest {:doc "Local test"
                 :task (run-processes false
                                      ["clojure" "-M:env-development-test:common-test"]
                                      #_["npm" "install"]
                                      #_["npx" "shadow-cljs" "compile" "ltest"]
                                      #_["npx" "karma" "start" "--single-run"])}
+
          lint {:doc "Lint (option -d will print details of file linted)"
                :task (run-processes true
                                     (concat ["clj-kondo"
