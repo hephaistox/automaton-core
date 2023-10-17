@@ -34,6 +34,8 @@
 
  :deps {babashka/fs #:mvn{:version "0.4.19"},
         babashka/process #:mvn{:version "0.5.21"},
+        hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
+                                        :sha "a75e61e65d6f20764f363e603ded3469521993b2"}
         danlentz/clj-uuid #:mvn{:version "0.1.9"},
         metosin/malli #:mvn{:version "0.13.0"},
         lambdaisland/uri {:mvn/version "1.15.125"}

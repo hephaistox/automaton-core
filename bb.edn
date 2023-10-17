@@ -1,62 +1,98 @@
-{:paths []
- :deps {}
- :tasks {:init (do
-                 (defn to-out
-                   "Generate options map for process function, write in std"
-                   []
-                   {:out :inherit
-                    :in :inherit
-                    :err :inherit
-                    :shutdown p/destroy-tree})
-                 (defn- cicd?
-                   []
+{:paths ["src/clj"]
+ :deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
+                                        :sha "a75e61e65d6f20764f363e603ded3469521993b2"}}
+ :tasks {:requires [[automaton-build-app.log :as build-log]
+                    [automaton-build-app.os.commands :as build-cmds]
+                    [clojure.string :as str]
+                    [babashka.fs :as fs]]
+         :init (do
+                 (defn- cicd? []
                    (System/getenv "CI"))
-                 (defn run-processes
-                   "Run processes with logs features
+
+                 (defn qualified-name [s]
+                   (apply str
+                          (interpose "/"
+                                     ((juxt namespace name) (symbol s)))))
+
+                 (defn- task-name []
+                   (-> (babashka.tasks/current-task)
+                       :name))
+
+                 (defn run-bb
+                   "Run the `body-fn` on the current bb environment"
+                   [body-fn]
+                   (build-log/trace-format "Run %s task on bb" (task-name))
+                   (let [ns (-> (symbol body-fn)
+                                namespace
+                                symbol)]
+                     (require ns)
+                     ((resolve body-fn) {:command-line-args *command-line-args*})))
+
+                 (defn run-clj
+                   [body-fn]
+                   (build-log/trace-format "Run %s task on clj" (task-name))
+                   (build-cmds/execute-and-trace ["clojure" "-X" (qualified-name body-fn)
+                                                  :command-line-args (pr-str *command-line-args*)]))
+
+                 (defn dispatch
+                   "Execute the body-fn directy in currently running bb env
+                      * `body` body to execute
+                      * `executing-pf` could be :bb or :clj, the task will be executed on one or the other"
+                   [body-fn executing-pf]
+                   (if (= :clj executing-pf)
+                     (run-clj body-fn)
+                     (run-bb body-fn)))
+
+                 (defn execute-task
+                   "Run the function and manage
                     Params:
-                    * `skip-errors` don't print errors if any, useful when a bb call another bb, as the outer one doesn't need to tell the error once again
-                    * `processes-strings` each element is sent to process to create a process and execute it"
-                   [skip-errors & processes-strings]
+                    * `body` body to execute
+                    * `executing-pf` (Optional, default = :bb) could be :bb or :clj, the task will be executed on one or the other"
+                   [body-fn & executing-pf]
                    (try
-                     (doseq [process-string processes-strings]
-                       (-> process-string
-                           (p/process (to-out))
-                           p/check))
+                     (build-log/info-format "Run %s task" (-> (current-task)
+                                                              :name))
+                     (dispatch body-fn
+                               (first executing-pf))
                      (catch Exception e
-                       (println (str "Error during execution of `" (:name (current-task)) "`"))
+                       (println (format "Error during execution of `%s`, %s`" (:name (current-task)) (pr-str (ex-message e))))
                        (if (cicd?)
                          (println e)
-                         (let [file (fs/create-temp-file)]
-                           (println "See details in `" (.toString (.toAbsolutePath file)) "`")
+                         (let [file (fs/create-temp-file {:suffix ".edn"})]
+                           (println (format "See details in `%s`" (.toString (.toAbsolutePath file))))
                            (spit (fs/file file) (prn-str e))
                            ""))
                        (System/exit 1)))))
-         :requires [[babashka.process :as p]
-                    [babashka.fs :as fs]]
 
-         clean-hard {:doc "Clean hard"
-                     :task ()}
+         blog {:doc "Transforms md file to pdf based on edn file"
+               :task (execute-task 'automaton-build-app.tasks.doc/blog-task :clj)}
+
+         clean {:doc "Clean cache files for compiles, and logs"
+                :task (execute-task 'automaton-build-app.tasks.clean/clean)}
+
+         clean-hard {:doc "Clean all files which are not under version control (it doesn't remove untracked file or staged files if there are eligible to `git add .`)"
+                     :task (execute-task 'automaton-build-app.tasks.clean/clean-hard)}
+
+         code-doc {:doc "Create the documentation of the app"
+                   :task (execute-task 'automaton-build-app.tasks.code-helpers-clj/code-doc :clj)}
+
+         compile-to-jar {:doc "Compile that code to a jar"
+                         :task (execute-task 'automaton-build-app.tasks.code-helpers/compile-to-jar :clj)}
+
+         gha {:doc "Github action command - is launched automatically by github"
+              :task (execute-task 'automaton-build-app.tasks.test/gha :clj)}
+
+         gha-lconnect {:doc "Connect to a local container running this code"
+                       :task (execute-task 'automaton-build-app.tasks.test/gha)}
+
+         lconnect {:doc "Local connect - repl"
+                   :task (execute-task 'automaton-build-app.tasks.code-helpers/lconnect)}
 
          ltest {:doc "Local test"
-                :task (run-processes false
-                                     ["clojure" "-M:env-development-test:common-test"]
-                                     #_["npm" "install"]
-                                     #_["npx" "shadow-cljs" "compile" "ltest"]
-                                     #_["npx" "karma" "start" "--single-run"])}
+                :task (execute-task 'automaton-build.app.test/ltest)}
 
-         lint {:doc "Lint (option -d will print details of file linted)"
-               :task (run-processes true
-                                    (concat ["clj-kondo"
-                                             "--lint"
-                                             "env/development/src"
-                                             "src"
-                                             "test"]
-                                            (when (= "-d" (first *command-line-args*))
-                                              ["--debug"])))}
-         gha {:doc "Github action command - is launched automatically by github"
-              :task (run-processes false
-                                   ["bb" "lint" "-d"]
-                                   ["bb" "ltest"])}
-         repl {:doc "Repl"
-               :task (run-processes true
-                                    ["clojure" "-M:env-development-repl"])}}}
+         push {:doc "Push this repo"
+               :task (execute-task 'automaton-build-app.tasks.publication/push-from-local :clj)}
+
+         update-deps {:doc "Update the dependencies, cider-nrepl and refactor are to be updated manually"
+                      :task (execute-task 'automaton-build-app.tasks.code-helpers-clj/update-deps :clj)}}}
