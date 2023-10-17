@@ -26,6 +26,7 @@
                                      "-r" ".*-test.*"
                                      "-d" "test/clj"
                                      "-d" "test/cljc"]}
+
   :build {:extra-deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
                                                       :sha "a75e61e65d6f20764f363e603ded3469521993b2"}}}
 
