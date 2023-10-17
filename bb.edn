@@ -31,7 +31,7 @@
                  (defn run-clj
                    [body-fn]
                    (build-log/trace-format "Run %s task on clj" (task-name))
-                   (build-cmds/execute-and-trace ["clojure" "-X" (qualified-name body-fn)
+                   (build-cmds/execute-and-trace ["clojure" "-X:build" (qualified-name body-fn)
                                                   :command-line-args (pr-str *command-line-args*)]))
 
                  (defn dispatch

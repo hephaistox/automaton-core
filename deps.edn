@@ -26,16 +26,17 @@
                                      "-r" ".*-test.*"
                                      "-d" "test/clj"
                                      "-d" "test/cljc"]}
+  :build {:extra-deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
+                                                      :sha "a75e61e65d6f20764f363e603ded3469521993b2"}}}
 
   :cljs-deps {:extra-paths ["src/cljs" "src/cljc" "resources" "test/cljs" "test/cljc"]
               :extra-deps {thheller/shadow-cljs {:mvn/version "2.25.8"}
                            cider/cider-nrepl {:mvn/version "0.21.1"}
                            binaryage/devtools {:mvn/version "1.0.7"}}}}
 
+
  :deps {babashka/fs #:mvn{:version "0.4.19"},
         babashka/process #:mvn{:version "0.5.21"},
-        hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
-                                        :sha "a75e61e65d6f20764f363e603ded3469521993b2"}
         danlentz/clj-uuid #:mvn{:version "0.1.9"},
         metosin/malli #:mvn{:version "0.13.0"},
         lambdaisland/uri {:mvn/version "1.15.125"}
