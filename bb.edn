@@ -1,9 +1,9 @@
 {:paths ["src/clj"]
  :deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
-                                        :sha "a75e61e65d6f20764f363e603ded3469521993b2"}}
+                                        :sha "33c8941cb6df63006bafaaf1d5e7f0383b10468a"}}
+
  :tasks {:requires [[automaton-build-app.log :as build-log]
                     [automaton-build-app.os.commands :as build-cmds]
-                    [clojure.string :as str]
                     [babashka.fs :as fs]]
          :init (do
                  (defn- cicd? []
@@ -32,7 +32,7 @@
                    [body-fn]
                    (build-log/trace-format "Run %s task on clj" (task-name))
                    (build-cmds/execute-and-trace ["clojure" "-X:build" (qualified-name body-fn)
-                                                  :command-line-args (pr-str *command-line-args*)]))
+                                                  :command-line-args *command-line-args*]))
 
                  (defn dispatch
                    "Execute the body-fn directy in currently running bb env
