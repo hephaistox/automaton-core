@@ -2,13 +2,13 @@
         babashka/process #:mvn{:version "0.5.21"},
         danlentz/clj-uuid #:mvn{:version "0.1.9"},
         metosin/malli #:mvn{:version "0.13.0"},
-        lambdaisland/uri {:mvn/version "1.15.125"}
+        lambdaisland/uri {:mvn/version "1.16.134"}
         mount/mount #:mvn{:version "0.1.17"},
         com.clojure-goes-fast/clj-memory-meter #:mvn{:version "0.3.0"},
         org.apache.logging.log4j/log4j-api #:mvn{:version "2.20.0"},
         org.apache.logging.log4j/log4j-core #:mvn{:version "2.20.0"},
         org.apache.logging.log4j/log4j-slf4j2-impl #:mvn{:version "2.20.0"},
-        io.sentry/sentry {:mvn/version "6.29.0"},
+        io.sentry/sentry {:mvn/version "6.32.0"},
         io.sentry/sentry-clj #:mvn{:version "6.28.200"},
         com.taoensso/tempura #:mvn{:version "1.5.3"},
         com.taoensso/encore  #:mvn{:version "3.62.1"}
@@ -29,8 +29,8 @@
                          :jvm-opts ["-Dheph-conf=env/test/config.edn"
                                     "-Dheph-common-conf=env/common_config.edn"]}
 
-           :build {:extra-deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
-                                                                :sha "33c8941cb6df63006bafaaf1d5e7f0383b10468a"}}}
+           :build {:extra-deps {hephaistox/automaton-build-app {:git/url "https://github.com/hephaistox/automaton-core.git"
+                                                                :sha "9729eb2e4698bad758b24d24d236064e436342c5"}}}
 
            :env-development-repl {:extra-paths ["env/development/resources"
                                                 "env/development/src/clj"
@@ -50,7 +50,7 @@
                                               "-d" "test/cljc"]}
 
            :cljs-deps {:extra-paths ["src/cljs" "src/cljc" "resources" "test/cljs" "test/cljc"]
-                       :extra-deps {thheller/shadow-cljs {:mvn/version "2.25.8"}
+                       :extra-deps {thheller/shadow-cljs {:mvn/version "2.25.9"}
                                     cider/cider-nrepl {:mvn/version "0.21.1"}
                                     binaryage/devtools {:mvn/version "1.0.7"}}}
 

@@ -8,8 +8,7 @@
   "version": "1.0.0",
   "author": "Hephaistox <info@hephaistox.com>",
   "dependencies": {
-    "react-router-dom": "^6.16.0",
-    "@sentry/react": "^7.69.0"
+    "@sentry/browser": "^7.73.0"
   },
   "workspaces": [],
   "devDependencies": {

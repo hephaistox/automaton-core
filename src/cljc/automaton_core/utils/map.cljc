@@ -79,8 +79,7 @@
   [m]
   (when (map? m)
     (->> (walk/postwalk prefixify-children m)
-         (map (fn [[k v]]
-                {k (if (sequential? v) (flatten v) v)}))
+         (map (fn [[k v]] {k (if (sequential? v) (flatten v) v)}))
          (into {}))))
 
 (defn add-ids

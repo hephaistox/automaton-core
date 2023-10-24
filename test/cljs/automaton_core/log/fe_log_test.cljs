@@ -18,7 +18,7 @@
             (automaton-core.log.fe-log/logger-ids-to-logger-fns
              [:automaton-core.log.registry/print]))
            "automaton-core.log.fe-log-test"
-           (clojure.core/str :fatal)
+           :fatal
            "foo"
            "bar")
          (macroexpand '(sut/log

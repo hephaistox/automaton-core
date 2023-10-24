@@ -2,11 +2,8 @@
   "Factory generating log function"
   (:require [automaton-core.log.strategy]
             [automaton-core.log.fe-registry]
-            [automaton-core.log.strategy.static-ns-level]
-            #?(:cljs [automaton-core.log.tracking.fe-error-tracking :as exs]))
+            [automaton-core.log.strategy.static-ns-level])
   #?(:cljs (:require-macros [automaton-core.log.fe-log])))
-
-#?(:cljs (defn log-init! [params] (exs/init-error-tracking! params)))
 
 (defn logger-ids-to-logger-fns
   [logger-ids]
@@ -24,7 +21,7 @@
   (let [ns (str *ns*)
         log-fns `(automaton-core.log.fe-log/logger-ids-to-logger-fns
                    ~logger-id)]
-    `((apply juxt ~log-fns) ~ns (str ~level) ~@message)))
+    `((apply juxt ~log-fns) ~ns ~level ~@message)))
 
 (defmacro log-exception
   [logger-id level exception & additional-message]
@@ -32,7 +29,7 @@
   (let [ns (str *ns*)
         log-fns `(automaton-core.log.fe-log/logger-ids-to-logger-fns
                    ~logger-id)]
-    `((apply juxt ~log-fns) ~ns (str ~level) ~exception)))
+    `((apply juxt ~log-fns) ~ns ~level ~exception)))
 
 (defmacro log-data
   [logger-id level data & additional-message]
@@ -40,7 +37,7 @@
   (let [ns (str *ns*)
         log-fns `(automaton-core.log.fe-log/logger-ids-to-logger-fns
                    ~logger-id)]
-    `((apply juxt ~log-fns) ~ns (str ~level) ~data)))
+    `((apply juxt ~log-fns) ~ns ~level ~data)))
 
 (defmacro log-format
   [logger-id level fmt & data]

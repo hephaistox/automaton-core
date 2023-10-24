@@ -1,11 +1,7 @@
 (ns automaton-core.log.tracking.fe-sentry
   "Sentry frontend logging."
-  (:require
-    [react :as react]
-    ["@sentry/react" :as Sentry]
-    ["react-router-dom" :refer
-     (useLocation useNavigationType createRoutesFromChildren matchRoutes)]
-    [automaton-core.log.tracking.sentry :as asentry]))
+  (:require ["@sentry/browser" :as Sentry]
+            [automaton-core.log.tracking.sentry :as asentry]))
 
 (defn send-breadcrumb!
   "Sends breadcrumb, which will not be shown in sentry untill event is sent.
@@ -27,16 +23,9 @@
   (.init Sentry
          #js {:dsn dsn,
               :environment env,
-              :integrations #js [(new (.-BrowserTracing Sentry)
-                                      #js {:routingInstrumentation
-                                             (.reactRouterV6Instrumentation
-                                               Sentry
-                                               react/useEffect
-                                               useLocation
-                                               useNavigationType
-                                               createRoutesFromChildren
-                                               matchRoutes)})
-                                 (new (.-Replay Sentry))],
+              :integrations #js [(new (.-BrowserTracing Sentry))],
+              :replaysSessionSampleRate 0,
+              :replaysOnErrorSampleRate 0,
               :tracesSampleRate 1.0,
               :tracePropagationTargets #js ["localhost" traced-website],
               :beforeSend (fn [event]

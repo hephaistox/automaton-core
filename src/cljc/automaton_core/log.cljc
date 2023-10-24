@@ -1,5 +1,5 @@
 (ns automaton-core.log
-  "Main entrypoint to logging, defines basic levels that we use to log.
+  "Main entrypoint to automaton core logging, defines basic levels that we use to log.
 
   Logical order of logs is:
   trace -> debug -> info -> warn -> error -> fatal"
