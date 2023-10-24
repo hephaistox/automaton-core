@@ -3,17 +3,13 @@
   Data can be set in two files:
   * one set in `heph-common-conf` java property for all values not specific to an environment
   * one set in `heph-conf` java property for all values specific to that environment"
-  (:require
-   [automaton-core.adapters.java-properties :as java-properties]
-   [automaton-core.configuration.edn-read :as conf-edn-read]
-   [automaton-core.configuration.protocol :as protocol]))
+  (:require [automaton-core.adapters.java-properties :as java-properties]
+            [automaton-core.configuration.edn-read :as conf-edn-read]
+            [automaton-core.configuration.protocol :as configuration-prot]))
 
-(defrecord SimpleConf
-           [config-map]
-  protocol/Conf
-  (read-conf-param [_this key-path]
-    (get-in config-map
-            key-path)))
+(defrecord SimpleConf [config-map]
+  configuration-prot/Conf
+    (read-conf-param [_this key-path] (get-in config-map key-path)))
 
 (defn- load-conf
   [property-name]

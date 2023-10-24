@@ -3,19 +3,29 @@
                       :branch "main"}
                :as-lib hephaistox/automaton-core
                :major-version "1.2.%s"
+               :gha-container {:repo-url "git@github.com:hephaistox/gha_image.git"
+                               :repo-branch "main"
+                               :account "hephaistox"
+                               :workflows [[".github/workflows/commit_validation.yml" "gha-automaton-core"]]}
+               :shadow-cljs {:target-build nil}
                :jar {:class-dir "target/classes"
                      :excluded-aliases #{}
                      :target-filename "target/%s-%s.jar"}}
  :lconnect {:aliases [:common-test :env-development-repl]}
  :ltest {:aliases [:env-development-test :common-test]}
+ :la {:selected-tasks ["blog" "clean" "clean-hard" "code-doc" "compile-to-jar" "container-clear" "container-list" "gha" "gha-lconnect" "ltest" "publish-gha-container" "push" "report" "update-deps"]}
  :customer-materials {:html-dir "tmp/html"
                       :dir "customer_materials"
                       :pdf-dir "tmp/pdf"}
- :container-repo {:account "hephaistox"}
  :doc {:dir "docs"
        :archi {:dir "docs/archi/"}
        :code-stats {:output-file "docs/code/stats.md"}
-       :reports {:output-files {:automaton-build-app.code-helpers.test-toolings/comments "XX"}}
+       :reports {:output-files {:comments "docs/code/comments.edn"
+                                :alias "docs/code/alias.edn"
+                                :css "docs/code/css.edn"
+                                :deps-ns "docs/code/deps-ns.svg"
+                                :deps "docs/code/deps.png"
+                                :ns "docs/code/ns.png"}}
        :code-doc {:dir "docs/code"
                   :title "Build app automaton"
                   :description "Autonomous project to build an hephaistox app"}}

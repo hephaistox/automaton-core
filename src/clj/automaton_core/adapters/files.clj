@@ -1,12 +1,11 @@
 (ns automaton-core.adapters.files
   "Tools to manipulate local files
   Is a proxy to babashka.fs tools"
-  (:require
-   [automaton-core.configuration :as conf]
-   [automaton-core.log :as log]
-   [automaton-core.utils.uuid-gen :as uuid]
-   [babashka.fs :as fs]
-   [clojure.string :as str]))
+  (:require [automaton-core.configuration :as conf]
+            [automaton-core.log :as log]
+            [automaton-core.utils.uuid-gen :as uuid]
+            [babashka.fs :as fs]
+            [clojure.string :as str]))
 
 (def file-separator
   "Symbol to separate directories.
@@ -16,13 +15,9 @@
 (defn absolutize
   "Transform a file or dir name in an absolute path"
   [relative-path]
-  (when relative-path
-    (str (fs/absolutize relative-path))))
+  (when relative-path (str (fs/absolutize relative-path))))
 
-(defn hidden?
-  "Return true if the path is hidden"
-  [path]
-  (fs/hidden? path))
+(defn hidden? "Return true if the path is hidden" [path] (fs/hidden? path))
 
 (defn delete-files
   "Deletes the files which are given in the list.
@@ -30,23 +25,20 @@
   [file-list]
   (doseq [file file-list]
     (if (fs/directory? file)
-      (do
-        (log/debug "Directory " (absolutize file) " is deleted")
-        (fs/delete-tree file))
-      (do
-        (log/debug "File " (absolutize file) " is deleted")
-        (fs/delete-if-exists file)))))
+      (do (log/debug "Directory " (absolutize file) " is deleted")
+          (fs/delete-tree file))
+      (do (log/debug "File " (absolutize file) " is deleted")
+          (fs/delete-if-exists file)))))
 
 (defn- copy-files-or-dir-validate
   "Internal function to validate data aof copy files or dir"
   [files]
   (when-not (and (sequential? files)
-                 (every? #(or (string? %)
-                              (= java.net.URL
-                                 (class %)))
-                         files))
-    (throw (ex-info "The `files` parameter should be a sequence of string or `java.net.URL`"
-                    {:files files}))))
+                 (every? #(or (string? %) (= java.net.URL (class %))) files))
+    (throw
+      (ex-info
+        "The `files` parameter should be a sequence of string or `java.net.URL`"
+        {:files files}))))
 
 (defn copy-files-or-dir
   "Copy the files, even if they are directories to the target
@@ -55,63 +47,58 @@
   [files target-dir]
   (log/debug "Copy files from `" files "` to `" target-dir "`")
   (copy-files-or-dir-validate files)
-  (try
-    (fs/create-dirs target-dir)
-    (doseq [file files]
-      (log/debug "Copy from " file " to " target-dir)
-      (if (fs/directory? file)
-        (do
-          (log/trace (format "Copy `%s` to `%s`"
-                             (absolutize file)
-                             (absolutize target-dir)))
-          (fs/copy-tree file target-dir
-                        {:replace-existing true
-                         :copy-attributes true}))
-        (do
-          (log/trace (format "Copy `%s` to `%s`"
-                             (absolutize file)
-                             (absolutize target-dir)))
-          (fs/copy file target-dir
-                   {:replace-existing true
-                    :copy-attributes true}))))
-    (catch Exception e
-      (throw (ex-info "Unexpected exception during copy"
-                      {:exception e
-                       :files files
-                       :target-dir target-dir})))))
+  (try (fs/create-dirs target-dir)
+       (doseq [file files]
+         (log/debug "Copy from " file " to " target-dir)
+         (if (fs/directory? file)
+           (do (log/trace (format "Copy `%s` to `%s`"
+                                  (absolutize file)
+                                  (absolutize target-dir)))
+               (fs/copy-tree file
+                             target-dir
+                             {:replace-existing true, :copy-attributes true}))
+           (do (log/trace (format "Copy `%s` to `%s`"
+                                  (absolutize file)
+                                  (absolutize target-dir)))
+               (fs/copy file
+                        target-dir
+                        {:replace-existing true, :copy-attributes true}))))
+       (catch Exception e
+         (throw (ex-info
+                  "Unexpected exception during copy"
+                  {:exception e, :files files, :target-dir target-dir})))))
 
 (defn directory-exists?
   "Check directory existance"
   [directory-path]
-  (and (fs/exists? directory-path)
-       (fs/directory? directory-path)))
+  (and (fs/exists? directory-path) (fs/directory? directory-path)))
 
 (defn is-existing-file?
   "Check if this the path exist and is not a directory"
   [path]
-  (and (fs/exists? path)
-       (not (fs/directory? path))))
+  (and (fs/exists? path) (not (fs/directory? path))))
 
 (defn is-existing-dir?
   "Check if this the path exist and is a directory"
   [path]
-  (and (fs/exists? path)
-       (fs/directory? path)))
+  (and (fs/exists? path) (fs/directory? path)))
 
 (defn create-dirs
   "Create a directory"
   [dir]
   (when (is-existing-file? dir)
-    (throw (ex-info (format "Can't create a directory `%s` as a file already exists with that name"
-                            (absolutize dir))
-                    {:dir dir})))
+    (throw
+      (ex-info
+        (format
+          "Can't create a directory `%s` as a file already exists with that name"
+          (absolutize dir))
+        {:dir dir})))
   (when-not (fs/exists? dir)
-    (try
-      (fs/create-dirs dir)
-      (catch Exception e
-        (throw (ex-info (format "The parameter is not a valid directory: `%s`" dir)
-                        {:dir (absolutize dir)
-                         :exception e})))))
+    (try (fs/create-dirs dir)
+         (catch Exception e
+           (throw (ex-info
+                    (format "The parameter is not a valid directory: `%s`" dir)
+                    {:dir (absolutize dir), :exception e})))))
   true)
 
 (defn remove-trailing-separator
@@ -149,17 +136,15 @@
   * `(files/search-files \"\" \"**{.clj,.cljs,.cljc,.edn}\")` search all clj files in pwd directory"
   ([root pattern options]
    (when-not (directory-exists? root)
-     (throw (ex-info (str root " is expected to be a directory") {:root root
-                                                                  :pattern pattern
-                                                                  :options options})))
+     (throw (ex-info (str root " is expected to be a directory")
+                     {:root root, :pattern pattern, :options options})))
    (into []
          (map str
-              (fs/glob root pattern (merge {:hidden true
-                                            :recursive true
-                                            :follow-links true}
-                                           options)))))
-  ([root pattern]
-   (search-files root pattern {})))
+           (fs/glob root
+                    pattern
+                    (merge {:hidden true, :recursive true, :follow-links true}
+                           options)))))
+  ([root pattern] (search-files root pattern {})))
 
 (defn list-subdir
   "List subdirectories"
@@ -175,14 +160,12 @@
 (defn for-each
   "Apply fn-each on each files in a directory"
   [dir fn-each]
-  (doseq [file (fs/list-dir dir)]
-    (fn-each (str file))))
+  (doseq [file (fs/list-dir dir)] (fn-each (str file))))
 
 (defn change-extension
   "Change the extension"
   [file-name new-extension]
-  (str (fs/strip-ext file-name)
-       new-extension))
+  (str (fs/strip-ext file-name) new-extension))
 
 (defn modified-since
   "Return true if anchor is older than one of the file in file-set"
@@ -194,9 +177,9 @@
   [source-file relative-name]
   (let [source-subdirs (fs/components source-file)
         subdirs (mapv str
-                      (if (fs/directory? source-file)
-                        source-subdirs
-                        (butlast source-subdirs)))
+                  (if (fs/directory? source-file)
+                    source-subdirs
+                    (butlast source-subdirs)))
         new-name (conj subdirs relative-name)]
     (apply create-file-path new-name)))
 
@@ -207,64 +190,54 @@
   (when-not (str/blank? filename)
     (if (fs/directory? filename)
       filename
-      (str
-       (when (= (str file-separator)
-                (str (first filename)))
-         file-separator)
-       (->> filename
-            fs/components
-            butlast
-            (map str)
-            (apply create-dir-path))))))
+      (str (when (= (str file-separator) (str (first filename))) file-separator)
+           (->> filename
+                fs/components
+                butlast
+                (map str)
+                (apply create-dir-path))))))
 
 (defn rename-file
   "Rename a file `src` to destination file `dst`"
   [src dst]
-  (try
-    (-> dst
-        extract-path
-        fs/create-dirs)
-
-    (log/trace "Rename file " src " to " dst)
-    (fs/move src (fs/path dst))
-    (catch Exception e
-      (throw (ex-info "Impossible to rename the file"
-                      {:src (absolutize src)
-                       :dst (absolutize dst)
-                       :exception e})))))
+  (try (-> dst
+           extract-path
+           fs/create-dirs)
+       (log/trace "Rename file " src " to " dst)
+       (fs/move src (fs/path dst))
+       (catch Exception e
+         (throw (ex-info "Impossible to rename the file"
+                         {:src (absolutize src),
+                          :dst (absolutize dst),
+                          :exception e})))))
 
 (defn rename-dir
   "Rename a dir"
   [src dst]
-  (try
-    (log/trace "Rename directory " src " to " dst)
-    (fs/move src (fs/path dst))
-    (catch Exception e
-      (throw (ex-info "Impossible to rename the directory"
-                      {:src (absolutize src)
-                       :dst (absolutize dst)
-                       :exception e})))))
+  (try (log/trace "Rename directory " src " to " dst)
+       (fs/move src (fs/path dst))
+       (catch Exception e
+         (throw (ex-info "Impossible to rename the directory"
+                         {:src (absolutize src),
+                          :dst (absolutize dst),
+                          :exception e})))))
 
 (defn remove-file
   "Remove the file `filename`"
   [filename]
-  (try
-    (fs/delete-if-exists filename)
-    (catch Exception e
-      (throw (ex-info "Impossible to remove the file"
-                      {:filename filename
-                       :exception e})))))
+  (try (fs/delete-if-exists filename)
+       (catch Exception e
+         (throw (ex-info "Impossible to remove the file"
+                         {:filename filename, :exception e})))))
 
 (defn read-file
   "Read the file `target-filename`"
   [target-filename]
   (log/trace (str "Reading file `" target-filename "`"))
-  (try
-    (slurp target-filename)
-    (catch Exception e
-      (throw (ex-info "Impossible to load the file"
-                      {:target-filename target-filename
-                       :exception e})))))
+  (try (slurp target-filename)
+       (catch Exception e
+         (throw (ex-info "Impossible to load the file"
+                         {:target-filename target-filename, :exception e})))))
 
 (defn file-ized
   "Transform a name, like a namespace name or application name, in a directory compatible names"
@@ -283,23 +256,21 @@
   Will stop at the first modification
   Return modification? telling if at least one renaming has been done"
   [target-dir file-filter pattern pattern-replacement]
-  (loop [files (search-files target-dir
-                             file-filter)
+  (loop [files (search-files target-dir file-filter)
          modification? false]
     (if (empty? files)
       modification?
       (let [filename (str (first files))
-            new-filename (str/replace filename
-                                      pattern
-                                      pattern-replacement)]
+            new-filename (str/replace filename pattern pattern-replacement)]
         (if (= new-filename filename)
           (recur (rest files) modification?)
-          (cond
-            (is-existing-file? filename) (do (rename-file filename new-filename)
-                                             (recur (rest files) true))
-            (is-existing-dir? filename) (do (rename-dir filename new-filename)
-                                            (recur (rest files) true))
-            :else (recur (rest files) modification?)))))))
+          (cond (is-existing-file? filename) (do (rename-file filename
+                                                              new-filename)
+                                                 (recur (rest files) true))
+                (is-existing-dir? filename) (do (rename-dir filename
+                                                            new-filename)
+                                                (recur (rest files) true))
+                :else (recur (rest files) modification?)))))))
 
 (defn rename-recursively
   "Search recursively all sub-dirs to be renamed from `template-app` in the `target-dir` directory
@@ -308,12 +279,22 @@
   * `pattern` is to find content in the namespace, for instance, as seen in [java pattern](https://docs.oracle.com/javase/10/docs/api/java/util/regex/Pattern.html), e.g. #\"foo(.*)bar\"
   * `pattern-replacement` is what to replace, according to the [replace specification](https://clojuredocs.org/clojure.string/replace). e.g. \"foo_$1_bar\" "
   [target-dir file-filter pattern pattern-replacement]
-  (log/debug "Rename files and directories in " target-dir " , from `" pattern "` to `" pattern-replacement "`")
+  (log/debug "Rename files and directories in "
+             target-dir
+             " , from `"
+             pattern
+             "` to `"
+             pattern-replacement
+             "`")
   (let [pattern (remove-trailing-separator (str pattern))
-        pattern-replacement (remove-trailing-separator (str pattern-replacement))]
+        pattern-replacement (remove-trailing-separator (str
+                                                         pattern-replacement))]
     (loop [iterations-left 30]
       (if (> iterations-left 0)
-        (when (rename-recursively-attempt target-dir file-filter pattern pattern-replacement)
+        (when (rename-recursively-attempt target-dir
+                                          file-filter
+                                          pattern
+                                          pattern-replacement)
           (recur (dec iterations-left)))
         (log/warn "Infinite loop detected during renaming")))))
 
@@ -324,12 +305,10 @@
   * `pattern` is a regular expression as described in [java doc](https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher(java.lang.String)) "
   [target-dir pattern]
   (log/debug "Create files-map for " target-dir " with parameter " pattern)
-  (->> (search-files target-dir
-                     pattern)
+  (->> (search-files target-dir pattern)
        (filter is-existing-file?)
-       (map (fn [filename]
-              [(str (absolutize filename))
-               (read-file (absolutize filename))]))
+       (map (fn [filename] [(str (absolutize filename))
+                            (read-file (absolutize filename))]))
        (into {})))
 
 (defn delete-files-starting-with
@@ -361,9 +340,9 @@
   * none
   Returns the string of the directory path"
   []
-  (let [tmp-dir (apply create-dir-path [(conf/read-param [:tests :tmp-dirs]
-                                                         "tmp/tests")
-                                        (str (uuid/time-based-uuid))])]
+  (let [tmp-dir (apply create-dir-path
+                  [(conf/read-param [:tests :tmp-dirs] "tmp/tests")
+                   (str (uuid/time-based-uuid))])]
     (fs/create-dirs tmp-dir)
     tmp-dir))
 
@@ -373,20 +352,17 @@
   * `dirs` sequence of string of directories"
   [dirs]
   (apply vector
-         (mapcat (fn [sub-dir]
-                   (let [sub-dir-rpath (absolutize sub-dir)]
-                     (when (directory-exists? sub-dir-rpath)
-                       [sub-dir-rpath])))
-                 dirs)))
+    (mapcat (fn [sub-dir]
+              (let [sub-dir-rpath (absolutize sub-dir)]
+                (when (directory-exists? sub-dir-rpath) [sub-dir-rpath])))
+      dirs)))
 
 (defn empty-path?
   "Is the directory empty
   Params:
   * `dir` the directory to search in"
   [dir]
-  (boolean
-   (and (fs/directory? dir)
-        (empty? (fs/list-dir dir)))))
+  (boolean (and (fs/directory? dir) (empty? (fs/list-dir dir)))))
 
 (defn create-tmp-edn
   "Create a temporary file with edn extension"
@@ -400,11 +376,11 @@
   This function has a trick to print exception and its stacktrace"
   [data]
   (let [filename (create-tmp-edn)
-        formatted-data (with-out-str (prn data)) ;; Important to print exception properly
-        ]
+        formatted-data (with-out-str (prn data)) ;; Important to print
+                                                 ;; exception properly
+       ]
     (spit filename formatted-data)
-    (format "See file `%s` for details"
-            (absolutize filename))))
+    (format "See file `%s` for details" (absolutize filename))))
 
 (defn file-name
   "Return the file name without the path"
@@ -415,9 +391,7 @@
   "Write `content` in the file `target-file`"
   [content target-filename]
   (log/trace (str "Writing file `" target-filename "`, content=" content))
-  (try
-    (spit target-filename content)
-    (catch Exception e
-      (throw (ex-info "Impossible to write the file"
-                      {:target-filename target-filename
-                       :exception e})))))
+  (try (spit target-filename content)
+       (catch Exception e
+         (throw (ex-info "Impossible to write the file"
+                         {:target-filename target-filename, :exception e})))))

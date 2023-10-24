@@ -11,6 +11,11 @@
     (is (> (count (sut/search-for-build-config))
            0))))
 
+(def tmp-dir (files/create-temp-dir))
+
+(def content
+  {:foo3 :bar3})
+
 (deftest spit-build-config-test
   (testing "Check spitted build config is found"
     (let [tmp-dir (files/create-temp-dir)

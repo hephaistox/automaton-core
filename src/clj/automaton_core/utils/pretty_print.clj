@@ -8,9 +8,7 @@
            Params:
             * `elt` data to show, which type will be checked"
   [elt]
-  (if (or (map? elt)
-          (set? elt)
-          (vector? elt))
+  (if (or (map? elt) (set? elt) (vector? elt))
     (-> elt
         pp/pprint
         with-out-str
@@ -20,8 +18,4 @@
 (defn seq->string
   "Returns string from sequence, that is readable in write outputs."
   [message]
-  (if (seqable? message)
-    (apply str ""
-           (map one-liner-print
-                message))
-    message))
+  (if (seqable? message) (apply str "" (map one-liner-print message)) message))

@@ -1,5 +1,4 @@
-(ns automaton-core.utils.sequences
-  "Manipulation of sequences")
+(ns automaton-core.utils.sequences "Manipulation of sequences")
 
 (defn trim-leading-nil
   "Remove nil values at the end of a sequence
@@ -8,13 +7,9 @@
   * `nil-fn` is the function to test nullity, (defaulted to `nil?`)"
   ([aseq nil-fn]
    (loop [aseq aseq
-          i 40]  ;; For security reason
-     (when-not (pos? i)
-       (throw (ex-info "Infinite loop detected" {})))
-     (if (and (seq aseq)
-              (nil-fn (last aseq)))
-       (recur (butlast aseq)
-              (dec i))
+          i 40] ;; For security reason
+     (when-not (pos? i) (throw (ex-info "Infinite loop detected" {})))
+     (if (and (seq aseq) (nil-fn (last aseq)))
+       (recur (butlast aseq) (dec i))
        aseq)))
-  ([aseq]
-   (trim-leading-nil aseq nil?)))
+  ([aseq] (trim-leading-nil aseq nil?)))

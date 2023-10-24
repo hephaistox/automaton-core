@@ -6,18 +6,13 @@
 (defn idx-of
   "Return the index of the first found value in the sequence"
   [v value]
-  (ffirst
-   (filter #(= value (second %))
-           (map-indexed vector v))))
+  (ffirst (filter #(= value (second %)) (map-indexed vector v))))
 
 (defn idx-of-pred
   "Same as idx-of but with a predicate"
   [v pred]
-  (when (and pred
-             (fn? pred))
-    (ffirst
-     (filter #(pred (second %))
-             (map-indexed vector v)))))
+  (when (and pred (fn? pred))
+    (ffirst (filter #(pred (second %)) (map-indexed vector v)))))
 
 (defn deep-merge
   "Deep merge nested maps.
@@ -25,67 +20,57 @@
 
   This code comes from this [gist](https://gist.github.com/danielpcox/c70a8aa2c36766200a95)"
   [& maps]
-  (apply merge-with (fn [& args]
-                      (if (every? #(or (map? %) (nil? %)) args)
-                        (apply deep-merge args)
-                        (last args)))
-         maps))
+  (apply merge-with
+    (fn [& args]
+      (if (every? #(or (map? %) (nil? %)) args)
+        (apply deep-merge args)
+        (last args)))
+    maps))
 
-(defn prefixify-map [prefix thing]
+(defn prefixify-map
+  [prefix thing]
   (if (map? thing)
     (set/rename-keys
-     thing
-     (->> (keys thing)
-          (map (fn [k]
-                 [k
-                  (keyword (str (name prefix) "." (name k)))]))
-          (into {})))
+      thing
+      (->> (keys thing)
+           (map (fn [k] [k (keyword (str (name prefix) "." (name k)))]))
+           (into {})))
     thing))
 
-(defn prefixify-vec [prefix thing]
+(defn prefixify-vec
+  [prefix thing]
   (let [rename (fn [el]
                  (if (map? el)
-                   (seq
-                    (set/rename-keys
-                     el
-                     (->> (keys el)
-                          (map (fn [k]
-                                 [k
-                                  (keyword (str (name prefix) "." (name k)))]))
-                          (into {}))))
+                   (seq (set/rename-keys el
+                                         (->> (keys el)
+                                              (map (fn [k] [k
+                                                            (keyword
+                                                              (str (name prefix)
+                                                                   "."
+                                                                   (name k)))]))
+                                              (into {}))))
                    el))]
     (if (vector? thing)
       (let [maps (filter map? thing)
             non-maps (remove map? thing)]
-        (merge
-         (->> (map rename maps)
-              (apply concat)
-              (group-by key)
-              (map (fn [[k vs]]
-                     {k (map second vs)}))
-              (into {}))
-         (when (seq non-maps)
-           {prefix non-maps})))
+        (merge (->> (map rename maps)
+                    (apply concat)
+                    (group-by key)
+                    (map (fn [[k vs]] {k (map second vs)}))
+                    (into {}))
+               (when (seq non-maps) {prefix non-maps})))
       thing)))
 
-(defn prefixify-children [thing]
+(defn prefixify-children
+  [thing]
   (if (map? thing)
     (->> thing
          (map (fn [[k v]]
-                (cond (map? v)
-                      (let [prefixed (prefixify-map k v)]
-                        (if (map? prefixed)
-                          prefixed
-                          {k v}))
-
-                      (vector? v)
-                      (let [prefixed (prefixify-vec k v)]
-                        (if (map? prefixed)
-                          prefixed
-                          {k v}))
-
-                      :else
-                      {k v})))
+                (cond (map? v) (let [prefixed (prefixify-map k v)]
+                                 (if (map? prefixed) prefixed {k v}))
+                      (vector? v) (let [prefixed (prefixify-vec k v)]
+                                    (if (map? prefixed) prefixed {k v}))
+                      :else {k v})))
          (apply merge))
     thing))
 
@@ -95,9 +80,7 @@
   (when (map? m)
     (->> (walk/postwalk prefixify-children m)
          (map (fn [[k v]]
-                {k (if (sequential? v)
-                     (flatten v)
-                     v)}))
+                {k (if (sequential? v) (flatten v) v)}))
          (into {}))))
 
 (defn add-ids
@@ -110,20 +93,15 @@
                 (let [language (cond-> language
                                  (map? language) (assoc :id lang-id))]
                   [lang-id language]))
-              m)))
+          m)))
 
 (defn update-kw
   "Update the keywords `kws` in map `m` with function `f`"
   [m kws f]
   (reduce (fn [m k]
-            (if (contains? m k)
-              (let [v (get m k)]
-                (assoc m
-                       k
-                       (f v)))
-              m))
-          m
-          kws))
+            (if (contains? m k) (let [v (get m k)] (assoc m k (f v))) m))
+    m
+    kws))
 
 (defn apply-to-keys
   "Apply function `f` to each key in `ks` in the maps in `maps`
@@ -132,13 +110,7 @@
   * `maps` is a sequence of map
   * `ks` keys in the map to apply `f` to"
   [maps f & ks]
-  (mapv (fn [m]
-          (reduce (fn [m k]
-                    (assoc m
-                           k (f m k (get m k))))
-                  m
-                  ks))
-        maps))
+  (mapv (fn [m] (reduce (fn [m k] (assoc m k (f m k (get m k)))) m ks)) maps))
 
 (defn map-util-hashmappify-vals
   "Converts an ordinary Clojure map into a Clojure map with nested map

@@ -1,9 +1,8 @@
 (ns automaton-core.utils.string-to-id
   "Transform a string into an id
   That id are currently used and tested for React"
-  (:require
-    [clojure.string :as str]
-    [automaton-core.utils.uuid-gen :as uuid]))
+  (:require [clojure.string :as str]
+            [automaton-core.utils.uuid-gen :as uuid]))
 
 (defn string-to-id
   "Transform what is not alphanumerical to an id

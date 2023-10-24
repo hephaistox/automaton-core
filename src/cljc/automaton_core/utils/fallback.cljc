@@ -1,7 +1,6 @@
 (ns automaton-core.utils.fallback
   "Fallback utilties"
-  (:require
-   [automaton-core.log :as log])
+  (:require [automaton-core.log :as log])
   #?(:cljs (:require-macros [automaton-core.utils.fallback])))
 
 (defn cljs-env?
@@ -19,12 +18,10 @@
                        #?(:clj Throwable
                           :cljs :default))
         ns (str *ns*)]
-    `(try
-       (~expr-fn)
-       (catch ~catch-level# e#
-         (log/error-exception (ex-info "Failed but defaulted to ret-val"
-                                       {:error e#
-                                        :data {:ret-val ~ret-val
-                                               :expr-fn ~expr-fn
-                                               :ns ~ns}}))
-         ~ret-val))))
+    `(try (~expr-fn)
+          (catch ~catch-level# e#
+            (log/error-exception
+              (ex-info "Failed but defaulted to ret-val"
+                       {:error e#,
+                        :data {:ret-val ~ret-val, :expr-fn ~expr-fn, :ns ~ns}}))
+            ~ret-val))))

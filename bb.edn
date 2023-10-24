@@ -1,98 +1,72 @@
-{:paths ["src/clj"]
- :deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
-                                        :sha "33c8941cb6df63006bafaaf1d5e7f0383b10468a"}}
-
- :tasks {:requires [[automaton-build-app.log :as build-log]
-                    [automaton-build-app.os.commands :as build-cmds]
-                    [babashka.fs :as fs]]
-         :init (do
-                 (defn- cicd? []
-                   (System/getenv "CI"))
-
-                 (defn qualified-name [s]
-                   (apply str
-                          (interpose "/"
-                                     ((juxt namespace name) (symbol s)))))
-
-                 (defn- task-name []
-                   (-> (babashka.tasks/current-task)
-                       :name))
-
-                 (defn run-bb
-                   "Run the `body-fn` on the current bb environment"
-                   [body-fn]
-                   (build-log/trace-format "Run %s task on bb" (task-name))
-                   (let [ns (-> (symbol body-fn)
-                                namespace
-                                symbol)]
-                     (require ns)
-                     ((resolve body-fn) {:command-line-args *command-line-args*})))
-
-                 (defn run-clj
-                   [body-fn]
-                   (build-log/trace-format "Run %s task on clj" (task-name))
-                   (build-cmds/execute-and-trace ["clojure" "-X:build" (qualified-name body-fn)
-                                                  :command-line-args *command-line-args*]))
-
-                 (defn dispatch
-                   "Execute the body-fn directy in currently running bb env
-                      * `body` body to execute
-                      * `executing-pf` could be :bb or :clj, the task will be executed on one or the other"
-                   [body-fn executing-pf]
-                   (if (= :clj executing-pf)
-                     (run-clj body-fn)
-                     (run-bb body-fn)))
-
-                 (defn execute-task
-                   "Run the function and manage
-                    Params:
-                    * `body` body to execute
-                    * `executing-pf` (Optional, default = :bb) could be :bb or :clj, the task will be executed on one or the other"
-                   [body-fn & executing-pf]
-                   (try
-                     (build-log/info-format "Run %s task" (-> (current-task)
-                                                              :name))
-                     (dispatch body-fn
-                               (first executing-pf))
-                     (catch Exception e
-                       (println (format "Error during execution of `%s`, %s`" (:name (current-task)) (pr-str (ex-message e))))
-                       (if (cicd?)
-                         (println e)
-                         (let [file (fs/create-temp-file {:suffix ".edn"})]
-                           (println (format "See details in `%s`" (.toString (.toAbsolutePath file))))
-                           (spit (fs/file file) (prn-str e))
-                           ""))
-                       (System/exit 1)))))
-
-         blog {:doc "Transforms md file to pdf based on edn file"
-               :task (execute-task 'automaton-build-app.tasks.doc/blog-task :clj)}
-
-         clean {:doc "Clean cache files for compiles, and logs"
-                :task (execute-task 'automaton-build-app.tasks.clean/clean)}
-
-         clean-hard {:doc "Clean all files which are not under version control (it doesn't remove untracked file or staged files if there are eligible to `git add .`)"
-                     :task (execute-task 'automaton-build-app.tasks.clean/clean-hard)}
-
-         code-doc {:doc "Create the documentation of the app"
-                   :task (execute-task 'automaton-build-app.tasks.code-helpers-clj/code-doc :clj)}
-
-         compile-to-jar {:doc "Compile that code to a jar"
-                         :task (execute-task 'automaton-build-app.tasks.code-helpers/compile-to-jar :clj)}
-
-         gha {:doc "Github action command - is launched automatically by github"
-              :task (execute-task 'automaton-build-app.tasks.test/gha :clj)}
-
-         gha-lconnect {:doc "Connect to a local container running this code"
-                       :task (execute-task 'automaton-build-app.tasks.test/gha)}
-
-         lconnect {:doc "Local connect - repl"
-                   :task (execute-task 'automaton-build-app.tasks.code-helpers/lconnect)}
-
-         ltest {:doc "Local test"
-                :task (execute-task 'automaton-build.app.test/ltest)}
-
-         push {:doc "Push this repo"
-               :task (execute-task 'automaton-build-app.tasks.publication/push-from-local :clj)}
-
-         update-deps {:doc "Update the dependencies, cider-nrepl and refactor are to be updated manually"
-                      :task (execute-task 'automaton-build-app.tasks.code-helpers-clj/update-deps :clj)}}}
+{:deps {hephaistox/automaton-build-app
+          {:local/root "../../automaton/automaton_build_app"}},
+ :paths [],
+ :tasks
+   {:enter (let [task-name (-> (babashka.tasks/current-task)
+                               :name
+                               str)]
+             (def execute-task
+               (partial build-task-helper/execute-task
+                        task-name
+                        (build-task-helper/enter-tasks task-name {})))),
+    :init (build-task-helper/init-tasks),
+    :requires [[automaton-build-app.tasks-helper :as build-task-helper]],
+    blog {:doc "Transforms md file to pdf based on edn file",
+          :task (execute-task 'automaton-build-app.tasks.doc-clj/blog-task
+                              {:executing-pf :clj})},
+    clean {:doc "Clean cache files for compiles, and logs",
+           :task (execute-task 'automaton-build-app.tasks.clean/clean)},
+    clean-hard
+      {:doc
+         "Clean all files which are not under version control (it doesn't remove untracked file or staged files if there are eligible to `git add .`)",
+       :task (execute-task 'automaton-build-app.tasks.clean/clean-hard)},
+    code-doc {:doc "Create the documentation of the app",
+              :task (execute-task 'automaton-build-app.tasks.doc-clj/code-doc
+                                  {:executing-pf :clj})},
+    compile-to-jar
+      {:doc "Compile that code to a jar",
+       :task (execute-task
+               'automaton-build-app.tasks.code-helpers-clj/compile-to-jar
+               {:executing-pf :clj})},
+    container-clear
+      {:doc "Clear all local containers",
+       :task
+         (execute-task
+           'automaton-build-app.tasks.container-publication/container-clean)},
+    container-list
+      {:doc "List all available containers",
+       :task
+         (execute-task
+           'automaton-build-app.tasks.container-publication/container-list)},
+    gha {:doc "Github action command - is launched automatically by github",
+         :task (execute-task 'automaton-build-app.tasks.test-clj/gha
+                             {:executing-pf :clj})},
+    gha-lconnect {:doc "Connect to a local container running this code",
+                  :task (execute-task
+                          'automaton-build-app.tasks.test/gha-lconnect)},
+    la {:doc "Local acceptance test",
+        :task (execute-task 'automaton-build-app.tasks.test/la)},
+    lconnect {:doc "Local connect - repl",
+              :task (execute-task
+                      'automaton-build-app.tasks.code-helpers/lconnect)},
+    ltest {:doc "Local test",
+           :task (execute-task 'automaton-build-app.tasks.test/ltest)},
+    publish
+      {:doc "Publish the container, useful to push the github container itself",
+       :task
+         (execute-task
+           'automaton-build-app.tasks.container-publication/push-gha-from-local)},
+    push {:doc "Push this repo",
+          :task (execute-task
+                  'automaton-build-app.tasks.publication-clj/push-from-local
+                  {:executing-pf :clj})},
+    report {:doc "Creates the reports of code analyzis",
+            :task (execute-task
+                    'automaton-build-app.tasks.code-analyze-clj/reports
+                    {:executing-pf :clj})},
+    update-deps
+      {:doc
+         "Update the dependencies, cider-nrepl and refactor are to be updated manually",
+       :task (execute-task
+               'automaton-build-app.tasks.code-helpers-clj/update-deps
+               {:executing-pf :clj})}}}
