@@ -30,7 +30,7 @@
                                     "-Dheph-common-conf=env/common_config.edn"]}
 
            :build {:extra-deps {hephaistox/automaton-build-app {:git/url "https://github.com/hephaistox/automaton-core.git"
-                                                                :sha "9729eb2e4698bad758b24d24d236064e436342c5"}}}
+                                                                :sha "d9f86d56c1060705dc378351925995adb5a06c16"}}}
 
            :env-development-repl {:extra-paths ["env/development/resources"
                                                 "env/development/src/clj"
@@ -54,6 +54,5 @@
                                     cider/cider-nrepl {:mvn/version "0.21.1"}
                                     binaryage/devtools {:mvn/version "1.0.7"}}}
 
-           :bb-deps {:extra-deps {hephaistox/automaton-build-app {:local/root "../../automaton/automaton_build_app"}
-                                  #_{:git/url "git@github.com:hephaistox/automaton-build-app.git"
-                                     :sha "df88ec49ea3cdbc8606c22cc1635ac7a309d8c03"}}}}}
+           :bb-deps {:extra-deps {hephaistox/automaton-build-app {:git/url "git@github.com:hephaistox/automaton-build-app.git"
+                                                                  :git/sha "a1c68fc455e4a6d0eb1ccd8da16e73adf55d3de3"}}}}}

@@ -1,5 +1,6 @@
 {:deps {hephaistox/automaton-build-app
-          {:local/root "../../automaton/automaton_build_app"}},
+          {:git/sha "a1c68fc455e4a6d0eb1ccd8da16e73adf55d3de3",
+           :git/url "git@github.com:hephaistox/automaton-build-app.git"}},
  :paths [],
  :tasks
    {:enter (let [task-name (-> (babashka.tasks/current-task)
@@ -11,9 +12,6 @@
                         (build-task-helper/enter-tasks task-name {})))),
     :init (build-task-helper/init-tasks),
     :requires [[automaton-build-app.tasks-helper :as build-task-helper]],
-    blog {:doc "Transforms md file to pdf based on edn file",
-          :task (execute-task 'automaton-build-app.tasks.doc-clj/blog-task
-                              {:executing-pf :clj})},
     clean {:doc "Clean cache files for compiles, and logs",
            :task (execute-task 'automaton-build-app.tasks.clean/clean)},
     clean-hard
@@ -41,6 +39,11 @@
     gha {:doc "Github action command - is launched automatically by github",
          :task (execute-task 'automaton-build-app.tasks.test-clj/gha
                              {:executing-pf :clj})},
+    gha-container-publish
+      {:doc "Publish the container, useful to push the github container itself",
+       :task
+         (execute-task
+           'automaton-build-app.tasks.container-publication/push-gha-from-local)},
     gha-lconnect {:doc "Connect to a local container running this code",
                   :task (execute-task
                           'automaton-build-app.tasks.test/gha-lconnect)},
@@ -51,11 +54,6 @@
                       'automaton-build-app.tasks.code-helpers/lconnect)},
     ltest {:doc "Local test",
            :task (execute-task 'automaton-build-app.tasks.test/ltest)},
-    publish-gha-container
-      {:doc "Publish the container, useful to push the github container itself",
-       :task
-         (execute-task
-           'automaton-build-app.tasks.container-publication/push-gha-from-local)},
     push {:doc "Push this repo",
           :task (execute-task
                   'automaton-build-app.tasks.publication-clj/push-from-local

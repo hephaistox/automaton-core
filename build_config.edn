@@ -2,7 +2,7 @@
  :publication {:repo {:address "git@github.com:hephaistox/automaton-core.git"
                       :branch "main"}
                :as-lib hephaistox/automaton-core
-               :major-version "1.2.%s"
+               :major-version "0.0.%d"
                :gha-container {:repo-url "git@github.com:hephaistox/gha_image.git"
                                :repo-branch "main"
                                :account "hephaistox"
@@ -13,7 +13,7 @@
                      :target-filename "target/%s-%s.jar"}}
  :lconnect {:aliases [:common-test :env-development-repl]}
  :ltest {:aliases [:env-development-test :common-test]}
- :la {:selected-tasks ["blog" "clean" "clean-hard" "code-doc" "compile-to-jar" "container-clear" "container-list" "gha" "gha-lconnect" "ltest" "publish-gha-container" "push" "report" "update-deps"]}
+ :la {:selected-tasks ["clean" "clean-hard" "code-doc" "compile-to-jar" "container-clear" "container-list" "gha" "gha-lconnect" "gha-container-publish" "ltest" "push" "report" "update-deps"]}
  :customer-materials {:html-dir "tmp/html"
                       :dir "customer_materials"
                       :pdf-dir "tmp/pdf"}
