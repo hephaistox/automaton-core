@@ -57,4 +57,4 @@
         org.clojure/tools.cli #:mvn{:version "1.0.219"},
         org.clojure/tools.logging #:mvn{:version "1.2.4"},
         refactor-nrepl/refactor-nrepl #:mvn{:version "3.9.0"}},
- :paths ["src/clj" "src/cljc" "resources"]}
+ :paths ["src/clj" "src/cljc" "resources" "src/cljs"]}
