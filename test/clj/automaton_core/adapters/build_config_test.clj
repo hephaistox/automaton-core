@@ -1,13 +1,12 @@
 (ns automaton-core.adapters.build-config-test
   (:require
-   [clojure.test :refer [deftest is testing]]
-
    [automaton-core.adapters.build-config :as sut]
+   [automaton-core.adapters.edn-utils :as edn-utils]
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.edn-utils :as edn-utils]))
+   [clojure.test :refer [deftest is testing]]))
 
 (deftest search-for-build-config-test
-  (testing "Are projects found"
+  (testing "At least current project should be found"
     (is (> (count (sut/search-for-build-config))
            0))))
 
@@ -20,4 +19,4 @@
                              ";; Hey!")
       (is (= content
              (edn-utils/read-edn-or-nil (files/create-file-path tmp-dir
-                                            sut/build-config-filename)))))))
+                                                                sut/build-config-filename)))))))
