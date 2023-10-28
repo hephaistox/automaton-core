@@ -3,6 +3,7 @@
  :jvm-opts ["-Xmx1G"
             "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"]
 
+ :paths ["src/cljs"]
  :deps {:aliases [:cljs-deps]}
 
  :dev-http {8012 ["target/browser-test"]}
