@@ -1,5 +1,5 @@
 {:deps {hephaistox/automaton-build-app
-          {:git/sha "a1c68fc455e4a6d0eb1ccd8da16e73adf55d3de3",
+          {:git/sha "16f0e053f28f9ebbdbf8129daf73c04afd47bf00",
            :git/url "git@github.com:hephaistox/automaton-build-app.git"}},
  :paths [],
  :tasks
