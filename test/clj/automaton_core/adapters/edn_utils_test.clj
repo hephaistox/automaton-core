@@ -17,25 +17,15 @@
 
 (deftest read-edn-test
   (testing "Malformed files are detected "
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"File.*is not an edn"
-                          (sut/read-edn "non-used-file-name"
-                                        (fn [_] "1.1.1 (+ 1 1)")))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"File.*is not an edn" (sut/read-edn "non-used-file-name" (fn [_] "1.1.1 (+ 1 1)")))))
   (testing "Non existing files are detected "
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"Unable to load the file"
-                          (sut/read-edn "not existing file"))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Unable to load the file" (sut/read-edn "not existing file"))))
   (testing "Non existing files throw an exception"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"Unable to load the file"
-                          (sut/read-edn "non existing file" slurp))))
-  (testing "Non existing files throw an exception"
-    (is (= "test1-content"
-           (sut/read-edn (io/resource "resource-test-copy-dir/test1"))))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Unable to load the file" (sut/read-edn "non existing file" slurp))))
+  (testing "Non existing files throw an exception" (is (= "test1-content" (sut/read-edn (io/resource "resource-test-copy-dir/test1"))))))
 
 (deftest read-edn-or-nil-test
-  (testing "Skip non existing files and return nil"
-    (is (nil? (sut/read-edn-or-nil "non existing file" slurp)))))
+  (testing "Skip non existing files and return nil" (is (nil? (sut/read-edn-or-nil "non existing file" slurp)))))
 
 (def tmp-file
   ;; => "../tmp/edns/6bfcd070-3c43-11ee-aece-d9f945498185.edn"

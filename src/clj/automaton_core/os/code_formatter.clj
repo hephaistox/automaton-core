@@ -13,11 +13,9 @@
   * `header` (optional) is written at the top of the file"
   ([filename header]
    (let [format-content (slurp filename)]
-     (files/spit-file filename
-                      (apply str
-                        [(when-not (str/blank? header)
-                           (print-str ";;" header (time/now-str) "\n"))
-                         format-content]))
-     (cmds/exec-cmds [[["zprint" "-w" filename] {:dir ".", :out :string}]])))
+     (files/spit-file filename (apply str [(when-not (str/blank? header) (print-str ";;" header (time/now-str) "\n")) format-content]))
+     (cmds/exec-cmds [[["zprint" "-w" filename]
+                       {:dir "."
+                        :out :string}]])))
   ([filename] (format-file filename nil)))
 

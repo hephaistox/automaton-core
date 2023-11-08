@@ -26,7 +26,7 @@
   "According to [RFC3986 page 12](https://www.ietf.org/rfc/rfc3986.txt):
    gen-delims  = : / ? #  [ ] @
    sub-delims  = ! $ & ' ( ) * + , ; ="
-  {:gen-delims [":" "/" "?" "#" "[" "]" "@"],
+  {:gen-delims [":" "/" "?" "#" "[" "]" "@"]
    :sub-delims ["!" "$" "&" "'" "(" ")" "*" "+" "," ";" "="]})
 
 (defn compare-locations

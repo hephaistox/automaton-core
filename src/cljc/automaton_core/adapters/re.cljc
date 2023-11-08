@@ -45,7 +45,5 @@
           assembled ""]
      (let [re (stringify re)
            assembled-re (str assembled (if optional? (str re "?") re))]
-       (if nexts
-         (recur nexts assembled-re)
-         (re-pattern (str prefix assembled-re suffix))))))
+       (if nexts (recur nexts assembled-re) (re-pattern (str prefix assembled-re suffix))))))
   ([res] (assemble-re-optional res nil nil)))

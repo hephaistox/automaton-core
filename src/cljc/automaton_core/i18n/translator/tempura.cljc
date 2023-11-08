@@ -11,11 +11,8 @@
 
 (def tempura-missing-text
   "Necessary for tempura,  a missing key is expected for all languages marked with `:core-dict?` in `automaton-core.i18n.language`"
-  {:en {:missing
-          "The text is missing! :( Please let us know at info@hephaistox.com"},
-   :fr
-     {:missing
-        "Le texte est manquant! :( Veuillez nous en informer à l'adresse info@hephaistox.com"}})
+  {:en {:missing "The text is missing! :( Please let us know at info@hephaistox.com"}
+   :fr {:missing "Le texte est manquant! :( Veuillez nous en informer à l'adresse info@hephaistox.com"}})
 
 (defn- append-dictionaries
   "Appends dictionaries
@@ -31,9 +28,9 @@
   [& dicts]
   (let [debug true ;; (= :dev (conf-core/read-param [:env]))
        ]
-    {:dict (append-dictionaries dicts),
-     :cache-dict? (not debug),
-     :default-local :fr,
+    {:dict (append-dictionaries dicts)
+     :cache-dict? (not debug)
+     :default-local :fr
      :cache-locales (not debug)}))
 
 (defrecord TempuraTranslator [opts main-langs]
@@ -42,13 +39,7 @@
     (translate [_ langs-id tr-id resources]
       (let [locales (vec (concat langs-id main-langs))
             translated-text (tempura/tr opts locales [tr-id] resources)]
-        (log/trace "Translate key `"
-                   tr-id
-                   "`,with locales `"
-                   locales
-                   "`, -> `"
-                   translated-text
-                   "`")
+        (log/trace "Translate key `" tr-id "`,with locales `" locales "`, -> `" translated-text "`")
         translated-text)))
 
 (defn make-translator

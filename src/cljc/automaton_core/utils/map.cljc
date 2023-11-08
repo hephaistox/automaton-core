@@ -11,8 +11,7 @@
 (defn idx-of-pred
   "Same as idx-of but with a predicate"
   [v pred]
-  (when (and pred (fn? pred))
-    (ffirst (filter #(pred (second %)) (map-indexed vector v)))))
+  (when (and pred (fn? pred)) (ffirst (filter #(pred (second %)) (map-indexed vector v)))))
 
 (defn deep-merge
   "Deep merge nested maps.
@@ -20,21 +19,15 @@
 
   This code comes from this [gist](https://gist.github.com/danielpcox/c70a8aa2c36766200a95)"
   [& maps]
-  (apply merge-with
-    (fn [& args]
-      (if (every? #(or (map? %) (nil? %)) args)
-        (apply deep-merge args)
-        (last args)))
-    maps))
+  (apply merge-with (fn [& args] (if (every? #(or (map? %) (nil? %)) args) (apply deep-merge args) (last args))) maps))
 
 (defn prefixify-map
   [prefix thing]
   (if (map? thing)
-    (set/rename-keys
-      thing
-      (->> (keys thing)
-           (map (fn [k] [k (keyword (str (name prefix) "." (name k)))]))
-           (into {})))
+    (set/rename-keys thing
+                     (->> (keys thing)
+                          (map (fn [k] [k (keyword (str (name prefix) "." (name k)))]))
+                          (into {})))
     thing))
 
 (defn prefixify-vec
@@ -43,11 +36,7 @@
                  (if (map? el)
                    (seq (set/rename-keys el
                                          (->> (keys el)
-                                              (map (fn [k] [k
-                                                            (keyword
-                                                              (str (name prefix)
-                                                                   "."
-                                                                   (name k)))]))
+                                              (map (fn [k] [k (keyword (str (name prefix) "." (name k)))]))
                                               (into {}))))
                    el))]
     (if (vector? thing)
@@ -66,10 +55,8 @@
   (if (map? thing)
     (->> thing
          (map (fn [[k v]]
-                (cond (map? v) (let [prefixed (prefixify-map k v)]
-                                 (if (map? prefixed) prefixed {k v}))
-                      (vector? v) (let [prefixed (prefixify-vec k v)]
-                                    (if (map? prefixed) prefixed {k v}))
+                (cond (map? v) (let [prefixed (prefixify-map k v)] (if (map? prefixed) prefixed {k v}))
+                      (vector? v) (let [prefixed (prefixify-vec k v)] (if (map? prefixed) prefixed {k v}))
                       :else {k v})))
          (apply merge))
     thing))
@@ -92,15 +79,12 @@
                 (let [language (cond-> language
                                  (map? language) (assoc :id lang-id))]
                   [lang-id language]))
-          m)))
+              m)))
 
 (defn update-kw
   "Update the keywords `kws` in map `m` with function `f`"
   [m kws f]
-  (reduce (fn [m k]
-            (if (contains? m k) (let [v (get m k)] (assoc m k (f v))) m))
-    m
-    kws))
+  (reduce (fn [m k] (if (contains? m k) (let [v (get m k)] (assoc m k (f v))) m)) m kws))
 
 (defn apply-to-keys
   "Apply function `f` to each key in `ks` in the maps in `maps`
@@ -116,8 +100,5 @@
    values recursively translated into what modify-type-fn is returning. Based
    on walk/stringify-keys."
   [m modify-type-fn]
-  (let [f (fn [[k v]]
-            (let [k (if (keyword? k) (name k) k)
-                  v (if (keyword? v) (name v) v)]
-              (if (map? v) [k (modify-type-fn v)] [k v])))]
+  (let [f (fn [[k v]] (let [k (if (keyword? k) (name k) k) v (if (keyword? v) (name v) v)] (if (map? v) [k (modify-type-fn v)] [k v])))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))

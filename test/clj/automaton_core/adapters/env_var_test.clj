@@ -5,8 +5,7 @@
 (deftest get-env-var-test
   (testing
     "Find the shell name in environment variable. TERM is find locally, RUNNER_OS on Github, as apparently no env var is common to both environments"
-    (is (or (string? (sut/get-env "TERM"))
-            (string? (sut/get-env "RUNNER_OS"))))))
+    (is (or (string? (sut/get-env "TERM")) (string? (sut/get-env "RUNNER_OS"))))))
 
 (deftest get-env-vars-test
   (testing "Env vars are ok"

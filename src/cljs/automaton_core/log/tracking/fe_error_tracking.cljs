@@ -4,11 +4,13 @@
 
 (defn log-fn
   [ns level & message]
-  (let [context
-          (if (map? (first message)) (merge (first message) {:ns ns}) {:ns ns})
+  (let [context (if (map? (first message)) (merge (first message) {:ns ns}) {:ns ns})
         message (apply str (if (map? (first message)) (rest message) message))
         level (if (= :trace level) :debug level)]
     (if (or (= level :error) (= level :fatal))
-      (sentry/send-event! {:message message, :level level, :context context})
-      (sentry/send-breadcrumb!
-        {:message message, :level level, :context context}))))
+      (sentry/send-event! {:message message
+                           :level level
+                           :context context})
+      (sentry/send-breadcrumb! {:message message
+                                :level level
+                                :context context}))))

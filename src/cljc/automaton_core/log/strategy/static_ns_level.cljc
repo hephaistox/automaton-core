@@ -21,20 +21,22 @@
   * `re` - is the regular expression to apply on the namespace to decide if the rule apply or not
   * `min-level` - is the minimum expected log level to be printed (so all greater or equal log levels are printed). Not providing that value means all levels accepted
   * `:logger` - seq of loggers ids to apply, loggers themselves are defined later on, in clj and cljs sides as their implementation depends on the technology most of the time"
-  [{:rule-id :rule2,
-    :re #"automaton-core.log",
-    :min-level :debug,
+  [{:rule-id :rule2
+    :re #"automaton-core.log"
+    :min-level :debug
     :logger [::log-registry/print]}
-   {:rule-id :rule1,
-    :re #"automaton-core.*",
-    :min-level :info,
+   {:rule-id :rule1
+    :re #"automaton-core.*"
+    :min-level :info
     :logger [::log-registry/print]}])
 
 (defn apply-ns-rule
   "If `ns` match the regular expression `re` then return a vector with:
   * the minimum level required to display that message
   * a description of the rule as a second parameter (useful for tracing the decision if log are needed)"
-  [ns {:keys [re], :as rule}]
+  [ns
+   {:keys [re]
+    :as rule}]
   (when re (when (re-find re (str ns)) rule)))
 
 (defrecord StaticNsLevelStrategy [ns-rules]
@@ -47,11 +49,7 @@
                     (log-levels/execute-level? level))
           (:logger active-rule)
           [::log-registry/text-based ::log-registry/error-tracking])))
-    (rule-ids [_]
-      (set (cons ::log-registry/no-op
-                 (reduce (fn [acc rule] (concat acc (:logger rule)))
-                   []
-                   ns-rules)))))
+    (rule-ids [_] (set (cons ::log-registry/no-op (reduce (fn [acc rule] (concat acc (:logger rule))) [] ns-rules)))))
 
 (defn make-static-ns-level-strategy
   "Build the `log-strategy/Strategy` instance applying the static ns level rule

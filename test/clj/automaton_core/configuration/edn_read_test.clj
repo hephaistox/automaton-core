@@ -5,5 +5,6 @@
 
 (deftest read-edn-test
   (testing "Find the test configuration stub"
-    (is (= {:foo "bar", :bar 10}
+    (is (= {:foo "bar"
+            :bar 10}
            (sut/read-edn (io/resource "configuration/stub.edn"))))))

@@ -6,47 +6,46 @@ And be able to watch bb log to check if results are as expected"
             [automaton-core.adapters.commands :as sut]
             [automaton-core.adapters.schema :as schema]))
 
-(defn check-exit-code
-  "Check the process return code is 0"
-  [proc]
-  (= 0 (:exit proc)))
+(defn check-exit-code "Check the process return code is 0" [proc] (= 0 (:exit proc)))
 
 (deftest execute-command-test
   (testing "Simple command is ok"
     (is (check-exit-code (sut/execute-command [["ls" "-la"] {}]
-                                              {:dir ".", :out :string}))))
+                                              {:dir "."
+                                               :out :string}))))
   (testing "Output is caught in :string"
     (is (= "-la\n"
            (:out (sut/execute-command [["echo" "-la"] {}]
-                                      {:out :string, :dir "."})))))
+                                      {:out :string
+                                       :dir "."})))))
   (testing "Command exits with non zero return code"
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"failed on exit code"
                           (sut/execute-command [["uname" "-x"] {}]
-                                               {:out :string, :dir "."}))))
+                                               {:out :string
+                                                :dir "."}))))
   (testing "Directory does not exist"
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"Command.*failed"
                           (sut/execute-command [[] {}]
-                                               {:out :string, :dir "."}))))
+                                               {:out :string
+                                                :dir "."}))))
   (testing "Directory is already a file"
-    (is (thrown-with-msg?
-          clojure.lang.ExceptionInfo
-          #"Can't create a directory"
-          (sut/execute-command [["pwd"]] {:dir "deps.edn", :out :string})))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"Can't create a directory"
+                          (sut/execute-command [["pwd"]]
+                                               {:dir "deps.edn"
+                                                :out :string})))))
 
 (deftest execute-test
   (testing "Simple version"
     (is (string? (sut/exec-cmds [[["pwd"]] [["pwd"]]]
-                                {:out :string, :dir "."}))))
+                                {:out :string
+                                 :dir "."}))))
   (testing "Failed command is detected"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #""
-                          (sut/exec-cmds [[["uname" "-x"] {:out :string}]]))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"" (sut/exec-cmds [[["uname" "-x"] {:out :string}]]))))
   (testing "Commands should be a vector of command"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"Malformed command"
-                          (sut/exec-cmds "test")))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"Malformed command" (sut/exec-cmds "test")))))
 
 (deftest commands-schema-test
   (testing "Accepted example"

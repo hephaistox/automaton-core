@@ -1,80 +1,56 @@
-{:deps {hephaistox/automaton-build-app
-          {:git/sha "797da62e6cecd368b7ec4d9a8672117806606402",
-           :git/url "git@github.com:hephaistox/automaton-build-app.git"}},
- :paths [],
+{:deps {hephaistox/automaton-build-app {:git/url "https://github.com/hephaistox/automaton-build-app.git"
+                                        :sha "db42465833ea1c5c40339fddafefcea461dc21c5"}}
+ :paths []
  :tasks
-   {:enter (let [task-name (-> (babashka.tasks/current-task)
-                               :name
-                               str)]
-             (def execute-task
-               (partial build-task-helper/execute-task
-                        task-name
-                        (build-task-helper/enter-tasks task-name {})))),
-    :init (build-task-helper/init-tasks),
-    :requires [[automaton-build-app.tasks-helper :as build-task-helper]],
-    clean {:doc "Clean cache files for compiles, and logs",
-           :task (execute-task (quote automaton-build-app.tasks.clean/clean))},
-    clean-hard
-      {:doc
-         "Clean all files which are not under version control (it doesn't remove untracked file or staged files if there are eligible to `git add .`)",
-       :task (execute-task (quote
-                             automaton-build-app.tasks.clean-hard/clean-hard))},
-    code-doc {:doc "Create the documentation of the app",
-              :task (execute-task (quote
-                                    automaton-build-app.tasks.code-doc/code-doc)
-                                  {:executing-pf :clj})},
-    compile-to-jar
-      {:doc "Compile that code to a jar",
-       :task (execute-task
-               (quote automaton-build-app.tasks.compile-to-jar/compile-to-jar)
-               {:executing-pf :clj})},
-    container-clear
-      {:doc "Clear all local containers",
-       :task (execute-task
-               (quote
-                 automaton-build-app.tasks.container-clear/container-clear))},
-    container-list
-      {:doc "List all available containers",
-       :task (execute-task
-               (quote
-                 automaton-build-app.tasks.container-list/container-list))},
-    format {:doc "Format the whole documentation",
-            :task (execute-task
-                    (quote
-                      automaton-build-app.tasks.format-files/format-files))},
-    gha {:doc "Github action command - is launched automatically by github",
-         :task (execute-task (quote automaton-build-app.tasks.gha/gha)
-                             {:executing-pf :clj})},
-    gha-container-publish
-      {:doc "Update the gha container to run that app",
+ {:enter (do (def cust-app-task-registy {})
+             (defn execute-build-app-task
+               [task-fn & argv]
+               (build-task-bb-entrypoint/execute-task (-> (current-task)
+                                                          :name
+                                                          str)
+                                                      task-fn
+                                                      argv)))
+  :requires [[babashka.process :as babahska-process] [automaton-build-app.tasks.launcher.bb-entrypoint :as build-task-bb-entrypoint]]
+  clean {:doc "Clean cache files for compiles, and logs"
+         :task (execute-build-app-task (quote automaton-build-app.tasks.clean/clean))}
+  clean-hard
+  {:doc
+   "Clean all files which are not under version control (it doesn't remove untracked file or staged files if there are eligible to `git add .`)"
+   :task (execute-build-app-task (quote automaton-build-app.tasks.clean-hard/clean-hard))}
+  code-doc {:doc "Create the documentation of the app"
+            :task (execute-build-app-task (quote automaton-build-app.tasks.code-doc/code-doc))}
+  compile-to-jar {:doc "Compile that code to a jar"
+                  :task (execute-build-app-task (quote automaton-build-app.tasks.compile-to-jar/compile-to-jar))}
+  container-clear {:doc "Clear all local containers"
+                   :task (execute-build-app-task (quote automaton-build-app.tasks.container-clear/container-clear))}
+  container-list {:doc "List all available containers"
+                  :task (execute-build-app-task (quote automaton-build-app.tasks.container-list/container-list))}
+  format {:doc "Format the whole documentation"
+          :task (execute-build-app-task (quote automaton-build-app.tasks.format-files/format-files))}
+  gha {:doc "Github action command - launched is automatically by github"
+       :task (execute-build-app-task (quote automaton-build-app.tasks.gha/gha))}
+  gha-container-publish {:doc "Update the gha container to run that app"
+                         :task (execute-build-app-task (quote automaton-build-app.tasks.gha-container-publish/gha-container-publish))}
+  gha-lconnect {:doc "Connect to a local container running this code"
+                :task (execute-build-app-task (quote automaton-build-app.tasks.gha-lconnect/gha-lconnect))}
+  ide {:doc "Quick tests to use during IDE usage"
        :task
-         (execute-task
-           (quote
-             automaton-build-app.tasks.gha-container-publish/gha-container-publish))},
-    gha-lconnect
-      {:doc "Connect to a local container running this code",
-       :task (execute-task
-               (quote automaton-build-app.tasks.gha-lconnect/gha-lconnect))},
-    ide {:doc "Quick tests to use during IDE",
-         :task (execute-task (quote automaton-build-app.tasks.ide/ide))},
-    la {:doc "Local acceptance test",
-        :task (execute-task (quote automaton-build-app.tasks.la/la))},
-    lconnect {:doc "Local connect - repl",
-              :task (execute-task
-                      (quote automaton-build-app.tasks.lconnect/lconnect))},
-    lint {:doc "linter",
-          :task (execute-task (quote automaton-build-app.tasks.lint/lint))},
-    ltest {:doc "Local test",
-           :task (execute-task (quote automaton-build-app.tasks.ltest/ltest))},
-    push {:doc "Push this repo",
-          :task (execute-task (quote automaton-build-app.tasks.push/push)
-                              {:executing-pf :clj})},
-    report {:doc "Creates the reports of code analyzis",
-            :task (execute-task (quote
-                                  automaton-build-app.tasks.reports/reports))},
-    update-deps
-      {:doc
-         "Update the dependencies, cider-nrepl and refactor are to be updated manually",
-       :task (execute-task (quote
-                             automaton-build-app.tasks.update-deps/update-deps)
-                           {:executing-pf :clj})}}}
+       (execute-build-app-task (quote automaton-build-app.tasks.workflow.composer/composer) (quote report) (quote format) (quote lint))}
+  la {:doc "Local acceptance test"
+      :task (execute-build-app-task (quote automaton-build-app.tasks.la/la))}
+  lconnect {:doc "Local connect - repl"
+            :task (execute-build-app-task (quote automaton-build-app.tasks.lconnect/lconnect))}
+  lint {:doc "linter"
+        :task (execute-build-app-task (quote automaton-build-app.tasks.lint/lint))}
+  ltest {:doc "Local test"
+         :task (execute-build-app-task (quote automaton-build-app.tasks.ltest/ltest))}
+  push {:doc "Push this repo"
+        :task (execute-build-app-task (quote automaton-build-app.tasks.push/push) {:executing-pf :clj})}
+  push-local-dir-to-repo {:doc "Push this repo "
+                          :task (execute-build-app-task (quote automaton-build-app.tasks.push-local-dir-to-repo/push-local-dir-to-repo))}
+  report {:doc "Creates the reports of code analyzis"
+          :task (execute-build-app-task (quote automaton-build-app.tasks.reports/reports))}
+  update-deps {:doc "Update the dependencies, cider-nrepl and refactor are to be updated manually"
+               :task (execute-build-app-task (quote automaton-build-app.tasks.update-deps/update-deps))}
+  wf-6 {:doc "Push the local version - create gha docker image - push to the repo"
+        :task (execute-build-app-task (quote automaton-build-app.tasks.workflow.composer/composer) (quote clean) (quote clean))}}}

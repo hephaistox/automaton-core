@@ -25,14 +25,7 @@
   * none
   Returns the list of directories with `build_config.edn` in it"
   ([config-path]
-   (->> (files/search-files config-path
-                            (str "{"
-                                 build-config-filename
-                                 ",*/"
-                                 build-config-filename
-                                 ",*/*/"
-                                 build-config-filename
-                                 "}"))
+   (->> (files/search-files config-path (str "{" build-config-filename ",*/" build-config-filename ",*/*/" build-config-filename "}"))
         flatten
         (filter (comp not nil?))))
   ([] (search-for-build-config "")))
@@ -44,7 +37,7 @@
                      (let [edn-file (edn-utils/read-edn build-filename)]
                        (when-let [lib (get-in edn-file [:publication :as-lib])]
                          (when (some #{lib} accepted-libs)
-                           {:lib lib,
+                           {:lib lib
                             :dir (get-in edn-file [:monorepo :app-dir])}))))
                    build-configs)]
     libs))

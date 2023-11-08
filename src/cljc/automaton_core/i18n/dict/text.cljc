@@ -5,4 +5,5 @@
 
 (def dict
   "Contains all translations internally needed for `automaton-core`"
-  {:en {}, :fr {}})
+  {:en {}
+   :fr {}})

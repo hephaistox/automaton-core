@@ -21,7 +21,7 @@
   [schema data msg]
   (when-not (schema-valid schema data)
     (throw (ex-info msg
-                    {:data data,
+                    {:data data
                      :reason (-> schema
                                  (malli/explain data)
                                  (malli-error/humanize))})))

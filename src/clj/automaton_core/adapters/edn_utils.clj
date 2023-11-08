@@ -26,16 +26,16 @@
   ([edn-filename loader-fn]
    (let [edn-filename (files/absolutize edn-filename)
          _ (log/trace "Load file:" edn-filename)
-         edn-content
-           (try (loader-fn edn-filename)
-                (catch Exception e
-                  (throw (ex-info (format "Unable to load the file `%s`"
-                                          edn-filename)
-                                  {:caused-by e, :file-name edn-filename}))))]
+         edn-content (try (loader-fn edn-filename)
+                          (catch Exception e
+                            (throw (ex-info (format "Unable to load the file `%s`" edn-filename)
+                                            {:caused-by e
+                                             :file-name edn-filename}))))]
      (try (edn/read-string edn-content)
           (catch Exception e
             (throw (ex-info (format "File `%s` is not an edn" edn-filename)
-                            {:caused-by e, :file-name edn-filename}))))))
+                            {:caused-by e
+                             :file-name edn-filename}))))))
   ([edn-filename] (read-edn edn-filename files/read-file)))
 
 (defn read-edn-or-nil
@@ -43,8 +43,7 @@
   * return nil if the file does not exist or is invalid
   * `file` could be a string representing the name of the file to load
   or a (io/resource) object representing the name of the file to load"
-  ([edn-file-name loader-fn]
-   (try (read-edn edn-file-name loader-fn) (catch Exception _ nil)))
+  ([edn-file-name loader-fn] (try (read-edn edn-file-name loader-fn) (catch Exception _ nil)))
   ([edn-file-name] (read-edn-or-nil edn-file-name slurp)))
 
 (defn spit-edn
@@ -62,8 +61,8 @@
         content
         (catch Exception e
           (throw (ex-info "Impossible to update the .edn file"
-                          {:deps-edn-filename edn-filename,
-                           :exception e,
+                          {:deps-edn-filename edn-filename
+                           :exception e
                            :content content})))))
   ([deps-edn-filename content] (spit-edn deps-edn-filename content nil)))
 
@@ -76,23 +75,18 @@
   * `header` optional is a string added at the top of the file
   Note: the content will be formatted thanks to `automaton.core.adapters.code-formatter`
   "
-  ([edn-filename update-fn header]
-   (let [bb-config (read-edn edn-filename)]
-     (spit-edn edn-filename (update-fn bb-config) header)))
+  ([edn-filename update-fn header] (let [bb-config (read-edn edn-filename)] (spit-edn edn-filename (update-fn bb-config) header)))
   ([edn-filename update-fn] (update-edn-content edn-filename update-fn nil)))
 
 (defn spit-edn-or-file
   "Spit the file as an edn if it is a clojure file, or spit it with no modification otherwise"
   [filename rendered-content]
-  (if (is-clojure-like-file filename)
-    (spit-edn filename rendered-content)
-    (files/spit-file filename rendered-content)))
+  (if (is-clojure-like-file filename) (spit-edn filename rendered-content) (files/spit-file filename rendered-content)))
 
 (defn create-tmp-edn
   "Create a temporary file directory string with edn extension"
   []
-  (let [edn-file (files/create-file-path (conf/read-param [:log :spitted-edns])
-                                         (str (uuid/time-based-uuid) ".edn"))]
+  (let [edn-file (files/create-file-path (conf/read-param [:log :spitted-edns]) (str (uuid/time-based-uuid) ".edn"))]
     (files/create-dirs (files/extract-path edn-file))
     edn-file))
 

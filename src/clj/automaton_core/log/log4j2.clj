@@ -20,8 +20,6 @@
         bas/remove-last-character)
     elt))
 
-(defn prettify
-  [message]
-  (if (seqable? message) (str/join "" (map prettify-elt message)) message))
+(defn prettify [message] (if (seqable? message) (str/join "" (map prettify-elt message)) message))
 
 (defn log-fn [ns level & message] (l/log ns level nil (prettify message)))

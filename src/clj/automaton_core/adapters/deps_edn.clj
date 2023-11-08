@@ -13,10 +13,7 @@
   [app-dir]
   (files/create-file-path app-dir deps-edn))
 
-(defn load-deps
-  "Load the current project `deps.edn` files"
-  []
-  (edn-utils/read-edn deps-edn))
+(defn load-deps "Load the current project `deps.edn` files" [] (edn-utils/read-edn deps-edn))
 
 (defn load-deps-edn
   "Load the deps.edn file of the app, passed as a parameter,
@@ -36,9 +33,7 @@
   (if-let [old-commit-id (get-in deps-edn [:deps as-lib :git/sha])]
     (if (= commit-id old-commit-id)
       (do (log/trace "Skip update as it already uptodate") deps-edn)
-      (do
-        (log/trace "Change commit from `" old-commit-id "` to `" commit-id "`")
-        (assoc-in deps-edn [:deps as-lib :git/sha] commit-id)))
+      (do (log/trace "Change commit from `" old-commit-id "` to `" commit-id "`") (assoc-in deps-edn [:deps as-lib :git/sha] commit-id)))
     (do (log/trace "Skip as it does not use lib `%s:%s`") deps-edn)))
 
 (defn extract-paths
@@ -47,13 +42,10 @@
   Params:
   * `deps-edn` content the deps edn file to search extract path in
   * `excluded-aliases` is a collection of aliases to exclude"
-  ([{:keys [paths aliases], :as _deps-edn} excluded-aliases]
+  ([{:keys [paths aliases]
+     :as _deps-edn} excluded-aliases]
    (let [selected-aliases (apply dissoc aliases excluded-aliases)
-         alias-paths (mapcat (fn [[_alias-name paths]]
-                               (apply concat
-                                 (vals (select-keys paths
-                                                    [:extra-paths :paths]))))
-                       selected-aliases)]
+         alias-paths (mapcat (fn [[_alias-name paths]] (apply concat (vals (select-keys paths [:extra-paths :paths])))) selected-aliases)]
      (->> alias-paths
           (concat paths)
           sort
@@ -66,11 +58,11 @@
   Params:
   * `deps-edn` is the content of the file to search dependencies in
   * `excluded-aliases` is a collection of aliases to exclude"
-  [{:keys [deps aliases], :as _deps-edn} excluded-aliases]
+  [{:keys [deps aliases]
+    :as _deps-edn} excluded-aliases]
   (let [selected-aliases (apply dissoc aliases excluded-aliases)]
     (->> selected-aliases
-         (map (fn [[_ alias-defs]]
-                (vals (select-keys alias-defs [:extra-deps :deps]))))
+         (map (fn [[_ alias-defs]] (vals (select-keys alias-defs [:extra-deps :deps]))))
          (apply concat)
          (into {})
          (concat deps)

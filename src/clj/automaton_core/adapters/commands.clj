@@ -7,17 +7,14 @@
             [clojure.java.io :as io]
             [clojure.string :as str]))
 
-(def size-command
-  "Size of the command line to be managed, measured on mcbook pro"
-  185)
+(def size-command "Size of the command line to be managed, measured on mcbook pro" 185)
 
-(def commands-schema
-  [:vector
-   [:or [:tuple [:vector [:string]] :map] [:tuple [:vector [:string]]]]])
+(def commands-schema [:vector [:or [:tuple [:vector [:string]] :map] [:tuple [:vector [:string]]]]])
 
 (def glob-command-params
   "Command params globals"
-  {:in :inherit, :blocking? true})
+  {:in :inherit
+   :blocking? true})
 
 (defn stream-execute-command*
   "Command processing function, that's redirecting output to a log fn as a stream, to allow information to be viewed during operation.
@@ -26,7 +23,8 @@
   https://clojurians.slack.com/archives/CLX41ASCS/p1694600409401029"
   [command dir]
   (let [proc (process/process command
-                              {:dir dir, :shutdown process/destroy-tree})]
+                              {:dir dir
+                               :shutdown process/destroy-tree})]
     (future (with-open [rdr (io/reader (:out proc))]
               (binding [*in* rdr]
                 (loop []
@@ -42,12 +40,12 @@
   "execute-command core function that's used to process the command."
   [command dir out file in blocking?]
   (let [proc (process/process command
-                              {:dir dir,
-                               :shutdown process/destroy-tree,
-                               :out out,
-                               :out-file file,
-                               :err out,
-                               :err-file file,
+                              {:dir dir
+                               :shutdown process/destroy-tree
+                               :out out
+                               :out-file file
+                               :err out
+                               :err-file file
                                :in in})]
     (if blocking? (process/check proc) proc)))
 
@@ -59,9 +57,9 @@
   * `cmds-params` list of parmeters set once for the global command"
   [[command cmd-params] cmds-params]
   (let [merged-params (merge glob-command-params cmd-params cmds-params)
-        execute-command-params {:command command,
-                                :merged-params merged-params,
-                                :cmd-params cmd-params,
+        execute-command-params {:command command
+                                :merged-params merged-params
+                                :cmd-params cmd-params
                                 :cmds-params cmds-params}
         {:keys [dir out in blocking? stream?]} merged-params
         filename out
@@ -72,29 +70,16 @@
                   :else :inherit)
         blocking? (or (= out :string) blocking?)]
     (files/create-dirs dir)
-    (log/debug-format "%s - in directory `%s`"
-                      str-command
-                      (files/absolutize dir))
-    (when (and (not= out :string) filename)
-      (log/info "  -> output = " filename))
-    (try (if stream?
-           (stream-execute-command* command dir)
-           (execute-command* command dir out file in blocking?))
-         (catch java.io.IOException e
-           (throw (ex-info (str "Directory does not exist")
-                           (merge {:exception e} execute-command-params))))
+    (log/debug-format "%s - in directory `%s`" str-command (files/absolutize dir))
+    (when (and (not= out :string) filename) (log/info "  -> output = " filename))
+    (try (if stream? (stream-execute-command* command dir) (execute-command* command dir out file in blocking?))
+         (catch java.io.IOException e (throw (ex-info (str "Directory does not exist") (merge {:exception e} execute-command-params))))
          (catch clojure.lang.ExceptionInfo e
            (let [{:keys [exit type]} (ex-data e)]
              (if (= type :babashka.process/error)
-               (throw (ex-info (str "Command `" str-command
-                                    "` failed on exit code " exit)
-                               (merge execute-command-params {:exception e})))
-               (throw (ex-info (str "Command `" str-command "` failed ")
-                               (merge execute-command-params
-                                      {:exception e}))))))
-         (catch Exception e
-           (throw (ex-info (str "Command `" str-command "` failed ")
-                           (merge execute-command-params {:exception e})))))))
+               (throw (ex-info (str "Command `" str-command "` failed on exit code " exit) (merge execute-command-params {:exception e})))
+               (throw (ex-info (str "Command `" str-command "` failed ") (merge execute-command-params {:exception e}))))))
+         (catch Exception e (throw (ex-info (str "Command `" str-command "` failed ") (merge execute-command-params {:exception e})))))))
 
 (defn exec-cmds
   "Execute commands with their default parameters
@@ -106,6 +91,4 @@
   ([commands] (exec-cmds commands {}))
   ([commands default-params]
    (schema/schema-valid-or-throw commands-schema commands "Malformed command")
-   (apply str
-     (doall (for [command commands]
-              (:out (execute-command command default-params)))))))
+   (apply str (doall (for [command commands] (:out (execute-command command default-params)))))))

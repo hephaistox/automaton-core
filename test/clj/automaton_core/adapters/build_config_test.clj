@@ -4,15 +4,11 @@
             [automaton-core.adapters.files :as files]
             [clojure.test :refer [deftest is testing]]))
 
-(deftest search-for-build-config-test
-  (testing "At least current project should be found"
-    (is (> (count (sut/search-for-build-config)) 0))))
+(deftest search-for-build-config-test (testing "At least current project should be found" (is (> (count (sut/search-for-build-config)) 0))))
 
 (deftest spit-build-config-test
   (testing "Check spitted build config is found"
     (let [tmp-dir (files/create-temp-dir)
           content {:foo3 :bar3}]
       (sut/spit-build-config tmp-dir content ";; Hey!")
-      (is (= content
-             (edn-utils/read-edn-or-nil
-               (files/create-file-path tmp-dir sut/build-config-filename)))))))
+      (is (= content (edn-utils/read-edn-or-nil (files/create-file-path tmp-dir sut/build-config-filename)))))))

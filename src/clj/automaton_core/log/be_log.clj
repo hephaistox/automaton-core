@@ -8,40 +8,28 @@
 
 (defn log-init!
   [{:keys [dsn env]}]
-  (exs/init-error-tracking! {:dsn dsn, :env env}))
+  (exs/init-error-tracking! {:dsn dsn
+                             :env env}))
 
 (defn- logger-ids-to-logger-fns
   "Based on logger-id chooses from registered strategies which logging function to use."
   [logger-ids]
-  (reduce (fn [acc logger-id]
-            (conj acc
-                  (get-in log-be-registry/strategies-registry
-                          [logger-id :impl])))
-    []
-    logger-ids))
+  (reduce (fn [acc logger-id] (conj acc (get-in log-be-registry/strategies-registry [logger-id :impl]))) [] logger-ids))
 
 (defmacro log
   [logger-ids level & message]
-  (let [ns *ns*
-        log-fns (logger-ids-to-logger-fns logger-ids)]
-    `((juxt ~@log-fns) ~ns ~level ~@message)))
+  (let [ns *ns* log-fns (logger-ids-to-logger-fns logger-ids)] `((juxt ~@log-fns) ~ns ~level ~@message)))
 
 (defmacro log-exception
   [logger-ids level exception & additional-message]
   (when additional-message `(log ~logger-ids ~level ~@additional-message))
-  (let [ns *ns*
-        log-fns (logger-ids-to-logger-fns logger-ids)]
-    `((juxt ~@log-fns) ~ns ~level ~exception)))
+  (let [ns *ns* log-fns (logger-ids-to-logger-fns logger-ids)] `((juxt ~@log-fns) ~ns ~level ~exception)))
 
 (defmacro log-data
   [logger-ids level data & additional-message]
   (when additional-message `(log ~logger-ids level ~@additional-message))
-  (let [ns *ns*
-        log-fns (logger-ids-to-logger-fns logger-ids)]
-    `((juxt ~@log-fns) ~ns ~level ~data)))
+  (let [ns *ns* log-fns (logger-ids-to-logger-fns logger-ids)] `((juxt ~@log-fns) ~ns ~level ~data)))
 
 (defmacro log-format
   [logger-ids level fmt & data]
-  (let [ns *ns*
-        log-fns (logger-ids-to-logger-fns logger-ids)]
-    `((juxt ~@log-fns) ~ns ~level (format ~fmt ~@data))))
+  (let [ns *ns* log-fns (logger-ids-to-logger-fns logger-ids)] `((juxt ~@log-fns) ~ns ~level (format ~fmt ~@data))))
