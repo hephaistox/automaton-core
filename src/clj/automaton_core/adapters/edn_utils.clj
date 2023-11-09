@@ -27,24 +27,9 @@
    (let [edn-filename (files/absolutize edn-filename)
          _ (log/trace "Load file:" edn-filename)
          edn-content (try (loader-fn edn-filename)
-                          (catch Exception e
-                            (throw (ex-info (format "Unable to load the file `%s`" edn-filename)
-                                            {:caused-by e
-                                             :file-name edn-filename}))))]
-     (try (edn/read-string edn-content)
-          (catch Exception e
-            (throw (ex-info (format "File `%s` is not an edn" edn-filename)
-                            {:caused-by e
-                             :file-name edn-filename}))))))
+                          (catch Exception e (log/warn-exception e (format "Unable to load the file `%s`" edn-filename))))]
+     (try (edn/read-string edn-content) (catch Exception e (log/warn-exception e (format "File `%s` is not an edn" edn-filename)) nil))))
   ([edn-filename] (read-edn edn-filename files/read-file)))
-
-(defn read-edn-or-nil
-  "Read the `.edn` file,
-  * return nil if the file does not exist or is invalid
-  * `file` could be a string representing the name of the file to load
-  or a (io/resource) object representing the name of the file to load"
-  ([edn-file-name loader-fn] (try (read-edn edn-file-name loader-fn) (catch Exception _ nil)))
-  ([edn-file-name] (read-edn-or-nil edn-file-name slurp)))
 
 (defn spit-edn
   "Spit the `content` in the edn file called `deps-edn-filename`.
@@ -56,14 +41,15 @@
   Return the content of the file"
   ([edn-filename content header]
    (try (log/trace "Spit edn file:" edn-filename)
-        (files/spit-file edn-filename content)
-        (code-formatter/format-file edn-filename header)
+        (->> content
+             (code-formatter/format-content header)
+             (files/spit-file edn-filename))
         content
         (catch Exception e
-          (throw (ex-info "Impossible to update the .edn file"
-                          {:deps-edn-filename edn-filename
-                           :exception e
-                           :content content})))))
+          (log/warn-exception (ex-info "Impossible to update the .edn file"
+                                       {:deps-edn-filename edn-filename
+                                        :content content
+                                        :caused-by e})))))
   ([deps-edn-filename content] (spit-edn deps-edn-filename content nil)))
 
 (defn update-edn-content
@@ -89,17 +75,3 @@
   (let [edn-file (files/create-file-path (conf/read-param [:log :spitted-edns]) (str (uuid/time-based-uuid) ".edn"))]
     (files/create-dirs (files/extract-path edn-file))
     edn-file))
-
-(defn spit-in-tmp-file
-  "Spit the data given as a parameter to a temporary file which adress is given
-  This function has a trick to print exception and its stacktrace
-  Params:
-  * `data` the data to spit
-  * `formatting?` (Optional, default = true) is the content formatted"
-  ([data formatting?]
-   (let [filename (create-tmp-edn)]
-     (files/spit-file filename data)
-     ;; Important to print exception properly
-     (when formatting? (code-formatter/format-file filename))
-     (format " See file `%s` for details" (files/absolutize filename))))
-  ([data] (spit-in-tmp-file data true)))

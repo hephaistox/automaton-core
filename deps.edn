@@ -1,7 +1,7 @@
 {:aliases {:bb-deps {:extra-deps {hephaistox/automaton-build-app {:git/url "https://github.com/hephaistox/automaton-build-app.git"
-                                                                  :sha "db42465833ea1c5c40339fddafefcea461dc21c5"}}}
+                                                                  :sha "ad0a5b0e90d45080386460206ca6090281db1a50"}}}
            :build {:extra-deps {hephaistox/automaton-build-app {:git/url "https://github.com/hephaistox/automaton-build-app.git"
-                                                                :sha "db42465833ea1c5c40339fddafefcea461dc21c5"}}}
+                                                                :sha "ad0a5b0e90d45080386460206ca6090281db1a50"}}}
            :cljs-deps {:extra-deps {binaryage/devtools {:mvn/version "1.0.7"}
                                     cider/cider-nrepl {:mvn/version "0.21.1"}
                                     thheller/shadow-cljs {:mvn/version "2.25.9"}}
@@ -40,5 +40,6 @@
         org.clojure/clojure #:mvn{:version "1.11.1"}
         org.clojure/tools.cli #:mvn{:version "1.0.219"}
         org.clojure/tools.logging #:mvn{:version "1.2.4"}
-        refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"}}
+        refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"}
+        zprint/zprint {:mvn/version "1.2.8"}}
  :paths ["src/clj" "src/cljc" "resources" "src/cljs"]}

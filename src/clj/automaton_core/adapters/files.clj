@@ -316,17 +316,6 @@
       fs/path
       (str ".edn")))
 
-(defn spit-in-tmp-file
-  "Spit the data given as a parameter to a temporary file which adress is given
-  This function has a trick to print exception and its stacktrace"
-  [data]
-  (let [filename (create-tmp-edn)
-        formatted-data (with-out-str (prn data)) ;; Important to print
-                                                 ;; exception properly
-       ]
-    (spit filename formatted-data)
-    (format "See file `%s` for details" (absolutize filename))))
-
 (defn file-name "Return the file name without the path" [path] (fs/file-name path))
 
 (defn write-file

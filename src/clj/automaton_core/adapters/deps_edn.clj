@@ -21,7 +21,7 @@
   * `app-dir` the directory of the app, where `deps.edn` is stored
   Returns nil if the file does not exists or is malformed"
   [app-dir]
-  (edn-utils/read-edn-or-nil (get-deps-filename app-dir)))
+  (edn-utils/read-edn (get-deps-filename app-dir)))
 
 (defn update-commit-id
   "Update the `deps-edn` with the `commit-id` for the dependency `as-lib`

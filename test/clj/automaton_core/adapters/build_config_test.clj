@@ -11,4 +11,4 @@
     (let [tmp-dir (files/create-temp-dir)
           content {:foo3 :bar3}]
       (sut/spit-build-config tmp-dir content ";; Hey!")
-      (is (= content (edn-utils/read-edn-or-nil (files/create-file-path tmp-dir sut/build-config-filename)))))))
+      (is (= content (edn-utils/read-edn (files/create-file-path tmp-dir sut/build-config-filename)))))))

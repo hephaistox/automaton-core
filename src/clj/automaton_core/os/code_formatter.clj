@@ -1,21 +1,18 @@
 (ns automaton-core.os.code-formatter
   "Format code
   Proxy to [zprint](https://github.com/kkinnear/zprint)"
-  (:require [automaton-core.adapters.files :as files]
-            [automaton-core.adapters.commands :as cmds]
+  (:require [zprint.core :as zprint]
             [automaton-core.adapters.time :as time]
             [clojure.string :as str]))
 
-(defn format-file
+(defn format-content
   "Format the `clj` or `edn` file
+  Returns a string, ready to be spitted, with the header
   Params:
-  * `filename` to format
-  * `header` (optional) is written at the top of the file"
-  ([filename header]
-   (let [format-content (slurp filename)]
-     (files/spit-file filename (apply str [(when-not (str/blank? header) (print-str ";;" header (time/now-str) "\n")) format-content]))
-     (cmds/exec-cmds [[["zprint" "-w" filename]
-                       {:dir "."
-                        :out :string}]])))
-  ([filename] (format-file filename nil)))
-
+  * `header` (optional) is written at the top of the file
+  * `content` is a data structure to format"
+  ([header content]
+   (let [format-content (-> content
+                            zprint/zprint-str)]
+     (apply str [(when-not (str/blank? header) (print-str ";;" header (time/now-str) "\n")) format-content])))
+  ([content] (format-content nil content)))

@@ -11,6 +11,6 @@
   "Get the version of the current application, if not found a local dev value is given"
   ([file-path]
    (if (files/is-existing-file? (str file-path version-filename))
-     (edn-utils/read-edn-or-nil (str file-path version-filename))
+     (edn-utils/read-edn (str file-path version-filename))
      {release "local-dev"}))
   ([] (slurp-version "")))
