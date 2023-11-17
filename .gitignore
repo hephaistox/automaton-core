@@ -1,4 +1,5 @@
 # Temporary files
+# Will it be removed?
 **/out/
 **/target/
 **/**/resources/public/js/compiled/
@@ -17,6 +18,7 @@ docs/codox
 
 # Log files
 **/*.log
+**logs
 
 # Leiningen
 /.lein-*

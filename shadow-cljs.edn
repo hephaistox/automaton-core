@@ -1,0 +1,11 @@
+{:builds {:browser-test {:ns-regexp "-test$"
+                         :runner-ns shadow.test.browser
+                         :target :browser-test
+                         :test-dir "target/browser-test"}
+          :ltest {:ns-regexp "-test$"
+                  :output-to "target/ltest.js"
+                  :target :karma}}
+ :deps {:aliases [:cljs-deps]}
+ :dev-http {8012 ["target/browser-test"]}
+ :jvm-opts ["-Xmx1G" "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/log4j2-factory"]
+ :nrepl {:port 8011}}
