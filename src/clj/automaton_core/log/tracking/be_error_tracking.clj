@@ -1,0 +1,22 @@
+(ns automaton-core.log.tracking.be-error-tracking
+  "Backend monitoring live exceptions for remote enviroments (e.g. production, local acceptance, global acceptance)."
+  (:require [automaton-core.log.tracking.be-sentry :as sentry]))
+
+(defn init-error-tracking!
+  [{:keys [dsn env]}]
+  (when-not dsn (prn "dsn is missing in init-error-tracking!"))
+  (when-not env (prn "env is missing in init-error-tracking!"))
+  (sentry/init-sentry! {:dsn dsn
+                        :env env}))
+
+(defn- sentry-data
+  [ns level & message]
+  (let [context (if (map? (first message)) (merge (first message) {:ns ns}) {:ns ns})
+        message (if (map? (first message)) (rest message) message)]
+    {:message message
+     :level level
+     :context context}))
+
+(defn add-context [ns level & message] (sentry/send-breadcrumb! (apply sentry-data ns level message)))
+
+(defn error-alert [ns level & message] (sentry/send-event! (apply sentry-data ns level message)))

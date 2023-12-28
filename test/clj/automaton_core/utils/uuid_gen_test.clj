@@ -4,17 +4,7 @@
 
 (deftest time-based-uuid
   (testing "uuid and chonological orders are the same"
-    (let [vecs (map
-                (fn [_n]
-                  (sut/time-based-uuid))
-                (range 10))]
-      (is (= (sort (map str vecs))
-             (map str vecs)))))
-  (testing "Is a uuid"
-    (is (uuid? (sut/time-based-uuid))))
+    (let [vecs (map (fn [_n] (sut/time-based-uuid)) (range 10))] (is (= (sort (map str vecs)) (map str vecs)))))
+  (testing "Is a uuid" (is (uuid? (sut/time-based-uuid))))
   (testing "Timed based uuid are in the right order"
-    (dotimes [_ 10]
-      (let [uuid1 (sut/time-based-uuid)
-            uuid2 (sut/time-based-uuid)]
-        (is (compare (str uuid1)
-                     (str uuid2)))))))
+    (dotimes [_ 10] (let [uuid1 (sut/time-based-uuid) uuid2 (sut/time-based-uuid)] (is (compare (str uuid1) (str uuid2)))))))

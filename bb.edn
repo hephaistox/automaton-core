@@ -1,66 +1,9 @@
-{:paths []
- :deps {}
- :tasks {:init (do
-                 (defn to-log
-                   "Generate map for process to write in logs."
-                   [msg log-filename]
-                   (fs/create-dirs "logs")
-                   (println msg ", see " log-filename " for details")
-                   {:out :write
-                    :err :write
-                    :err-file log-filename
-                    :out-file log-filename
-                    :shutdown p/destroy-tree})
-                 (defn to-out
-                   "Generate map for process to write in std"
-                   []
-                   {:out :inherit
-                    :in :inherit
-                    :err :inherit
-                    :shutdown p/destroy-tree})
-                 (defn run-process
-                   "Run a process with logs features"
-                   [process]
-                   (try
-                     (p/check (process))
-                     (catch Exception e
-                       (println (str "Error during execution of `" (:name (current-task)) "`"))
-                       (let [file (fs/create-temp-file)]
-                         (println "See details in `" (.toString (.toAbsolutePath file)) "`")
-                         (spit (fs/file file) (prn-str e))
-                         "")
-                       (System/exit 1)))))
-         :requires [[babashka.process :as p]
-                    [babashka.fs :as fs]]
-         test {:doc "Test"
-               :task (run-process (fn []
-                                    (p/process ["clj" "-M:runner"]
-                                               (to-out))))}
-         lint {:doc "Lint"
-               :task (run-process (fn []
-                                    (p/process ["clj-kondo"
-                                                "--lint"
-                                                "src/clj" "src/cljc"
-                                        ;"resources"
-                                                "env/dev/src/clj"
-                                                "env/dev/resources"
-                                                "env/test/resources"
-                                                ;"env/test/src/clj"
-                                                ;"env/test/src/cljc"
-                                        ;"env/dev/src/cljc"
-                                                "test/clj" "test/cljc"
-                                                "test/resources"]
-                                               (to-out))))}
-         repl {:doc "Repl"
-               :task (run-process (fn []
-                                    (p/process ["clj" "-M:repl"]
-                                               (to-out))))}
-         ;; (test-frontend {:doc "Test frontend"
-         ;;                    :task (run-process (fn []
-         ;;                                         (-> (p/process ["npm" "install"]
-         ;;                                                        (to-out)))
-         ;;                                         (-> (p/process ["npx" "shadow-cljs" "compile" "karma-test"]
-         ;;                                                        (to-out)))
-         ;;                                         (-> (p/process ["npx" "karma" "start" "--single-run"]
-         ;;                                                       (to-out)))))})
-         }}
+{:deps {org.clojars.hephaistox/automaton-build-app {:mvn/version "0.0.9"}}
+ :paths []
+ :tasks {:requires [[automaton-build-app.tasks.launcher.bb-entrypoint :as build-task-bb-entrypoint] [babashka.process :as babahska-process]]
+         heph-task {:doc "Launch an Hephaistox task"
+                    :task (System/exit (build-task-bb-entrypoint/-main *command-line-args*))}
+         lconnect {:doc "Repl in case automaton-core is failing. Using -f or --force cli arguments to force start if some part are failing"
+                   :task (try (-> (babahska-process/shell "clojure" "-M:common-test:env-development-repl:build" *command-line-args*)
+                                  System/exit)
+                              (catch Exception e (println "Repl failed also - error during repl startup" (ex-message e))))}}}
