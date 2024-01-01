@@ -32,7 +32,8 @@
       (is (= {10 20} (sut/read-edn tmp-file)))
       (sut/spit-edn tmp-file {15 25})
       (is (= {15 25} (sut/read-edn tmp-file)))
-      (sut/spit-edn tmp-file {5 5} "Header"))))
+      (sut/spit-edn tmp-file {5 5} ";;Header")
+      (is (= {5 5} (sut/read-edn tmp-file))))))
 
 (deftest update-edn-content-test
   (testing "Update the edn"

@@ -2,7 +2,7 @@
   "Utility functions for keywords."
   (:require [clojure.string :as str]))
 
-(defn- keywordize
+(defn keywordize
   "Change string to appropriate clojure keyword"
   [s]
   (-> (str/lower-case s)

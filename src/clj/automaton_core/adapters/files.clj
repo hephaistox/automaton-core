@@ -319,6 +319,7 @@
 (defn file-name "Return the file name without the path" [path] (fs/file-name path))
 
 (defn relativize
+  "Turn the `path` into a relative directory starting from `root-dir`"
   [path root-dir]
   (let [path (-> path
                  remove-trailing-separator
