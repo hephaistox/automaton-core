@@ -1,40 +1,11 @@
 (ns automaton-core.adapters.deps-edn
   "Proxy to deps.edn file"
   (:require [automaton-core.adapters.edn-utils :as edn-utils]
-            [automaton-core.adapters.files :as files]
-            [automaton-core.log :as core-log]))
+            [automaton-core.adapters.files :as files]))
 
 (def deps-edn "deps.edn")
 
-(defn get-deps-filename
-  "Get the deps-file of the application
-  Params:
-  * `app-dir` is where the application is stored"
-  [app-dir]
-  (files/create-file-path app-dir deps-edn))
-
 (defn load-deps "Load the current project `deps.edn` files" [] (edn-utils/read-edn deps-edn))
-
-(defn load-deps-edn
-  "Load the deps.edn file of the app, passed as a parameter,
-  Params:
-  * `app-dir` the directory of the app, where `deps.edn` is stored
-  Returns nil if the file does not exists or is malformed"
-  [app-dir]
-  (let [deps-filename (get-deps-filename app-dir)] (when (files/is-existing-file? deps-filename) (edn-utils/read-edn deps-filename))))
-
-(defn update-commit-id
-  "Update the `deps-edn` with the `commit-id` for the dependency `as-lib`
-  Params:
-  * `as-lib` is the symbol for the library to update
-  * `commit-id` is the sha of the commit
-  * `deps-edn` is the content of the file"
-  [as-lib commit-id deps-edn]
-  (if-let [old-commit-id (get-in deps-edn [:deps as-lib :sha])]
-    (if (= commit-id old-commit-id)
-      (do (core-log/trace "Skip update as it already uptodate") deps-edn)
-      (do (core-log/trace "Change commit from `" old-commit-id "` to `" commit-id "`") (assoc-in deps-edn [:deps as-lib :sha] commit-id)))
-    (do (core-log/trace "Skip as it does not use lib `%s:%s`") deps-edn)))
 
 (defn extract-paths
   "Extracts the `:paths` and `:extra-paths` from a given `deps.edn`
@@ -96,14 +67,6 @@
        (filter is-hephaistox-deps)
        keys
        vec))
-
-(defn spit-deps-edn
-  "Spit `content` in the filename path
-  Params:
-  * `app-dir`
-  * `content`"
-  ([app-dir content header] (edn-utils/spit-edn (get-deps-filename app-dir) content header))
-  ([app-dir content] (spit-deps-edn app-dir content nil)))
 
 (defn update-dep-local-root
   "Update the local root directories in a dependency map (of one lib)

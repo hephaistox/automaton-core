@@ -1,5 +1,5 @@
 (ns automaton-core.adapters.re-test
-  (:require [automaton-core.adapters.re :as sut]
+  (:require [automaton-core.adapters.regexp :as sut]
             #?(:clj [clojure.test :refer [deftest is testing]]
                :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
 

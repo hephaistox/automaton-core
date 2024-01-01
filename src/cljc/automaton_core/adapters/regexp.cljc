@@ -1,4 +1,4 @@
-(ns automaton-core.adapters.re
+(ns automaton-core.adapters.regexp
   "Adapter to regular expressions
   Seamless access to regular expressions between cljs and clj
   Managing both back and frontend to have a seamless experience"
