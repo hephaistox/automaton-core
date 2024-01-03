@@ -14,7 +14,12 @@
 (defn- logger-ids-to-logger-fns
   "Based on logger-id chooses from registered strategies which logging function to use."
   [logger-ids]
-  (reduce (fn [acc logger-id] (conj acc (get-in log-be-registry/strategies-registry [logger-id :impl]))) [] logger-ids))
+  (reduce (fn [acc logger-id]
+            (if-let [logger-strategy (get-in log-be-registry/strategies-registry [logger-id :impl])]
+              (conj acc logger-strategy)
+              (do (print "WARN: Logging strategy is nil for id: " logger-id) acc)))
+          []
+          logger-ids))
 
 (defmacro log
   [logger-ids level & message]
