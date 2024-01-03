@@ -11,7 +11,7 @@
 
 (defn- sentry-data
   [ns level & message]
-  (let [context (if (map? (first message)) (merge (first message) {:ns ns}) {:ns ns})
+  (let [context (if (map? (first message)) (merge (first message) (when ns {:ns ns})) (when ns {:ns ns}))
         message (if (map? (first message)) (rest message) message)]
     {:message message
      :level level

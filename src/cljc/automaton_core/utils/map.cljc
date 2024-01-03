@@ -98,7 +98,12 @@
 (defn map-util-hashmappify-vals
   "Converts an ordinary Clojure map into a Clojure map with nested map
    values recursively translated into what modify-type-fn is returning. Based
-   on walk/stringify-keys."
+   on walk/stringify-keys.
+   When key or value is nil, the pair is removed, as the hashmap doesn't allow null keys/values."
   [m modify-type-fn]
-  (let [f (fn [[k v]] (let [k (if (keyword? k) (name k) k) v (if (keyword? v) (name v) v)] (if (map? v) [k (modify-type-fn v)] [k v])))]
+  (let [f (fn [[k v]]
+            (let [k (if (keyword? k) (str (symbol k)) k)
+                  v (if (keyword? v) (str (symbol v)) v)]
+              (cond (map? v) [k (modify-type-fn v)]
+                    (and (some? v) (some? k)) [k v])))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))

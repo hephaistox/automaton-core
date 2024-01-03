@@ -19,7 +19,7 @@
                               :impl automaton-core.log.impl.log4j2/log-fn}
    ::log-registry/no-op {:description "Deactivate that log"
                          :impl no-op-fn}
-   ::log-registry/error-tracking {:description "For monitoring exceptions in the application"
-                                  :impl automaton-core.log.tracking.be-error-tracking/add-context}
+   ::log-registry/error-tracking-context {:description "For monitoring exceptions in the application"
+                                          :impl automaton-core.log.tracking.be-error-tracking/add-context}
    ::log-registry/error-tracking-alert {:description "For alerting about monitoring exceptions in the application"
                                         :impl automaton-core.log.tracking.be-error-tracking/error-alert}})
