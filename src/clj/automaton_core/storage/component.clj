@@ -20,7 +20,7 @@
           :access access})
        (catch Throwable e (core-log/fatal (ex-info "Storage component failed." {:error e})))))
 
-(defstate storage-state :start (start-storage) :stop (.release storage-state))
+(defstate storage-state :start (start-storage) :stop (.release (:connection @storage-state)))
 
 (defn upsert [storage update-fn] (core-log/trace "Executed: " update-fn) (storage/upsert (:access storage) (:connection storage) update-fn))
 

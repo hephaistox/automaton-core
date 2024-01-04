@@ -71,12 +71,8 @@
 
 (defn- warn-on-overwrite
   [ms]
-  (doseq [[k kvs] (group-by key (apply concat ms))
-          :let [vs (map val kvs)]
-          :when (and (next kvs) (not= (first vs) (last vs)))]
-    (println "WARNING: configuration keys are duplicated"
-             {:k k
-              :vs vs})))
+  (let [kseq (reduce (fn [acc m] (concat acc (keys m))) [] ms)]
+    (for [[id freq] (frequencies kseq) :when (> freq 1)] (println "WARNING: configuration keys are duplicated for:" id))))
 
 (defn merge-configs [& m] (warn-on-overwrite m) (apply utils-map/deep-merge m))
 
