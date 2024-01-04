@@ -9,7 +9,7 @@
 
 (defn start-storage
   []
-  (try (core-log/info "Starting storage component")
+  (try (core-log/info "Start storage component")
        (let [dc (datomic/make-datomic-client datomic-schema/all-schema)
              db-uri (or (conf/read-param [:storage :datomic :url]) (conf/read-param [:storage-datomic-url]))
              _db-uri-valid? (when-not db-uri (throw (ex-info "Database uri was not found." {})))
