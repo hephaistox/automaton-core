@@ -9,9 +9,9 @@
 
 (defn start-storage
   []
-  (try (core-log/info "Starting storage component")
+  (try (core-log/info "Start storage component")
        (let [dc (datomic/make-datomic-client datomic-schema/all-schema)
-             db-uri (or (conf/read-param [:storage :datomic :url]) (conf/read-param [:storage-datomic-url]))
+             db-uri (conf/read-param [:storage :datomic :url])
              _db-uri-valid? (when-not db-uri (throw (ex-info "Database uri was not found." {})))
              conn (storage/connection dc db-uri)
              access (datomic/make-datomic-access)]
@@ -20,7 +20,7 @@
           :access access})
        (catch Throwable e (core-log/fatal (ex-info "Storage component failed." {:error e})))))
 
-(defstate storage-state :start (start-storage) :stop (.release storage-state))
+(defstate storage-state :start (start-storage) :stop (.release (:connection @storage-state)))
 
 (defn upsert [storage update-fn] (core-log/trace "Executed: " update-fn) (storage/upsert (:access storage) (:connection storage) update-fn))
 
