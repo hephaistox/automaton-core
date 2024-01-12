@@ -12,7 +12,8 @@
   (try (core-log/info "Start storage component")
        (let [dc (datomic/make-datomic-client datomic-schema/all-schema)
              db-uri (conf/read-param [:storage :datomic :url])
-             _db-uri-valid? (when-not db-uri (throw (ex-info "Database uri was not found." {})))
+             _db-uri-valid? (when-not db-uri
+                              (throw (ex-info "Database uri was not found. Are you sure that env variable STORAGE_DATOMIC_URL is set?" {})))
              conn (storage/connection dc db-uri)
              access (datomic/make-datomic-access)]
          (core-log/trace "Storage component is started")

@@ -107,3 +107,9 @@
               (cond (map? v) [k (modify-type-fn v)]
                     (and (some? v) (some? k)) [k v])))]
     (walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
+
+(defn replace-keys
+  "Replace keys in `m2` with keys from `m1`. Similiar to merge but non-existen keys in first map won't be added. e.g. (replace-keys {:a 3 :b 2} {:a 1}) -> {:a 3}"
+  [m1 m2]
+  (->> (select-keys m1 (keys m2))
+       (merge m2)))
