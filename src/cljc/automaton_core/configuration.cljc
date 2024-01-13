@@ -21,7 +21,7 @@
 (defn start-conf
   []
   (try (println "Starting configuration component")
-       (let [conf (core-conf-files/->SimpleConf)
+       (let [conf (core-conf-files/->FilesConf)
              env-conf (core-conf-env/->EnvConf)]
          (println "Configuration component is started")
          [conf env-conf])
@@ -39,9 +39,7 @@
   ([key-path default-value]
    (let [value (or (core-conf-prot/read-conf-param (first @conf-state) key-path)
                    (core-conf-prot/read-conf-param (second @conf-state) key-path))]
-     (when (nil? value)
-       (println "Value for " key-path " is not set, use default value")
-       default-value)))
+     (when (nil? value) (println "Value for " key-path " is not set, use default value") default-value)))
   ([key-path] (read-param key-path nil)))
 
 

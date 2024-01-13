@@ -54,8 +54,7 @@
 
 (def ^{:doc "A map of configuration variables."} conf (memoize read-config))
 
-
-(defrecord SimpleConf []
+(defrecord FilesConf []
   core-conf-prot/Conf
     (read-conf-param [_this key-path] (get-in (conf) key-path))
     (config [_this] (conf)))
