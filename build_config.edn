@@ -2,6 +2,7 @@
  :task-shared {:gha {}
                :publication {:as-lib org.clojars.hephaistox/automaton-core
                              :deploy-to :clojars
+                             :license {}
                              :major-version "0.0.%d"
                              :repo "git@github.com:hephaistox/automaton-core.git"}
                :repl-aliases [:common-test :env-development-repl :build]}

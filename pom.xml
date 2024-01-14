@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>0.0.56</version>
+  <version>0.0.57</version>
   <name>automaton-core</name>
   <dependencies>
     <dependency>
@@ -28,16 +28,6 @@
       <version>1.2.4</version>
     </dependency>
     <dependency>
-      <groupId>metosin</groupId>
-      <artifactId>ring-http-response</artifactId>
-      <version>0.9.3</version>
-    </dependency>
-    <dependency>
-      <groupId>metosin</groupId>
-      <artifactId>muuntaja</artifactId>
-      <version>0.6.8</version>
-    </dependency>
-    <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>tools.cli</artifactId>
       <version>1.0.219</version>
@@ -48,34 +38,14 @@
       <version>0.1.9</version>
     </dependency>
     <dependency>
-      <groupId>clj-htmltopdf</groupId>
-      <artifactId>clj-htmltopdf</artifactId>
-      <version>0.2.1</version>
-    </dependency>
-    <dependency>
       <groupId>com.clojure-goes-fast</groupId>
       <artifactId>clj-memory-meter</artifactId>
       <version>0.3.0</version>
     </dependency>
     <dependency>
-      <groupId>ring</groupId>
-      <artifactId>ring-ssl</artifactId>
-      <version>0.3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>day8.re-frame</groupId>
-      <artifactId>http-fx</artifactId>
-      <version>0.2.4</version>
-    </dependency>
-    <dependency>
       <groupId>com.taoensso</groupId>
       <artifactId>encore</artifactId>
       <version>3.62.1</version>
-    </dependency>
-    <dependency>
-      <groupId>ring-cors</groupId>
-      <artifactId>ring-cors</artifactId>
-      <version>0.1.13</version>
     </dependency>
     <dependency>
       <groupId>io.sentry</groupId>
@@ -88,29 +58,14 @@
       <version>1.0.7075</version>
     </dependency>
     <dependency>
-      <groupId>thheller</groupId>
-      <artifactId>shadow-cljs</artifactId>
-      <version>2.26.2</version>
-    </dependency>
-    <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry-clj</artifactId>
       <version>6.33.209</version>
     </dependency>
     <dependency>
-      <groupId>cljsjs</groupId>
-      <artifactId>highlight</artifactId>
-      <version>11.7.0-0</version>
-    </dependency>
-    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.7.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.namespace</artifactId>
-      <version>1.4.4</version>
     </dependency>
     <dependency>
       <groupId>com.taoensso</groupId>
@@ -128,11 +83,6 @@
       <version>0.51.1</version>
     </dependency>
     <dependency>
-      <groupId>markdown-clj</groupId>
-      <artifactId>markdown-clj</artifactId>
-      <version>1.11.7</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
       <version>2.22.1</version>
@@ -143,89 +93,14 @@
       <version>1.2.8</version>
     </dependency>
     <dependency>
-      <groupId>hiccup</groupId>
-      <artifactId>hiccup</artifactId>
-      <version>2.0.0-RC2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.taoensso</groupId>
-      <artifactId>sente</artifactId>
-      <version>1.19.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>33.0.0-jre</version>
-    </dependency>
-    <dependency>
-      <groupId>day8.re-frame</groupId>
-      <artifactId>tracing</artifactId>
-      <version>0.6.2</version>
-    </dependency>
-    <dependency>
-      <groupId>binaryage</groupId>
-      <artifactId>devtools</artifactId>
-      <version>1.0.7</version>
-    </dependency>
-    <dependency>
-      <groupId>re-frame</groupId>
-      <artifactId>re-frame</artifactId>
-      <version>1.4.2</version>
-    </dependency>
-    <dependency>
-      <groupId>reagent</groupId>
-      <artifactId>reagent</artifactId>
-      <version>1.2.0</version>
-    </dependency>
-    <dependency>
       <groupId>metosin</groupId>
       <artifactId>malli</artifactId>
       <version>0.13.0</version>
     </dependency>
     <dependency>
-      <groupId>cider</groupId>
-      <artifactId>cider-nrepl</artifactId>
-      <version>0.30.0</version>
-    </dependency>
-    <dependency>
-      <groupId>ring</groupId>
-      <artifactId>ring-anti-forgery</artifactId>
-      <version>1.3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>slipset</groupId>
-      <artifactId>deps-deploy</artifactId>
-      <version>0.2.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.andrewmcveigh</groupId>
-      <artifactId>cljs-time</artifactId>
-      <version>0.5.2</version>
-    </dependency>
-    <dependency>
       <groupId>babashka</groupId>
       <artifactId>process</artifactId>
       <version>0.5.21</version>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.reader</artifactId>
-      <version>1.3.7</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.weavejester</groupId>
-      <artifactId>medley</artifactId>
-      <version>1.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.liquidz</groupId>
-      <artifactId>antq</artifactId>
-      <version>2.7.1133</version>
-    </dependency>
-    <dependency>
-      <groupId>codox</groupId>
-      <artifactId>codox</artifactId>
-      <version>0.10.8</version>
     </dependency>
     <dependency>
       <groupId>nrepl</groupId>
@@ -238,21 +113,6 @@
       <version>0.1.17</version>
     </dependency>
     <dependency>
-      <groupId>io.github.clojure</groupId>
-      <artifactId>tools.build</artifactId>
-      <version>0.9.6</version>
-    </dependency>
-    <dependency>
-      <groupId>amalloy</groupId>
-      <artifactId>ring-gzip-middleware</artifactId>
-      <version>0.1.4</version>
-    </dependency>
-    <dependency>
-      <groupId>metosin</groupId>
-      <artifactId>reitit-frontend</artifactId>
-      <version>0.6.0</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
       <version>2.22.1</version>
@@ -263,44 +123,9 @@
       <version>1.16.134</version>
     </dependency>
     <dependency>
-      <groupId>metosin</groupId>
-      <artifactId>reitit</artifactId>
-      <version>0.6.0</version>
-    </dependency>
-    <dependency>
       <groupId>babashka</groupId>
       <artifactId>fs</artifactId>
       <version>0.5.20</version>
-    </dependency>
-    <dependency>
-      <groupId>ring</groupId>
-      <artifactId>ring</artifactId>
-      <version>1.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>cider</groupId>
-      <artifactId>piggieback</artifactId>
-      <version>0.5.3</version>
-    </dependency>
-    <dependency>
-      <groupId>clj-commons</groupId>
-      <artifactId>pushy</artifactId>
-      <version>0.3.10</version>
-    </dependency>
-    <dependency>
-      <groupId>day8.re-frame</groupId>
-      <artifactId>re-frame-10x</artifactId>
-      <version>1.9.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>core.async</artifactId>
-      <version>1.6.681</version>
-    </dependency>
-    <dependency>
-      <groupId>no.cjohansen</groupId>
-      <artifactId>portfolio</artifactId>
-      <version>2023.12.07</version>
     </dependency>
     <dependency>
       <groupId>http-kit</groupId>
@@ -309,7 +134,7 @@
     </dependency>
   </dependencies>
   <build>
-    <sourceDirectory>/Users/Mati/Projects/monorepo/clojure/automaton/automaton_core/env/development/src/clj</sourceDirectory>
+    <sourceDirectory>src/clj/</sourceDirectory>
   </build>
   <repositories>
     <repository>
@@ -319,8 +144,8 @@
   </repositories>
   <licenses>
     <license>
-      <name/>
-      <url/>
+      <name>CC BY-NC 4.0</name>
+      <url>https://creativecommons.org/licenses/by-nc/4.0/deed.en</url>
     </license>
   </licenses>
 </project>
