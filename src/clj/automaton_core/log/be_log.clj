@@ -4,7 +4,8 @@
    Current structure is generic for logging level, as they are the same right now in sense of this proxy.
    In future it may develop if needed to e.g. have the same number of macros as in `automaton-core.log`."
   (:require [automaton-core.log.be-registry :as log-be-registry]
-            [automaton-core.log.tracking.be-error-tracking :as exs]))
+            [automaton-core.log.tracking.be-error-tracking :as exs]
+            [automaton-core.log.terminal :as core-terminal]))
 
 (defn log-init!
   [{:keys [dsn env]}]
@@ -17,7 +18,7 @@
   (reduce (fn [acc logger-id]
             (if-let [logger-strategy (get-in log-be-registry/strategies-registry [logger-id :impl])]
               (conj acc logger-strategy)
-              (do (print "WARN: Logging strategy is nil for id: " logger-id) acc)))
+              (do (core-terminal/log "WARN: Logging strategy is nil for id: " logger-id) acc)))
           []
           logger-ids))
 

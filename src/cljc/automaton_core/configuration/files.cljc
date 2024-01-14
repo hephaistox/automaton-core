@@ -1,49 +1,15 @@
-(ns automaton-core.configuration.simple-files
+(ns automaton-core.configuration.files
   "Namespace for simple configuration based on local file.
    Just like in core configuration, we are not using log nor outside dependencies to comply with the configuration requirements."
   (:require #?@(:clj [[clojure.edn :as edn] [clojure.java.io :as io] [automaton-core.adapters.java-properties :as java-properties]]
-                :cljs [[cljs.reader :as edn] [goog.object :as obj]])
-            [automaton-core.utils.map :as utils-map]
+                :cljs [[cljs.reader :as edn]])
             [automaton-core.configuration.protocol :as core-conf-prot]
-            [automaton-core.utils.keyword :as utils-keyword]))
+            [automaton-core.utils.keyword :as utils-keyword]
+            [automaton-core.utils.map :as utils-map]))
 
 #?(:cljs (def ^:private nodejs? (exists? js/require)))
 
 #?(:cljs (def ^:private fs (when nodejs? (js/require "fs"))))
-
-#?(:cljs (def ^:private process (when nodejs? (js/require "process"))))
-
-(defn parse-number
-  [^String v]
-  (try #?(:clj (Long/parseLong v)
-          :cljs (parse-long v))
-       #?(:clj (catch NumberFormatException _ (BigInteger. v)))
-       (catch #?(:clj Exception
-                 :cljs js/Error)
-         _
-         v)))
-
-(defn str->value
-  "ENV vars and system properties are strings. str->value will convert:
-   the numbers to longs, the alphanumeric values to strings, and will use Clojure reader for the rest
-   in case reader can't read OR it reads a symbol, the value will be returned as is (a string)"
-  [v]
-  (cond (re-matches #"[0-9]+" v) (parse-number v)
-        (re-matches #"^(true|false)$" v) #?(:clj (Boolean/parseBoolean v)
-                                            :cljs (parse-boolean v))
-        (re-matches #"\w+" v) v
-        :else (try (let [parsed (edn/read-string v)] (if (symbol? parsed) v parsed))
-                   (catch #?(:clj Exception
-                             :cljs js/Error)
-                     _
-                     v))))
-
-(defn read-system-env
-  []
-  (->> #?(:clj (System/getenv)
-          :cljs (zipmap (obj/getKeys (.-env process)) (obj/getValues (.-env process))))
-       (map (fn [[k v]] [(utils-keyword/keywordize k) (str->value v)]))
-       (into {})))
 
 (defn slurp-file
   [f]
@@ -71,12 +37,8 @@
 
 (defn- warn-on-overwrite
   [ms]
-  (doseq [[k kvs] (group-by key (apply concat ms))
-          :let [vs (map val kvs)]
-          :when (and (next kvs) (not= (first vs) (last vs)))]
-    (println "WARNING: configuration keys are duplicated"
-             {:k k
-              :vs vs})))
+  (let [kseq (reduce (fn [acc m] (concat acc (keys m))) [] ms)]
+    (for [[id freq] (frequencies kseq) :when (> freq 1)] (println "WARNING: configuration keys are duplicated for:" id))))
 
 (defn merge-configs [& m] (warn-on-overwrite m) (apply utils-map/deep-merge m))
 
@@ -87,15 +49,12 @@
                property->config-files
                (mapv read-config-file)
                (filterv some?)
-               (apply merge-configs (read-system-env)))
-     :cljs (if nodejs?
-             (->> (read-config-file config-file)
-                  (merge-configs (read-system-env)))
-             {})))
+               (apply merge-configs))
+     :cljs (if nodejs? (read-config-file config-file) {})))
 
 (def ^{:doc "A map of configuration variables."} conf (memoize read-config))
 
-(defrecord SimpleConf []
+(defrecord FilesConf []
   core-conf-prot/Conf
     (read-conf-param [_this key-path] (get-in (conf) key-path))
     (config [_this] (conf)))

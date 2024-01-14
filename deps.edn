@@ -1,5 +1,5 @@
-{:aliases {:bb-deps {:extra-deps {org.clojars.hephaistox/automaton-build-app {:mvn/version "0.0.70"}}}
-           :build {:extra-deps {org.clojars.hephaistox/automaton-build-app {:mvn/version "0.0.70"}}}
+{:aliases {:bb-deps {:extra-deps #:org.clojars.hephaistox{automaton-build-app {:mvn/version "0.0.83"}}}
+           :build {:extra-deps #:org.clojars.hephaistox{automaton-build-app {:mvn/version "0.0.83"}}}
            :cljs-deps {:extra-deps {binaryage/devtools {:mvn/version "1.0.7"}
                                     cider/cider-nrepl {:mvn/version "0.30.0"}
                                     thheller/shadow-cljs {:mvn/version "2.26.2"}}
@@ -25,10 +25,9 @@
         com.clojure-goes-fast/clj-memory-meter {:mvn/version "0.3.0"}
         com.datomic/peer {:mvn/version "1.0.7075"}
         com.taoensso/encore {:mvn/version "3.62.1"}
-        org.clojure/data.json {:mvn/version "2.5.0"}
         com.taoensso/tempura {:mvn/version "1.5.3"}
         danlentz/clj-uuid {:mvn/version "0.1.9"}
-        djblue/portal {:mvn/version "0.51.0"} ;; developer tooling
+        djblue/portal {:mvn/version "0.51.1"}
         http-kit/http-kit {:mvn/version "2.7.0"}
         io.sentry/sentry {:mvn/version "7.1.0"}
         io.sentry/sentry-clj {:mvn/version "6.33.209"}
@@ -40,6 +39,7 @@
         org.apache.logging.log4j/log4j-core {:mvn/version "2.22.1"}
         org.apache.logging.log4j/log4j-slf4j2-impl {:mvn/version "2.22.1"}
         org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/data.json {:mvn/version "2.5.0"}
         org.clojure/tools.cli {:mvn/version "1.0.219"}
         org.clojure/tools.logging {:mvn/version "1.2.4"}
         org.postgresql/postgresql {:mvn/version "42.7.1"}

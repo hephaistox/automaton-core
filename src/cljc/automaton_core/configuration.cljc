@@ -11,7 +11,8 @@
   gathering all classpath, so all `config.edn` versions. The solution was to be based on environment
   parameter. So each alias can tell which version it uses, especially monorepo could be different."
   (:require [automaton-core.configuration.protocol :as core-conf-prot]
-            [automaton-core.configuration.simple-files :as simple-files]
+            [automaton-core.configuration.files :as core-conf-files]
+            [automaton-core.configuration.environment :as core-conf-env]
             [mount.core :refer [defstate in-cljc-mode]]))
 
 ;; Force the use of `cljc mode` in mount library, so call to `@` will work
@@ -20,9 +21,10 @@
 (defn start-conf
   []
   (try (println "Starting configuration component")
-       (let [conf (simple-files/->SimpleConf)]
+       (let [conf (core-conf-files/->FilesConf)
+             env-conf (core-conf-env/->EnvConf)]
          (println "Configuration component is started")
-         conf)
+         [conf env-conf])
        (catch #?(:clj Throwable
                  :cljs :default)
          e
@@ -35,11 +37,9 @@
 (defn read-param
   "Returns value under `key-path` vector."
   ([key-path default-value]
-   (let [value (core-conf-prot/read-conf-param @conf-state key-path)]
-     (if (nil? value)
-       (do (println "Value for " key-path " is not set, use default value" default-value) default-value)
-       (do (println "Read key-path " key-path " = " value) value))))
+   (let [value (or (core-conf-prot/read-conf-param (first @conf-state) key-path)
+                   (core-conf-prot/read-conf-param (second @conf-state) key-path))]
+     (if (nil? value) (do (println "Value for " key-path " is not set, use default value") default-value) value)))
   ([key-path] (read-param key-path nil)))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(defn all-config "Returns whole configuration map, with all the keys and values." [] (core-conf-prot/config @conf-state))
+
