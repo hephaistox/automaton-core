@@ -1,5 +1,5 @@
 ;;The file is updated automatically
-{:deps #:org.clojars.hephaistox{automaton-build-app {:mvn/version "0.0.89"}}
+{:deps #:org.clojars.hephaistox{automaton-build-app {:mvn/version "0.0.90"}}
  :paths []
  :tasks {:requires [[automaton-build-app.tasks.launcher.bb-entrypoint :as build-task-bb-entrypoint] [babashka.process :as babahska-process]]
          heph-task {:doc "Launch an Hephaistox task"
