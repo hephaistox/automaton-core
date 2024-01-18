@@ -10,8 +10,8 @@
    [automaton-core.utils.keyword :as utils-keyword]
    [automaton-core.utils.map :as utils-map]))
 
-#?@(:cljs [(def ^:private nodejs? (exists? js/require))
-           (def ^:private fs (when nodejs? (js/require "fs")))])
+#?(:cljs (def ^:private nodejs? (exists? js/require)))
+#?(:cljs (def ^:private fs (when nodejs? (js/require "fs"))))
 
 (defn slurp-file
   [f]
