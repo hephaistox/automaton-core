@@ -7,8 +7,9 @@
    [automaton-core.utils.keyword :as utils-keyword]
    [clojure.string :as str]))
 
-#?@(:cljs [(def ^:private nodejs? (exists? js/require))
-           (def ^:private process (when nodejs? (js/require "process")))])
+#?(:cljs (def ^:private nodejs? (exists? js/require)))
+
+#?(:cljs (def ^:private process (when nodejs? (js/require "process"))))
 
 (defn env-key-path
   "Turns key-path ([:a :b :c] -> 'a-b-c') into environment type key."
