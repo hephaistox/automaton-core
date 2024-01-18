@@ -1,7 +1,8 @@
 (ns automaton-core.i18n.missing-translation-report-test
-  (:require #?(:clj [clojure.test :refer [deftest is testing]]
-               :cljs [cljs.test :refer [deftest is testing] :include-macros true])
-            [automaton-core.i18n.missing-translation-report :as sut]))
+  (:require
+   #?(:clj [clojure.test :refer [deftest is testing]]
+      :cljs [cljs.test :refer [deftest is testing] :include-macros true])
+   [automaton-core.i18n.missing-translation-report :as sut]))
 
 (def dic-sample
   "Dictionary sample"
@@ -29,12 +30,26 @@
 
 (deftest key-with-missing-languages
   (testing "Return keys with missing languages"
-    (is (= [[:esp-only #{:esperanto}] [:nested.one #{:en}] [:nested.two #{:en}] [:en-only #{:en}]]
+    (is (= [[:esp-only #{:esperanto}]
+            [:nested.one #{:en}]
+            [:nested.two #{:en}]
+            [:en-only #{:en}]]
            (sut/key-with-missing-languages dic-sample #{:en :esperanto} []))))
   (testing "Keys could be excluded"
     (is (= [[:esp-only #{:esperanto}] [:nested.two #{:en}] [:en-only #{:en}]]
-           (sut/key-with-missing-languages dic-sample #{:en :esperanto} [:nested.one])))
+           (sut/key-with-missing-languages dic-sample
+                                           #{:en :esperanto}
+                                           [:nested.one])))
     (is (= [[:esp-only #{:esperanto}] [:nested.two #{:en}]]
-           (sut/key-with-missing-languages dic-sample #{:en :esperanto} [:nested.one :en-only])))
-    (is (= [[:esp-only #{:esperanto}]] (sut/key-with-missing-languages dic-sample #{:en :esperanto} [:nested.one :en-only :nested.two])))
-    (is (= [] (sut/key-with-missing-languages dic-sample #{:en :esperanto} [:nested.one :en-only :nested.two :esp-only])))))
+           (sut/key-with-missing-languages dic-sample
+                                           #{:en :esperanto}
+                                           [:nested.one :en-only])))
+    (is (= [[:esp-only #{:esperanto}]]
+           (sut/key-with-missing-languages dic-sample
+                                           #{:en :esperanto}
+                                           [:nested.one :en-only :nested.two])))
+    (is (= []
+           (sut/key-with-missing-languages
+            dic-sample
+            #{:en :esperanto}
+            [:nested.one :en-only :nested.two :esp-only])))))

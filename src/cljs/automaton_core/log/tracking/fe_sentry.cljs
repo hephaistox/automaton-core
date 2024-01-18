@@ -1,6 +1,7 @@
 (ns automaton-core.log.tracking.fe-sentry
   "Sentry frontend logging."
-  (:require ["@sentry/browser" :as Sentry]))
+  (:require
+   ["@sentry/browser" :as Sentry]))
 
 (defn send-breadcrumb!
   "Sends breadcrumb, which will not be shown in sentry untill event is sent.

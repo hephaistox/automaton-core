@@ -1,9 +1,13 @@
 (ns automaton-core.utils.fallback
   "Fallback utilties"
-  (:require [automaton-core.log :as core-log])
+  (:require
+   [automaton-core.log :as core-log])
   #?(:cljs (:require-macros [automaton-core.utils.fallback])))
 
-(defn cljs-env? "Take the &env from a macro, and tell whether we are expanding into cljs." [env] (boolean (:ns env)))
+(defn cljs-env?
+  "Take the &env from a macro, and tell whether we are expanding into cljs."
+  [env]
+  (boolean (:ns env)))
 
 (defmacro always-return
   "To be used with great caution, as this is not a good practice to ignore exceptions. This should be used only in if it's really important for some application part to always return the value and should be used as a last resort.

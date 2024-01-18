@@ -1,7 +1,8 @@
 (ns automaton-core.log.log-levels-test
-  (:require [automaton-core.log.log-levels :as sut]
-            #?(:clj [clojure.test :refer [deftest is testing]]
-               :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
+  (:require
+   [automaton-core.log.log-levels :as sut]
+   #?(:clj [clojure.test :refer [deftest is testing]]
+      :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
 
 (deftest execute-min-level?
   (testing "Logs of same or higher level are accepted"

@@ -1,23 +1,32 @@
 (ns automaton-core.utils.map-test
-  (:require [automaton-core.utils.map :as sut]
-            #?(:clj [clojure.test :refer [deftest is testing]]
-               :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
+  (:require
+   [automaton-core.utils.map :as sut]
+   #?(:clj [clojure.test :refer [deftest is testing]]
+      :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
 
 (def v ["a" "b" "c"])
 
 (filter #(= "b" (second %)) (map-indexed vector v))
 
 (deftest idx-of-test
-  (testing "Basic case" (is (= 0 (sut/idx-of v "a"))) (is (= 1 (sut/idx-of v "b"))) (is (= 2 (sut/idx-of v "c"))))
+  (testing "Basic case"
+    (is (= 0 (sut/idx-of v "a")))
+    (is (= 1 (sut/idx-of v "b")))
+    (is (= 2 (sut/idx-of v "c"))))
   (testing "not found values return nil" (is (nil? (sut/idx-of v "z"))))
-  (testing "nil values are ok" (is (nil? (sut/idx-of v nil))) (is (nil? (sut/idx-of nil "v")))))
+  (testing "nil values are ok"
+    (is (nil? (sut/idx-of v nil)))
+    (is (nil? (sut/idx-of nil "v")))))
 
 (def v2 [{:foo :bar} {:foo :bar2}])
 
 (deftest idx-of-pred-test
   (testing "Basic case" (is (= 0 (sut/idx-of-pred v2 #(= :bar (:foo %))))))
-  (testing "not found values return nil" (is (nil? (sut/idx-of-pred v #(= :not-existing (:foo %))))))
-  (testing "nil values are ok" (is (nil? (sut/idx-of-pred v nil))) (is (nil? (sut/idx-of-pred nil "v")))))
+  (testing "not found values return nil"
+    (is (nil? (sut/idx-of-pred v #(= :not-existing (:foo %))))))
+  (testing "nil values are ok"
+    (is (nil? (sut/idx-of-pred v nil)))
+    (is (nil? (sut/idx-of-pred nil "v")))))
 
 (deftest crush-test
   (testing "Crush function contract"

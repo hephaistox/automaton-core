@@ -1,7 +1,8 @@
 (ns automaton-core.i18n.language-test
-  (:require [automaton-core.i18n.language :as sut]
-            #?(:clj [clojure.test :refer [deftest is testing]]
-               :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
+  (:require
+   [automaton-core.i18n.language :as sut]
+   #?(:clj [clojure.test :refer [deftest is testing]]
+      :cljs [cljs.test :refer [deftest is testing] :include-macros true])))
 
 (deftest merge-languages-map-test
   (testing "Non selected languages are removed"

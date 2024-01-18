@@ -1,7 +1,8 @@
 (ns automaton-core.utils.pretty-print
   "Gathers functions related to pretty printing or pretty formatting."
-  (:require [automaton-core.adapters.string :as bas]
-            [clojure.pprint :as pp]))
+  (:require
+   [automaton-core.adapters.string :as bas]
+   [clojure.pprint :as pp]))
 
 (defn one-liner-print
   "Prepare the element `elt` to display in the print

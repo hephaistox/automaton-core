@@ -1,7 +1,8 @@
 (ns automaton-core.app.build-config
   "Adapter to `build_config.edn`"
-  (:require [automaton-core.adapters.files :as files]
-            [automaton-core.adapters.edn-utils :as edn-utils]))
+  (:require
+   [automaton-core.adapters.files :as files]
+   [automaton-core.adapters.edn-utils :as edn-utils]))
 
 (def build-config-filename "build_config.edn")
 
@@ -26,6 +27,13 @@
   * `root-dir`
   Returns the list of directories with `build_config.edn` in it"
   [root-dir]
-  (->> (files/search-files root-dir (str "{" build-config-filename ",*/" build-config-filename ",*/*/" build-config-filename "}"))
+  (->> (files/search-files root-dir
+                           (str "{"
+                                build-config-filename
+                                ",*/"
+                                build-config-filename
+                                ",*/*/"
+                                build-config-filename
+                                "}"))
        flatten
        (filterv (comp not nil?))))

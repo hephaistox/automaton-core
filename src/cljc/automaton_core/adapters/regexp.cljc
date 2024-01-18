@@ -2,7 +2,8 @@
   "Adapter to regular expressions
   Seamless access to regular expressions between cljs and clj
   Managing both back and frontend to have a seamless experience"
-  #?(:cljs (:require [automaton-core.adapters.string :as aas])))
+  #?(:cljs (:require
+            [automaton-core.adapters.string :as aas])))
 
 (def starts-a-string
   #?(:clj "\\A"
@@ -45,5 +46,7 @@
           assembled ""]
      (let [re (stringify re)
            assembled-re (str assembled (if optional? (str re "?") re))]
-       (if nexts (recur nexts assembled-re) (re-pattern (str prefix assembled-re suffix))))))
+       (if nexts
+         (recur nexts assembled-re)
+         (re-pattern (str prefix assembled-re suffix))))))
   ([res] (assemble-re-optional res nil nil)))

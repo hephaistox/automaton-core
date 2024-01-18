@@ -1,4 +1,5 @@
-(ns automaton-core.log.strategy "Strategy to choose what logger is used where and when")
+(ns automaton-core.log.strategy
+  "Strategy to choose what logger is used where and when")
 
 (defprotocol Strategy
   (apply-strategy [this ns level]

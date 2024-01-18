@@ -7,4 +7,7 @@
   [var-name]
   (System/getenv var-name))
 
-(defn get-envs "A map of all available environment variables" [] (into {} (System/getenv)))
+(defn get-envs
+  "A map of all available environment variables"
+  []
+  (into {} (System/getenv)))

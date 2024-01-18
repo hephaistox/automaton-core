@@ -1,8 +1,9 @@
 #_{:heph-ignore {:forbidden-words ["tap>"]}}
 (ns automaton-core.repl.portal
-  (:require [automaton-core.configuration :as conf]
-            [portal.api :as p]
-            [portal.client.jvm :as p-client]))
+  (:require
+   [automaton-core.configuration :as conf]
+   [portal.api :as p]
+   [portal.client.jvm :as p-client]))
 
 (def default-port (conf/read-param [:dev :portal-port]))
 
@@ -15,7 +16,10 @@
    Params:
    * `port` (optional)  defaults to def `default-port`, it is a port on which portal app can be found."
   ([] (client-connect default-port))
-  ([port] (conf/read-param [:app-name]) (add-tap (client-submit port)) (tap> "Client connected")))
+  ([port]
+   (conf/read-param [:app-name])
+   (add-tap (client-submit port))
+   (tap> "Client connected")))
 
 (defn portal-connect "Regular portal add-tap fn proxy." [] (add-tap #'submit))
 

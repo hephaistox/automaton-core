@@ -1,11 +1,14 @@
 (ns automaton-core.os.code-formatter
   "Format code
   Proxy to [zprint](https://github.com/kkinnear/zprint)"
-  (:require [zprint.core :as zprint]
-            [automaton-core.adapters.time :as time]
-            [clojure.string :as str]))
+  (:require
+   [zprint.core :as zprint]
+   [automaton-core.adapters.time :as time]
+   [clojure.string :as str]))
 
-(defn add-header [header] (when-not (str/blank? header) (print-str ";;" header (time/now-str) "\n")))
+(defn add-header
+  [header]
+  (when-not (str/blank? header) (print-str ";;" header (time/now-str) "\n")))
 
 (defn format-content
   "Format the `clj` or `edn` file

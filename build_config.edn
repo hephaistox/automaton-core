@@ -4,7 +4,13 @@
                              :deploy-to :clojars
                              :license {}
                              :major-version "0.0.%d"
-                             :repo "git@github.com:hephaistox/automaton-core.git"}
+                             :repo
+                             "git@github.com:hephaistox/automaton-core.git"}
                :repl-aliases [:common-test :env-development-repl :build]}
- :tasks {:clean {:dirs [".cpcache/" ".clj-kondo/.cache/" "tmp/" "target/" "node_modules/" ".shadow-cljs/builds/"]}
+ :tasks {:clean {:dirs [".cpcache/"
+                        ".clj-kondo/.cache/"
+                        "tmp/"
+                        "target/"
+                        "node_modules/"
+                        ".shadow-cljs/builds/"]}
          :reports {:forbiddenwords-words #{"automaton-web" "landing" "tap>"}}}}

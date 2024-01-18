@@ -1,15 +1,17 @@
 (ns automaton-core.configuration.files
   "Namespace for simple configuration based on local file.
    Just like in core configuration, we are not using log nor outside dependencies to comply with the configuration requirements."
-  (:require #?@(:clj [[clojure.edn :as edn] [clojure.java.io :as io] [automaton-core.adapters.java-properties :as java-properties]]
-                :cljs [[cljs.reader :as edn]])
-            [automaton-core.configuration.protocol :as core-conf-prot]
-            [automaton-core.utils.keyword :as utils-keyword]
-            [automaton-core.utils.map :as utils-map]))
+  (:require
+   #?@(:clj [[clojure.edn :as edn]
+             [clojure.java.io :as io]
+             [automaton-core.adapters.java-properties :as java-properties]]
+       :cljs [[cljs.reader :as edn]])
+   [automaton-core.configuration.protocol :as core-conf-prot]
+   [automaton-core.utils.keyword :as utils-keyword]
+   [automaton-core.utils.map :as utils-map]))
 
-#?(:cljs (def ^:private nodejs? (exists? js/require)))
-
-#?(:cljs (def ^:private fs (when nodejs? (js/require "fs"))))
+#?@(:cljs [(def ^:private nodejs? (exists? js/require))
+           (def ^:private fs (when nodejs? (js/require "fs")))])
 
 (defn slurp-file
   [f]
@@ -23,7 +25,8 @@
 (defn read-config-file
   "Reads config file, on purpose fn defined here to keep dependencies as small as possible."
   [f]
-  (when-let [content (slurp-file f)] (into {} (utils-keyword/sanitize-map-keys (edn/read-string content)))))
+  (when-let [content (slurp-file f)]
+    (into {} (utils-keyword/sanitize-map-keys (edn/read-string content)))))
 
 (def config-file
   #?(:clj "heph-conf"
@@ -38,7 +41,9 @@
 (defn- warn-on-overwrite
   [ms]
   (let [kseq (reduce (fn [acc m] (concat acc (keys m))) [] ms)]
-    (for [[id freq] (frequencies kseq) :when (> freq 1)] (println "WARNING: configuration keys are duplicated for:" id))))
+    (for [[id freq] (frequencies kseq)
+          :when (> freq 1)]
+      (println "WARNING: configuration keys are duplicated for:" id))))
 
 (defn merge-configs [& m] (warn-on-overwrite m) (apply utils-map/deep-merge m))
 
@@ -52,9 +57,10 @@
                (apply merge-configs))
      :cljs (if nodejs? (read-config-file config-file) {})))
 
-(def ^{:doc "A map of configuration variables."} conf (memoize read-config))
 
-(defrecord FilesConf []
+(defrecord FilesConf [conf]
   core-conf-prot/Conf
-    (read-conf-param [_this key-path] (get-in (conf) key-path))
-    (config [_this] (conf)))
+    (read-conf-param [_this key-path] (get-in conf key-path))
+    (config [_this] conf))
+
+(defn make-files-conf [] (->FilesConf (read-config)))

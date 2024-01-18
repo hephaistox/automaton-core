@@ -1,6 +1,7 @@
 (ns automaton-core.user.account.schema
   "Contains all schema related to user accounts"
-  (:require [datomic.db]))
+  (:require
+   [datomic.db]))
 
 (def account-schema
   "Schema for creating account"

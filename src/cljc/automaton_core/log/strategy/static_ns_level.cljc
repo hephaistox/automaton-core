@@ -8,9 +8,10 @@
   * All selected lines could then decide on runtime if there are needed or not. For instance log4j2 logger could use its own parameters to update dynamically which one is used or not
 
   See `automaton-core.log.strategy.static-ns-level/ns-rules` for rule definition details "
-  (:require [automaton-core.log.log-levels :as log-levels]
-            [automaton-core.log.strategy :as log-strategy]
-            [automaton-core.log.registry :as log-registry]))
+  (:require
+   [automaton-core.log.log-levels :as log-levels]
+   [automaton-core.log.strategy :as log-strategy]
+   [automaton-core.log.registry :as log-registry]))
 
 (def ns-rules
   "Decides the level of log depending on namespace
@@ -69,7 +70,10 @@
   [rules]
   (filter (fn [rule] (= :default (:rule-id rule))) rules))
 
-(defn- filter-rules-by-ns "Returns all rules that fit for the provided ns." [rules ns] (keep (partial apply-ns-rule ns) rules))
+(defn- filter-rules-by-ns
+  "Returns all rules that fit for the provided ns."
+  [rules ns]
+  (keep (partial apply-ns-rule ns) rules))
 
 (defn- filter-rules-by-unique-loggers
   "Returns sequence of rules where each logger is unique.
@@ -80,15 +84,23 @@
 (defn- filter-rules-loggers-not-in
   "Returns coll1 rules that doesn't have a logger in rules from coll2"
   [coll1 coll2]
-  (filter (fn [coll1-rule] (every? (fn [coll2-rule] (not= (:logger coll1-rule) (:logger coll2-rule))) coll2)) coll1))
+  (filter (fn [coll1-rule]
+            (every? (fn [coll2-rule]
+                      (not= (:logger coll1-rule) (:logger coll2-rule)))
+                    coll2))
+          coll1))
 
 (defn- rules-seq-loggers
   "Returns vector of loggers from sequences with rules.
    If there is no rules with loggers, returns empty vector."
   [& rules-seq]
-  (reduce (fn [loggers rule] (conj loggers (:logger rule))) [] (into [] (apply concat rules-seq))))
+  (reduce (fn [loggers rule] (conj loggers (:logger rule)))
+          []
+          (into [] (apply concat rules-seq))))
 
-(defn filter-rules-by-env [rules env] (filter (fn [rule] (if (:env rule) (= env (:env rule)) true)) rules))
+(defn filter-rules-by-env
+  [rules env]
+  (filter (fn [rule] (if (:env rule) (= env (:env rule)) true)) rules))
 
 (defn filter-rules-by-level
   [rules level]
@@ -108,9 +120,13 @@
             matching-ns-rules (-> ns-rules
                                   (filter-rules-by-ns ns)
                                   filter-rules-by-unique-loggers)
-            default-loggers-rules-kept (filter-rules-loggers-not-in default-loggers-rules-accepted matching-ns-rules)
-            matching-ns-rules-kept (filter-rules-by-level matching-ns-rules level)
-            loggers (rules-seq-loggers default-loggers-rules-kept matching-ns-rules-kept)
+            default-loggers-rules-kept (filter-rules-loggers-not-in
+                                        default-loggers-rules-accepted
+                                        matching-ns-rules)
+            matching-ns-rules-kept (filter-rules-by-level matching-ns-rules
+                                                          level)
+            loggers (rules-seq-loggers default-loggers-rules-kept
+                                       matching-ns-rules-kept)
             loggers* (if (empty? loggers) [::log-registry/no-op] loggers)]
         loggers*))
     (rule-ids [_]

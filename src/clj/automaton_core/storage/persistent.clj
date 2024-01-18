@@ -1,4 +1,5 @@
-(ns automaton-core.storage.persistent "Protocol namespace defining what is required from persistent storage implementation.")
+(ns automaton-core.storage.persistent
+  "Protocol namespace defining what is required from persistent storage implementation.")
 
 (defprotocol PersistentStorageClient
   "Protocol for persisten storage connection mechanism"

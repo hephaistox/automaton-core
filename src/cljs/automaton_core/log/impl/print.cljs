@@ -1,7 +1,8 @@
 (ns automaton-core.log.impl.print
   "Simple print namespace, most likely used just temporarily.
 trace -> debug -> info -> warn -> error -> fatal"
-  (:require [clojure.string :as str]))
+  (:require
+   [clojure.string :as str]))
 
 (defn get-logger
   "The logger version for js console is based in the order found in that [article](https://www.atatus.com/blog/javascript-logging-basic-tips/)

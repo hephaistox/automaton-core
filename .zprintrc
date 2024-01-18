@@ -1,10 +1,12 @@
 ;;See [doc](https://github.com/kkinnear/zprint/blob/d0bb27e51ac97b1cdae5ea32b9b953f66cd650b2/doc/reference.md#introduction-to-configuration) for more details
-{:style :community
- :width 140
+{:style [:community
+         :how-to-ns
+         :require-justify
+         :sort-dependencies
+         :backtranslate
+         :hiccup]
  :map {:comma? false
-       :unlift-ns? true
-       :lift-ns-in-code? false
-       :lift-ns? false
        :force-nl? true}
  :pair {:force-nl? true}
+ :pair-fn {:hang? false}
  :comment {:wrap? false}}

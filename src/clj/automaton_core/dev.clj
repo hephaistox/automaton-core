@@ -1,7 +1,8 @@
 (ns automaton-core.dev
   "Will be `refer :all` in the subproject `user` namespace, default namepsace for subproject REPL"
-  (:require [clj-memory-meter.core :as mm]
-            [automaton-core.repl :as repl]))
+  (:require
+   [clj-memory-meter.core :as mm]
+   [automaton-core.repl :as repl]))
 
 (defn start "Start repl" [& _args] (repl/start-repl))
 

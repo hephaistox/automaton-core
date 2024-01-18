@@ -1,10 +1,12 @@
 (ns automaton-core.log.tracking.be-sentry
   "Sentry backend implementation"
-  (:require [automaton-core.utils.map :as utils-map]
-            [sentry-clj.core :as sentry]
-            [automaton-core.utils.pretty-print :as pretty-print])
-  (:import [io.sentry Breadcrumb Sentry SentryLevel]
-           [java.util Date HashMap Map]))
+  (:require
+   [automaton-core.utils.map :as utils-map]
+   [sentry-clj.core :as sentry]
+   [automaton-core.utils.pretty-print :as pretty-print])
+  (:import
+   [io.sentry Breadcrumb Sentry SentryLevel]
+   [java.util Date HashMap Map]))
 
 (defn- keyword->level
   "Converts a keyword into an event level."
@@ -25,14 +27,18 @@
     (when level (.setLevel breadcrumb (keyword->level level)))
     (when message (.setMessage breadcrumb message))
     (when category (.setCategory breadcrumb category))
-    (when data (doseq [[k v] (utils-map/map-util-hashmappify-vals data #(HashMap. ^Map %))] (.setData breadcrumb k v)))
+    (when data
+      (doseq [[k v] (utils-map/map-util-hashmappify-vals data
+                                                         #(HashMap. ^Map %))]
+        (.setData breadcrumb k v)))
     breadcrumb))
 
 (defn send-breadcrumb!
   "Sends breadcrumb, which will not be shown in sentry until event is sent.
    You can read more here: https://docs.sentry.io/platforms/java/enriching-events/breadcrumbs/"
   [{:keys [message level context]}]
-  (Sentry/addBreadcrumb (map->breadcrumb {:message (pretty-print/seq->string message)
+  (Sentry/addBreadcrumb (map->breadcrumb {:message (pretty-print/seq->string
+                                                    message)
                                           :level level
                                           :data context})))
 
@@ -47,4 +53,6 @@
   "Initialize sentry for jvm, so events can be recorded.
    'development' as an environment is ignored, so no event is sent from it."
   [{:keys [dsn env]}]
-  (if (every? some? [dsn env]) (sentry/init! dsn {:environment env}) (prn "Sentry initialization is skipped, paremeters are missing")))
+  (if (every? some? [dsn env])
+    (sentry/init! dsn {:environment env})
+    (prn "Sentry initialization is skipped, paremeters are missing")))
