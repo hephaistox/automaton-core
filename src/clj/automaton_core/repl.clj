@@ -1,10 +1,11 @@
 (ns automaton-core.repl
-  "REPL component
+  "REPL component. Could be used remotely to connect on production or locally to connect a development environment
 
   Design decision:
   * This REPL is available in `automaton-core.repl` for enabling the repl for local acceptance and production
   * This namespace rely on `automaton-core.configuration`, which means no log could be done before configuration is loaded"
   (:require
+   [automaton-build.os.terminal-msg :as build-terminal-msg]
    [automaton-core.adapters.files :as files]
    [automaton-core.configuration :as conf]
    [automaton-core.log :as core-log]
@@ -33,7 +34,7 @@
 (defn stop-repl
   "Stop the repl"
   [repl-port]
-  (core-log/info "Stop nrepl server on port" repl-port)
+  (build-terminal-msg/println-msg "Stop nrepl server on port" repl-port)
   (stop-server (:repl @repl))
   (reset! repl {}))
 
@@ -61,13 +62,17 @@
                                                     middleware)))})
     (.addShutdownHook
      (Runtime/getRuntime)
-     (Thread. #(do (core-log/info "SHUTDOWN in progress, stop repl on port `"
-                                  repl-port
-                                  "`")
-                   (core-portal/stop)
+     (Thread. #(do (build-terminal-msg/println-msg
+                    "SHUTDOWN in progress, stop repl on port `%s`"
+                    repl-port)
+                   (stop-repl repl-port)
+                   (build-terminal-msg/println-msg "Repl stopped server")
+                   ;; (core-portal/stop)
+                   ;; (build-terminal-msg/println-msg "Portal stopped")
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
                        (files/delete-files))
-                   (stop-repl repl-port))))))
+                   (build-terminal-msg/println-msg
+                    "nrepl port files removed"))))))
 
 (defn start-repl
   "Start repl, setup and catch errors"
