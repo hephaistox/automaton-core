@@ -5,7 +5,7 @@ And be able to watch bb log to check if results are as expected"
   (:require
    [clojure.test :refer [deftest is testing]]
    [automaton-core.adapters.commands :as sut]
-   [automaton-core.adapters.schema :as schema]))
+   [automaton-core.adapters.schema :as core-schema]))
 
 (defn check-exit-code
   "Check the process return code is 0"
@@ -41,26 +41,14 @@ And be able to watch bb log to check if results are as expected"
                                                {:dir "deps.edn"
                                                 :out :string})))))
 
-(deftest execute-test
-  (testing "Simple version"
-    (is (string? (sut/exec-cmds [[["pwd"]] [["pwd"]]]
-                                {:out :string
-                                 :dir "."}))))
-  (testing "Failed command is detected"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #""
-                          (sut/exec-cmds [[["uname" "-x"] {:out :string}]]))))
-  (testing "Commands should be a vector of command"
-    (is (thrown-with-msg? clojure.lang.ExceptionInfo
-                          #"Malformed command"
-                          (sut/exec-cmds "test")))))
-
 (deftest commands-schema-test
   (testing "Accepted example"
-    (is (schema/schema-valid sut/commands-schema [[[]]]))
-    (is (schema/schema-valid sut/commands-schema [[["pwd"]]]))
-    (is (schema/schema-valid sut/commands-schema [[["pwd"]] [["pwd"]]])))
+    (is (core-schema/schema-valid sut/commands-schema [[[]]]))
+    (is (core-schema/schema-valid sut/commands-schema [[["pwd"]]]))
+    (is (core-schema/schema-valid sut/commands-schema [[["pwd"]] [["pwd"]]])))
   (testing "Non accepted example"
-    (is (not (schema/schema-valid sut/commands-schema [[["pwd" nil]]])))
-    (is (not (schema/schema-valid sut/commands-schema [[["pwd" nil] {} {}]])))
-    (is (not (schema/schema-valid sut/commands-schema [[["pwd" nil] [] {}]])))))
+    (is (not (core-schema/schema-valid sut/commands-schema [[["pwd" nil]]])))
+    (is (not (core-schema/schema-valid sut/commands-schema
+                                       [[["pwd" nil] {} {}]])))
+    (is (not (core-schema/schema-valid sut/commands-schema
+                                       [[["pwd" nil] [] {}]])))))

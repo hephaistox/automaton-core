@@ -2,15 +2,10 @@
   "Library to execute a set of commands"
   (:require
    [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.schema :as schema]
    [automaton-core.log :as core-log]
    [babashka.process :as babashka-process]
    [clojure.java.io :as io]
    [clojure.string :as str]))
-
-(def size-command
-  "Size of the command line to be managed, measured on mcbook pro"
-  185)
 
 (def commands-schema
   [:vector
@@ -100,17 +95,3 @@
          (catch Exception e
            (throw (ex-info (str "Command `" str-command "` failed ")
                            (merge execute-command-params {:exception e})))))))
-
-(defn exec-cmds
-  "Execute commands with their default parameters
-   is a vector of two elements:
-   * the first is a vector of string, each representing an argument on the cli
-   * the second is the set of parameters, which allow to be specific for each command
-  Params:
-  * `commands` tokenize command"
-  ([commands] (exec-cmds commands {}))
-  ([commands default-params]
-   (schema/schema-valid-or-throw commands-schema commands "Malformed command")
-   (apply str
-          (doall (for [command commands]
-                   (:out (execute-command command default-params)))))))
