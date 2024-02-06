@@ -48,7 +48,7 @@
                             :else nil))
                         (every? nil?))
                ~@body)))
-   :cljs (defmacro assert-protocols [_ _ & body] (do ~@body)))
+   :cljs (defn assert-protocols [_ _ & body] (body)))
 
 #?(:clj
      (defmacro assert-positive-integer
@@ -61,4 +61,5 @@
          `(do ~@body)
          `(if (and (int? ~val) (or (zero? ~val) (pos? ~val)))
             (do ~@body)
-            (core-log/error-format ~msg ~val)))))
+            (core-log/error-format ~msg ~val))))
+   :cljs (defn assert-positive-integer [_ _ & body] (body)))
