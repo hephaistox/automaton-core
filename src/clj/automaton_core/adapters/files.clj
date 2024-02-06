@@ -32,9 +32,9 @@
   [file-list]
   (doseq [file file-list]
     (if (fs/directory? file)
-      (do (core-log/debug "Directory " (absolutize file) " is deleted")
+      (do (core-log/trace "Directory " (absolutize file) " is deleted")
           (fs/delete-tree file))
-      (do (core-log/debug "File " (absolutize file) " is deleted")
+      (do (core-log/trace "File " (absolutize file) " is deleted")
           (fs/delete-if-exists file)))))
 
 (defn- copy-files-or-dir-validate
