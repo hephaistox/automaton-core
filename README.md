@@ -8,3 +8,16 @@ This one should be agnostic of any environment, so it should run on the followin
 * frontend of web app,
 * Android frontend,
 * Android backend, ...
+
+
+Features are:
+* Graph execution 
+  * Store what happened in a causal graph
+* Helpers for regular expression, strings, keywords, maps, sequences ...
+* Logger
+* Configuration management - with multiple environments
+* Simple graph datastructure
+* Translation
+* Exception fallback mechanism
+* uuid
+* Persistence (databases)
