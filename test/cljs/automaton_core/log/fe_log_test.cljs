@@ -3,7 +3,7 @@
    [automaton-core.log.fe-log :as sut]
    [cljs.test :refer [deftest is testing] :include-macros true]))
 
-(deftest fatal-test
+(deftest log-fatal-test
   (testing "Fatal is always printing something"
     (is
      (= "foo bar"
@@ -22,6 +22,21 @@
         "bar")
       (macroexpand
        '(sut/log [:automaton-core.log.registry/print] :fatal "foo" "bar"))))))
+
+(comment
+  (macroexpand '(sut/log-exception
+                 [:automaton-core.log.registry/print]
+                 :trace
+                 (ex-info "foo" {})
+                 "bar"))
+  ;((clojure.core/apply
+  ;  clojure.core/juxt
+  ;  (automaton-core.log.fe-log/logger-ids-to-logger-fns
+  ;   [:automaton-core.log.registry/print]))
+  ; "automaton-core.log.fe-log-test"
+  ; :trace
+  ; (ex-info "foo" {}))
+)
 
 (deftest trace-test
   (testing "Trace is not accepted in log namespace test rule"
