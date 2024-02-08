@@ -70,8 +70,10 @@
               " is not totally comparable")
     :result (->> (pick-random-tuple values-to-test 3 nb-iterations)
                  (map (fn [triple]
-                        (let [[date1 date2 date3]
-                              (sort (#?(:clj var-get) binary-operator) triple)]
+                        (let [[date1 date2 date3] (sort (#?(:clj var-get
+                                                            :cljs identity)
+                                                         binary-operator)
+                                                        triple)]
                           (if (binary-operator date1 date3)
                             false
                             [date1 date2 date3]))))
