@@ -13,3 +13,13 @@
        (recur (butlast aseq) (dec i))
        aseq)))
   ([aseq] (trim-leading-nil aseq nil?)))
+
+(defn index-of
+  "Find the position of x, the first occurence matching(x) in coll.
+
+  Returns its position
+   Params:
+  * `coll` collection to search in
+  * `pred` pred is a function returning true when called on the element to return the sequence of"
+  [coll pred]
+  (let [idx? (fn [i a] (when (pred a) i))] (first (keep-indexed idx? coll))))

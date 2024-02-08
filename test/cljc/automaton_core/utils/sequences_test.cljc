@@ -21,3 +21,11 @@
     (is (empty? (sut/trim-leading-nil ["a" "b"] string?)))
     (is (= ["a" "b"]
            (sut/trim-leading-nil ["a" "b" nil nil "" ""] str/blank?)))))
+
+(deftest index-of-test
+  (testing "Element found in the sequence"
+    (is (= 2 (sut/index-of [1 2 :foo 3] #{:foo})))
+    (is (= 0 (sut/index-of [:foo 1 2 3] #{:foo})))
+    (is (= 3 (sut/index-of [1 2 3 :foo] #{:foo}))))
+  (testing "Element not found in the sequence"
+    (is (nil? (sut/index-of [1 2 3] :foo)))))

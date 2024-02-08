@@ -6,7 +6,7 @@
    [automaton-core.log.strategy.static-ns-level])
   #?(:cljs (:require-macros [automaton-core.log.fe-log])))
 
-(defn logger-ids-to-logger-fns
+(defn- logger-ids-to-logger-fns
   [logger-ids]
   (reduce (fn [acc logger-id]
             (conj acc
@@ -26,7 +26,7 @@
 
 (defmacro log-exception
   [logger-id level exception & additional-message]
-  (when additional-message (log logger-id level additional-message))
+  (when additional-message `(log ~logger-id ~level ~@additional-message))
   (let [ns (str *ns*)
         log-fns `(automaton-core.log.fe-log/logger-ids-to-logger-fns
                   ~logger-id)]
@@ -34,7 +34,7 @@
 
 (defmacro log-data
   [logger-id level data & additional-message]
-  (when additional-message (log logger-id additional-message))
+  (when additional-message `(log ~logger-id ~level ~@additional-message))
   (let [ns (str *ns*)
         log-fns `(automaton-core.log.fe-log/logger-ids-to-logger-fns
                   ~logger-id)]
