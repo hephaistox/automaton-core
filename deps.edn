@@ -1,10 +1,10 @@
 {:aliases
  {:bb-deps {:extra-deps #:org.clojars.hephaistox{automaton-build
-                                                 #:mvn{:version "0.10.2-la"}}}
+                                                 #:mvn{:version "1.0.2-la"}}}
   :build {:extra-deps #:org.clojars.hephaistox{automaton-build
-                                               #:mvn{:version "0.10.2-la"}}}
+                                               #:mvn{:version "1.0.2-la"}}}
   :cljs-deps {:extra-deps {binaryage/devtools #:mvn{:version "1.0.7"}
-                           cider/cider-nrepl #:mvn{:version "0.30.0"}
+                           cider/cider-nrepl #:mvn{:version "0.44.0"}
                            thheller/shadow-cljs #:mvn{:version "2.26.2"}}
               :extra-paths
               ["src/cljs/" "src/cljc/" "resources/" "test/cljs/" "test/cljc/"]}
@@ -18,7 +18,7 @@
    :extra-paths ["test/clj/" "test/cljc/" "test/resources/"]
    :jvm-opts ["-Dheph-conf=env/test/config.edn,env/common_config.edn"]}
   :env-development-repl
-  {:extra-deps {cider/cider-nrepl #:mvn{:version "0.30.0"}
+  {:extra-deps {cider/cider-nrepl #:mvn{:version "0.44.0"}
                 org.clojure/core.async #:mvn{:version "1.6.681"}}
    :extra-paths ["env/development/resources/"
                  "env/development/src/clj/"

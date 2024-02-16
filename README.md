@@ -1,6 +1,6 @@
 # Automaton core
 
-Automaton core is the root of all of Hephaistox projects. It is based on no other Hephaistox project.
+Automaton core is about all core technical functionalities we may need to start a project.
 
 This one should be agnostic of any environment, so it should run on the following examples of technology:
 * CLI 
@@ -9,15 +9,15 @@ This one should be agnostic of any environment, so it should run on the followin
 * Android frontend,
 * Android backend, ...
 
-
 Features are:
-* Graph execution 
+* Execution graph 
   * Store what happened in a causal graph
-* Helpers for regular expression, strings, keywords, maps, sequences ...
+* Small utility function helpers like: regular expression, strings, keywords, maps, sequences, uuids
 * Logger
 * Configuration management - with multiple environments
-* Simple graph datastructure
 * Translation
 * Exception fallback mechanism
-* uuid
 * Persistence (databases)
+
+License information can be found in [LICENSE file](LICENSE.md)
+Copyright © 2020-2024 Anthony Caumond, Mateusz Mazurczak
