@@ -1,8 +1,8 @@
 {:aliases
  {:bb-deps {:extra-deps #:org.clojars.hephaistox{automaton-build
-                                                 #:mvn{:version "1.0.2-la"}}}
+                                                 #:mvn{:version "1.0.1-2-la"}}}
   :build {:extra-deps #:org.clojars.hephaistox{automaton-build
-                                               #:mvn{:version "1.0.2-la"}}}
+                                               #:mvn{:version "1.0.1-2-la"}}}
   :cljs-deps {:extra-deps {binaryage/devtools #:mvn{:version "1.0.7"}
                            cider/cider-nrepl #:mvn{:version "0.44.0"}
                            thheller/shadow-cljs #:mvn{:version "2.26.2"}}
