@@ -4,7 +4,7 @@
    [automaton-core.storage.persistent :as storage]
    [automaton-core.storage.impl.datomic.datomic :as datomic]
    [automaton-core.storage.impl.datomic.schema :as datomic-schema]
-   [automaton-core.configuration :as conf]
+   [automaton-core.configuration :as core-conf]
    [automaton-core.log :as core-log]
    [mount.core :refer [defstate]]))
 
@@ -14,7 +14,7 @@
     (core-log/info "Start storage component")
     (let
       [dc (datomic/make-datomic-client datomic-schema/all-schema)
-       db-uri (conf/read-param [:storage :datomic :url])
+       db-uri (core-conf/read-param [:storage :datomic :url])
        _db-uri-valid?
        (when-not db-uri
          (throw

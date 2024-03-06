@@ -24,11 +24,10 @@
   (try (println "Starting configuration component")
        (let [conf (core-conf-files/make-files-conf)
              env-conf (core-conf-env/make-env-conf)]
-         (println "Configuration component is started")
          [conf env-conf])
        (catch #?(:clj Throwable
                  :cljs :default)
-         e
+              e
          (println "Configuration failed" e))))
 
 (defn stop-conf [] (println "Stop configuration component"))
@@ -38,13 +37,14 @@
 (defn read-param
   "Returns value under `key-path` vector."
   ([key-path default-value]
-   (let [value (or (core-conf-prot/read-conf-param (first @conf-state) key-path)
-                   (core-conf-prot/read-conf-param (second @conf-state)
-                                                   key-path))]
-     (if (nil? value)
+   (let [param-values [(core-conf-prot/read-conf-param (first @conf-state) key-path)
+                       (core-conf-prot/read-conf-param (second @conf-state)
+                                                       key-path)]
+         value (->> param-values
+                    (filter some?)
+                    first)]
+     (if (every? nil? param-values)
        (do (println "Value for " key-path " is not set, use default value")
            default-value)
        value)))
   ([key-path] (read-param key-path nil)))
-
-
