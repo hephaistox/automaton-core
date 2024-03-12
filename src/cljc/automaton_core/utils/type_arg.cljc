@@ -28,7 +28,7 @@
 #?(:clj (defmacro assert-protocols
           "Assert the `args` to check if they all match the expected type"
           [caller-fn-name asserts & body]
-          (if (core-configuration/read-param [:test-type-arg?] false)
+          (if (core-configuration/read-param [:production] false)
             `(do ~@body)
             `(when (->> (for [[expected-type# arg#] ~asserts]
                           (cond
@@ -57,7 +57,7 @@
   * `val` value to test
   * `msg` message to display, the `%s` in the string is replaced with the value"
        [val msg & body]
-       (if (core-configuration/read-param [:test-type-arg?] false)
+       (if (core-configuration/read-param [:production] false)
          `(do ~@body)
          `(if (and (int? ~val) (or (zero? ~val) (pos? ~val)))
             (do ~@body)

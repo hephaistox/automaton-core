@@ -4,7 +4,6 @@
                              :deploy-to :clojars
                              :env {:la {}
                                    :production {}}
-                             :frontend {:run-aliases []}
                              :license {}
                              :repo
                              "git@github.com:hephaistox/automaton-core.git"}
@@ -15,7 +14,4 @@
                         "target/"
                         "node_modules/"
                         ".shadow-cljs/builds/"]}
-         :lfe-test {}
-         :lfe-watch {}
-         :reports {:forbiddenwords-words #{"automaton-build" "automaton-web"
-                                           "landing" "tap>"}}}}
+         :reports {:forbiddenwords-words #{"automaton-web" "landing" "tap>"}}}}

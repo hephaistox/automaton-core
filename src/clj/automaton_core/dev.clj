@@ -1,9 +1,13 @@
 (ns automaton-core.dev
-  "Will be `refer :all` in the subproject `user` namespace, default namepsace for subproject REPL
-
-  Linter doesn't detect that all that functions are callable from the user namespace of the repl."
+  "Will be `refer :all` in the subproject `user` namespace, default namepsace for subproject REPL"
   (:require
-   [clj-memory-meter.core :as mm]))
+   [clj-memory-meter.core :as mm]
+   [automaton-core.repl :as core-repl]))
+
+(defn start "Start repl" [& _args] (core-repl/start-repl))
+
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(defn go "starts all states defined by defstate" [] (start) :ready)
 
 ;; See https://github.com/clojure-goes-fast/clj-memory-meter, for details
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}

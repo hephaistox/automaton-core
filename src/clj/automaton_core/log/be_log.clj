@@ -6,7 +6,7 @@
   (:require
    [automaton-core.log.be-registry :as log-be-registry]
    [automaton-core.log.tracking.be-error-tracking :as exs]
-   [automaton-core.log.terminal :as core-log-terminal]))
+   [automaton-core.log.terminal :as core-terminal]))
 
 (defn log-init!
   [{:keys [dsn env]}]
@@ -20,9 +20,8 @@
             (if-let [logger-strategy (get-in log-be-registry/strategies-registry
                                              [logger-id :impl])]
               (conj acc logger-strategy)
-              (do (core-log-terminal/log
-                   "WARN: Logging strategy is nil for id: "
-                   logger-id)
+              (do (core-terminal/log "WARN: Logging strategy is nil for id: "
+                                     logger-id)
                   acc)))
           []
           logger-ids))

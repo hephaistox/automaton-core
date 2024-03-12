@@ -19,8 +19,8 @@
           :cljs (when ^js (.existsSync fs f) (str ^js (.readFileSync fs f))))
        (catch #?(:clj Exception
                  :cljs js/Error)
-              _
-         (println (str "Reading file " f " failed")))))
+         _
+         (println (str "Reading file" f " failed")))))
 
 (defn read-config-file
   "Reads config file, on purpose fn defined here to keep dependencies as small as possible."
@@ -57,9 +57,10 @@
                (apply merge-configs))
      :cljs (if nodejs? (read-config-file config-file) {})))
 
+
 (defrecord FilesConf [conf]
   core-conf-prot/Conf
-  (read-conf-param [_this key-path] (get-in conf key-path))
-  (config [_this] conf))
+    (read-conf-param [_this key-path] (get-in conf key-path))
+    (config [_this] conf))
 
 (defn make-files-conf [] (->FilesConf (read-config)))
