@@ -1,2 +1,2 @@
 {:env :test
- :production false}
+ :test-type-arg? false}

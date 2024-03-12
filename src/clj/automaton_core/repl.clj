@@ -5,7 +5,7 @@
   * This REPL is available in `automaton-core.repl` for enabling the repl for local acceptance and production
   * This namespace rely on `automaton-core.configuration`, which means no log could be done before configuration is loaded"
   (:require
-   [automaton-core.os.terminal-msg :as core-terminal-msg]
+   [automaton-core.log.terminal :as core-log-terminal]
    [automaton-core.adapters.files :as files]
    [automaton-core.configuration :as core-conf]
    [automaton-core.log :as core-log]
@@ -53,13 +53,14 @@
     (core-portal-server/start)
     (reset! repl {:nrepl-port repl-port
                   :repl (do (core-log/info "nrepl available on port " repl-port)
-                            (println "repl port is available on: " repl-port)
+                            (core-log-terminal/log "repl port is available on: "
+                                                   repl-port)
                             (start-server :port repl-port
                                           :handler (apply default-handler
                                                           middlewares)))})
     (.addShutdownHook
      (Runtime/getRuntime)
-     (Thread. #(do (core-terminal-msg/println-msg
+     (Thread. #(do (core-log-terminal/log
                     "SHUTDOWN in progress, stop repl on port `"
                     repl-port
                     "`")
@@ -67,6 +68,33 @@
                    (core-portal-server/stop)
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
                        (files/delete-files)))))))
+
+(defn- require-package
+  [package]
+  (-> package
+      namespace
+      symbol
+      require))
+
+(defn- require-existing-package
+  [package]
+  (try (require-package package) package (catch Exception _ nil)))
+
+(defn add-packages
+  [packages]
+  (reduce (fn [acc package]
+            (if-let [confirmed-package (require-existing-package package)]
+              (if (coll? @(resolve confirmed-package))
+                (vec (concat @(resolve confirmed-package) acc))
+                (conj acc confirmed-package))
+              acc))
+          []
+          packages))
+
+(defn default-middleware
+  []
+  (add-packages ['cider.nrepl/cider-middleware
+                 'refactor-nrepl.middleware/wrap-refactor]))
 
 (defn start-repl
   "Start repl, setup and catch errors
