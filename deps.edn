@@ -1,13 +1,17 @@
 {:aliases
  {:bb-deps {:extra-deps #:org.clojars.hephaistox{automaton-build
-                                                 #:mvn{:version "1.1.0"}}}
+                                                 #:mvn{:version "1.2.0"}}}
   :build {:extra-deps #:org.clojars.hephaistox{automaton-build #:mvn{:version
-                                                                     "1.1.0"}}}
+                                                                     "1.2.0"}}}
   :cljs-deps {:extra-deps {binaryage/devtools #:mvn{:version "1.0.7"}
-                           cider/cider-nrepl #:mvn{:version "0.44.0"}
                            thheller/shadow-cljs #:mvn{:version "2.27.5"}}
-              :extra-paths
-              ["src/cljs/" "src/cljc/" "resources/" "test/cljs/" "test/cljc/"]}
+              :extra-paths ["src/cljs/"
+                            "src/cljc/"
+                            "resources/"
+                            "test/cljs/"
+                            "test/cljc/"
+                            "env/development/src/cljs"
+                            "env/development/src/cljc"]}
   :common-test
   {:exec-fn cognitect.test-runner.api/test
    :extra-deps {com.cognitect/test-runner
@@ -18,8 +22,7 @@
    :extra-paths ["test/clj/" "test/cljc/" "test/resources/"]
    :jvm-opts ["-Dheph-conf=env/test/config.edn,env/common_config.edn"]}
   :env-development-repl
-  {:extra-deps {cider/cider-nrepl #:mvn{:version "0.44.0"}
-                org.clojure/core.async #:mvn{:version "1.6.681"}}
+  {:extra-deps #:org.clojure{core.async #:mvn{:version "1.6.681"}}
    :extra-paths ["env/development/resources/"
                  "env/development/src/clj/"
                  "env/development/src/cljc/"]
@@ -60,6 +63,5 @@
         org.clojure/tools.cli #:mvn{:version "1.1.230"}
         org.clojure/tools.logging #:mvn{:version "1.3.0"}
         org.postgresql/postgresql #:mvn{:version "42.7.2"}
-        refactor-nrepl/refactor-nrepl #:mvn{:version "3.6.0"}
         zprint/zprint #:mvn{:version "1.2.8"}}
  :paths ["src/clj/" "src/cljc/" "resources/"]}

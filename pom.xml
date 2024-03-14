@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0</version>
   <name>automaton-core</name>
   <dependencies>
     <dependency>
@@ -66,11 +66,6 @@
       <groupId>com.taoensso</groupId>
       <artifactId>tempura</artifactId>
       <version>1.5.3</version>
-    </dependency>
-    <dependency>
-      <groupId>refactor-nrepl</groupId>
-      <artifactId>refactor-nrepl</artifactId>
-      <version>3.6.0</version>
     </dependency>
     <dependency>
       <groupId>djblue</groupId>

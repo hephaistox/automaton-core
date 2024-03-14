@@ -14,7 +14,7 @@
         * This namespace is the entrypoint for both clj and cljs implementations
 "
   (:require
-   [automaton-core.configuration :as conf]
+   [automaton-core.configuration :as core-conf]
    [automaton-core.log.strategy.static-ns-level
     :as
     log-static-ns-level-strategy]
@@ -26,7 +26,7 @@
 (def stgy
   "Decides which strategy implementation to use for choosing the loggers."
   (log-static-ns-level-strategy/make-static-ns-level-strategy
-   {:env (conf/read-param [:env])}))
+   {:env (core-conf/read-param [:env])}))
 
 (defn cljs-env?
   "Take the &env from a macro, and tell whether we are expanding into cljs."
