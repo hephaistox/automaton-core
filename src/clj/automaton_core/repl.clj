@@ -5,25 +5,26 @@
   * This REPL is available in `automaton-core.repl` for enabling the repl for local acceptance and production
   * This namespace rely on `automaton-core.configuration`, which means no log could be done before configuration is loaded"
   (:require
-   [automaton-build.os.terminal-msg :as build-terminal-msg]
+   [automaton-core.log.terminal :as core-log-terminal]
    [automaton-core.adapters.files :as files]
-   [automaton-core.configuration :as conf]
+   [automaton-core.configuration :as core-conf]
    [automaton-core.log :as core-log]
-   [automaton-core.repl.portal :as core-portal]
-   [cider.nrepl :as cider-nrepl]
-   [clojure.core.async :refer [<!! chan]]
+   [automaton-core.utils.namespace :as core-namespace]
+   [automaton-core.portal.server :as core-portal-server]
    [nrepl.server :refer [default-handler start-server stop-server]]))
+
+(defn- force-option?
+  [args]
+  (filter some? (map #(contains? #{"-f" "--force"} %) args)))
+(force-option? "--force")
 
 (def nrepl-port-filename "Name of the `.nrepl-port` file" ".nrepl-port")
 
-(defn custom-nrepl-handler
-  "We build our own custom nrepl handler"
-  [nrepl-mws]
-  (apply default-handler nrepl-mws))
-
 (def repl "Store the repl instance in the atom" (atom {}))
 
-(defn get-nrepl-port-parameter [] (conf/read-param [:dev :clj-nrepl-port] 8000))
+(defn get-nrepl-port-parameter
+  []
+  (core-conf/read-param [:dev :clj-nrepl-port] 8000))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn get-active-nrepl-port
@@ -31,10 +32,9 @@
   []
   (:nrepl-port @repl))
 
-(defn stop-repl
+(defn- stop-repl
   "Stop the repl"
-  [repl-port]
-  (build-terminal-msg/println-msg "Stop nrepl server on port" repl-port)
+  []
   (stop-server (:repl @repl))
   (reset! repl {}))
 
@@ -47,46 +47,52 @@
     (doseq [nrepl-port nrepl-ports]
       (files/write-file nrepl-port (str repl-port)))))
 
-(defn start-repl*
-  "Launch a new repl"
-  [{:keys [middleware]}]
+(defn- start-repl*
+  [middlewares]
   (let [repl-port (get-nrepl-port-parameter)]
-    (core-portal/start)
-    (core-portal/portal-connect)
     (create-nrepl-files repl-port)
+    (core-portal-server/start)
     (reset! repl {:nrepl-port repl-port
                   :repl (do (core-log/info "nrepl available on port " repl-port)
-                            (println "repl port is available on:" repl-port)
+                            (core-log-terminal/log "repl port is available on: "
+                                                   repl-port)
                             (start-server :port repl-port
-                                          :handler (custom-nrepl-handler
-                                                    middleware)))})
+                                          :handler (apply default-handler
+                                                          middlewares)))})
     (.addShutdownHook
      (Runtime/getRuntime)
-     (Thread. #(do (build-terminal-msg/println-msg
-                    "SHUTDOWN in progress, stop repl on port `%s`"
-                    repl-port)
-                   (stop-repl repl-port)
-                   (build-terminal-msg/println-msg "Repl stopped server")
-                   ;; (core-portal/stop)
-                   ;; (build-terminal-msg/println-msg "Portal stopped")
+     (Thread. #(do (core-log-terminal/log
+                    "SHUTDOWN in progress, stop repl on port `"
+                    repl-port
+                    "`")
+                   (stop-repl)
+                   (core-portal-server/stop)
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
-                       (files/delete-files))
-                   (build-terminal-msg/println-msg
-                    "nrepl port files removed"))))))
+                       (files/delete-files)))))))
+
+(defn default-middleware
+  []
+  (let [cider-middlewares (core-namespace/try-require
+                           'cider.nrepl/cider-middleware)
+        nrepl-middleware (core-namespace/try-require
+                          'refactor-nrepl.middleware/wrap-refactor)]
+    (cond-> []
+      cider-middlewares (concat @(resolve cider-middlewares))
+      nrepl-middleware (conj nrepl-middleware)
+      true vec)))
 
 (defn start-repl
-  "Start repl, setup and catch errors"
-  []
-  (try (start-repl* {:middleware (conj
-                                  cider-nrepl/cider-middleware
-                                  'refactor-nrepl.middleware/wrap-refactor)})
+  "Start repl, setup and catch errors
+  Params:
+  * `mdws` List of middlewares"
+  [args mdws main-fn]
+  (try (when-not (force-option? args) (main-fn))
+       (start-repl* mdws)
+       (ns user
+         (:require
+          [automaton-core.dev :refer :all]))
        :started
        (catch Exception e
-         (core-log/error (ex-info "Uncaught exception" {:error e})))))
-
-(defn -main
-  "Entry point for simple / emergency repl"
-  [& _args]
-  (let [c (chan)]
-    (start-repl)
-    (<!! c)))
+         (core-log/error (ex-info "Failed to start, relaunch with -force option"
+                                  {:error e}))
+         nil)))

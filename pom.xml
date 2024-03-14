@@ -4,14 +4,9 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>1.0.3-2-la</version>
+  <version>1.0.4-la</version>
   <name>automaton-core</name>
   <dependencies>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>data.json</artifactId>
-      <version>2.5.0</version>
-    </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
@@ -73,14 +68,9 @@
       <version>1.5.3</version>
     </dependency>
     <dependency>
-      <groupId>refactor-nrepl</groupId>
-      <artifactId>refactor-nrepl</artifactId>
-      <version>3.6.0</version>
-    </dependency>
-    <dependency>
       <groupId>djblue</groupId>
       <artifactId>portal</artifactId>
-      <version>0.51.1</version>
+      <version>0.52.2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
