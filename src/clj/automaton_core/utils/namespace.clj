@@ -22,6 +22,8 @@
           symbol
           require))
 
+(defn try-require [ns] (try (require-ns ns) ns (catch Exception _ nil)))
+
 (defn symbol-to-fn-call
   "Resolve the symbol and execute the associated function"
   [f & args]

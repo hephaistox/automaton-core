@@ -9,6 +9,7 @@
    [automaton-core.adapters.files :as files]
    [automaton-core.configuration :as core-conf]
    [automaton-core.log :as core-log]
+   [automaton-core.utils.namespace :as core-namespace]
    [automaton-core.portal.server :as core-portal-server]
    [nrepl.server :refer [default-handler start-server stop-server]]))
 
@@ -69,32 +70,16 @@
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
                        (files/delete-files)))))))
 
-(defn- require-package
-  [package]
-  (-> package
-      namespace
-      symbol
-      require))
-
-(defn- require-existing-package
-  [package]
-  (try (require-package package) package (catch Exception _ nil)))
-
-(defn add-packages
-  [packages]
-  (reduce (fn [acc package]
-            (if-let [confirmed-package (require-existing-package package)]
-              (if (coll? @(resolve confirmed-package))
-                (vec (concat @(resolve confirmed-package) acc))
-                (conj acc confirmed-package))
-              acc))
-          []
-          packages))
-
 (defn default-middleware
   []
-  (add-packages ['cider.nrepl/cider-middleware
-                 'refactor-nrepl.middleware/wrap-refactor]))
+  (let [cider-middlewares (core-namespace/try-require
+                           'cider.nrepl/cider-middleware)
+        nrepl-middleware (core-namespace/try-require
+                          'refactor-nrepl.middleware/wrap-refactor)]
+    (cond-> []
+      cider-middlewares (concat @(resolve cider-middlewares))
+      nrepl-middleware (conj nrepl-middleware)
+      true vec)))
 
 (defn start-repl
   "Start repl, setup and catch errors

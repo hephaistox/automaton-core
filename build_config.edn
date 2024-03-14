@@ -4,7 +4,7 @@
                              :deploy-to :clojars
                              :env {:la {}
                                    :production {}}
-                             :frontend {:run-aliases []}
+                             :frontend {:run-aliases [:browser-test :ltest]}
                              :license {}
                              :repo
                              "git@github.com:hephaistox/automaton-core.git"}
