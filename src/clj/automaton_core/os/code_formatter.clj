@@ -2,9 +2,9 @@
   "Format code
   Proxy to [zprint](https://github.com/kkinnear/zprint)"
   (:require
-   [zprint.core :as zprint]
    [automaton-core.adapters.time :as time]
-   [clojure.string :as str]))
+   [clojure.string               :as str]
+   [zprint.core                  :as zprint]))
 
 (defn add-header
   [header]

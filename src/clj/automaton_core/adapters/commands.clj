@@ -2,10 +2,10 @@
   "Library to execute a set of commands"
   (:require
    [automaton-core.adapters.files :as files]
-   [automaton-core.log :as core-log]
-   [babashka.process :as babashka-process]
-   [clojure.java.io :as io]
-   [clojure.string :as str]))
+   [automaton-core.log            :as core-log]
+   [babashka.process              :as babashka-process]
+   [clojure.java.io               :as io]
+   [clojure.string                :as str]))
 
 (def commands-schema
   [:vector

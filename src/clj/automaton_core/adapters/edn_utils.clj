@@ -1,11 +1,11 @@
 (ns automaton-core.adapters.edn-utils
   "Edn file manipulation"
   (:require
+   [automaton-core.adapters.files    :as files]
+   [automaton-core.log               :as core-log]
    [automaton-core.os.code-formatter :as code-formatter]
-   [automaton-core.adapters.files :as files]
-   [automaton-core.log :as core-log]
-   [automaton-core.utils.uuid-gen :as uuid-gen]
-   [clojure.edn :as edn]))
+   [automaton-core.utils.uuid-gen    :as uuid-gen]
+   [clojure.edn                      :as edn]))
 
 (defn is-clojure-like-file
   "Returns true if the file's extension is clojure like"

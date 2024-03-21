@@ -1,12 +1,11 @@
 (ns automaton-core.log.tracking.be-sentry
   "Sentry backend implementation"
   (:require
-   [automaton-core.utils.map :as utils-map]
-   [sentry-clj.core :as sentry]
-   [automaton-core.utils.pretty-print :as pretty-print])
-  (:import
-   [io.sentry Breadcrumb Sentry SentryLevel]
-   [java.util Date HashMap Map]))
+   [automaton-core.utils.map          :as utils-map]
+   [automaton-core.utils.pretty-print :as pretty-print]
+   [sentry-clj.core                   :as sentry])
+  (:import [io.sentry Breadcrumb Sentry SentryLevel]
+           [java.util Date HashMap Map]))
 
 (defn- keyword->level
   "Converts a keyword into an event level."

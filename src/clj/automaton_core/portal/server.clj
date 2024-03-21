@@ -3,7 +3,7 @@
   "Portal server starting"
   (:require
    [automaton-core.portal.common :as core-portal-common]
-   [portal.api :as p]))
+   [portal.api                   :as p]))
 
 (def ^:private submit "Sumbitting data to the portal" #'p/submit)
 (defn- portal-connect "Regular portal add-tap fn proxy." [] (add-tap #'submit))

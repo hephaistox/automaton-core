@@ -1,7 +1,7 @@
 (ns automaton-core.utils.namespace-test
   (:require
    [automaton-core.utils.namespace :as sut]
-   [clojure.test :refer [deftest is testing]]))
+   [clojure.test                   :refer [deftest is testing]]))
 
 (deftest namespaced-keyword-test
   (testing "Test from symbols"

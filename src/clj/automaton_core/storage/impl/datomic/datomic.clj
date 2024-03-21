@@ -1,9 +1,9 @@
 (ns automaton-core.storage.impl.datomic.datomic
   "Implementation of storage protocols in datomic"
   (:require
-   [automaton-core.log :as core-log]
+   [automaton-core.log                :as core-log]
    [automaton-core.storage.persistent :as storage]
-   [datomic.api :as d]))
+   [datomic.api                       :as d]))
 
 (defrecord DatomicClient [schema]
   storage/PersistentStorageClient

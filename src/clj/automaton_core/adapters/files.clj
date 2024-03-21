@@ -3,8 +3,8 @@
   Is a proxy to babashka.fs tools"
   (:require
    [automaton-core.log :as core-log]
-   [babashka.fs :as fs]
-   [clojure.string :as str]))
+   [babashka.fs        :as fs]
+   [clojure.string     :as str]))
 
 (def directory-separator
   "Symbol to separate directories.

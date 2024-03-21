@@ -1,8 +1,8 @@
 (ns automaton-core.log.be-registry
   "List of all known backend strategies"
   (:require
-   [automaton-core.log.registry :as log-registry]
    [automaton-core.log.impl.log4j2]
+   [automaton-core.log.registry :as log-registry]
    [automaton-core.log.tracking.be-error-tracking]))
 
 (defn no-op-fn [& _] nil)

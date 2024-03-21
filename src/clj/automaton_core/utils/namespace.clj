@@ -1,7 +1,7 @@
 (ns automaton-core.utils.namespace
   (:require
    [automaton-core.log :as core-log]
-   [clojure.string :as str]))
+   [clojure.string     :as str]))
 
 (defn namespaced-keyword
   "Create a namespaced keyword"

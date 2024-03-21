@@ -1,7 +1,7 @@
 (ns automaton-core.utils.uuid-gen-test
   (:require
    [automaton-core.utils.uuid-gen :as sut]
-   [clojure.test :refer [testing deftest is]]))
+   [clojure.test                  :refer [deftest is testing]]))
 
 (deftest time-based-uuid
   (testing "uuid and chonological orders are the same"

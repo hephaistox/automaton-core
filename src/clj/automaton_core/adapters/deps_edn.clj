@@ -2,7 +2,7 @@
   "Proxy to deps.edn file"
   (:require
    [automaton-core.adapters.edn-utils :as edn-utils]
-   [automaton-core.adapters.files :as files]))
+   [automaton-core.adapters.files     :as files]))
 
 (def deps-edn "deps.edn")
 

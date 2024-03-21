@@ -1,8 +1,8 @@
 (ns automaton-core.adapters.edn-utils-test
   (:require
-   [clojure.java.io :as io]
-   [clojure.test :refer [deftest is testing]]
-   [automaton-core.adapters.edn-utils :as sut]))
+   [automaton-core.adapters.edn-utils :as sut]
+   [clojure.java.io                   :as io]
+   [clojure.test                      :refer [deftest is testing]]))
 
 (deftest is-clojure-like-file-test
   (testing "Compatible files are found"

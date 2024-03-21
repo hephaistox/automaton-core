@@ -1,8 +1,8 @@
 (ns automaton-core.app.build-config
   "Adapter to `build_config.edn`"
   (:require
-   [automaton-core.adapters.files :as files]
-   [automaton-core.adapters.edn-utils :as edn-utils]))
+   [automaton-core.adapters.edn-utils :as edn-utils]
+   [automaton-core.adapters.files     :as files]))
 
 (def build-config-filename "build_config.edn")
 

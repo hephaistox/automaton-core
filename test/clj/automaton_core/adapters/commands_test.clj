@@ -3,9 +3,9 @@
 Their value are to catch knowledge on how to use commands.
 And be able to watch bb log to check if results are as expected"
   (:require
-   [clojure.test :refer [deftest is testing]]
    [automaton-core.adapters.commands :as sut]
-   [automaton-core.adapters.schema :as core-schema]))
+   [automaton-core.adapters.schema   :as core-schema]
+   [clojure.test                     :refer [deftest is testing]]))
 
 (defn check-exit-code
   "Check the process return code is 0"
