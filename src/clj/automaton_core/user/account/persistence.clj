@@ -1,7 +1,7 @@
 (ns automaton-core.user.account.persistence
   "Account access entrypoint functions."
   (:require
-   [automaton-core.storage.component :as storage-entry]
+   [automaton-core.storage.component    :as storage-entry]
    [automaton-core.user.account.datalog :as queries]))
 
 (defn add-account!

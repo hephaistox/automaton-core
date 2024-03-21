@@ -1,13 +1,13 @@
 (ns automaton-core.log.be-log-test
   (:require
-   [automaton-core.log :as core-log]
+   [automaton-core.log        :as core-log]
    [automaton-core.log.be-log :as sut]
-   [automaton-core.log.registry]
    [automaton-core.log.be-registry]
+   [automaton-core.log.impl.log4j2]
+   [automaton-core.log.registry]
    [automaton-core.log.tracking.be-error-tracking]
-   [clojure.string :as str]
-   [clojure.test :refer [deftest is testing]]
-   [automaton-core.log.impl.log4j2]))
+   [clojure.string            :as str]
+   [clojure.test              :refer [deftest is testing]]))
 
 (deftest log-test
   (testing

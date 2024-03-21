@@ -1,7 +1,7 @@
 (ns automaton-core.adapters.deps-edn-test
   (:require
    [automaton-core.adapters.deps-edn :as sut]
-   [clojure.test :refer [deftest is testing]]))
+   [clojure.test                     :refer [deftest is testing]]))
 
 (deftest is-hephaistox-deps-test
   (testing "Hephaistox lib find"
