@@ -17,5 +17,7 @@
                         ".shadow-cljs/builds/"]}
          :lfe-test {}
          :lfe-watch {}
+         :update-deps {:exclude-libs #{"com.taoensso/encore"
+                                       "org.clojars.hephaistox/automaton-build@*-*"}}
          :reports {:forbiddenwords-words #{"automaton-build" "automaton-web"
                                            "landing" "tap>"}}}}
