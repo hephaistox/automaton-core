@@ -140,3 +140,64 @@
                            :foo2 :bar2}
                           []
                           (fn [_] "arg"))))))
+
+(deftest remove-nil-vals-test
+  (testing "Remove nil values"
+    (is (= {} (sut/remove-nil-vals nil)))
+    (is (= {} (sut/remove-nil-vals {})))
+    (is (= {} (sut/remove-nil-vals {:foo nil})))
+    (is (= {:barfoo :foobar}
+           (sut/remove-nil-vals {:foo nil
+                                 :bar nil
+                                 :barfoo :foobar})))))
+
+(deftest remove-nil-submap-vals-test
+  (testing "Remove nil sub values"
+    (is (= {} (sut/remove-nil-submap-vals nil)))
+    (is (= {:foobar :barfoo}
+           (sut/remove-nil-submap-vals {:foo nil
+                                        :foobar :barfoo})))
+    (is (= {:foo {:bar :foo}}
+           (sut/remove-nil-submap-vals {:foo {:bar :foo
+                                              :foo nil}})))))
+
+(deftest map-difference-test
+  (testing "The same maps are returning no difference"
+    (is (= (sut/map-difference {} {}) {}))
+    (is (= (sut/map-difference {:a 1} {:a 1}) {}))
+    (is (= (sut/map-difference {:a 1
+                                :d 6
+                                :b {:c 2
+                                    :d 6}}
+                               {:a 1
+                                :b {:c 2
+                                    :d 6}
+                                :d 6})
+           {}))
+    (is (= (sut/map-difference {:a 2
+                                :b 5}
+                               {:b 5
+                                :a 2})
+           {})))
+  (testing "Difference is found"
+    (is (= (sut/map-difference {:a 2} {}) {:a 2}))
+    (is (= (sut/map-difference {} {:a 2}) {:a 2}))
+    (is (= (sut/map-difference {:a 1}
+                               {:a 1
+                                :b 2})
+           {:b 2}))
+    (is (= (sut/map-difference {:a 1
+                                :d 6
+                                :b {:c 2
+                                    :d 6}}
+                               {:a 1
+                                :b {:c 2
+                                    :d 5}
+                                :d 6})
+           {:b {:c 2
+                :d 6}}))
+    (is (= (sut/map-difference {:a 2
+                                :b 5}
+                               {:b 5
+                                :a 3})
+           {:a 2}))))

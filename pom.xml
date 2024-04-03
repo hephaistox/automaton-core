@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>1.1.1-12-la</version>
+  <version>1.1.2-la</version>
   <name>automaton-core</name>
   <dependencies>
     <dependency>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>djblue</groupId>
       <artifactId>portal</artifactId>
-      <version>0.53.0</version>
+      <version>0.54.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>metosin</groupId>
       <artifactId>malli</artifactId>
-      <version>0.14.0</version>
+      <version>0.15.0</version>
     </dependency>
     <dependency>
       <groupId>babashka</groupId>
