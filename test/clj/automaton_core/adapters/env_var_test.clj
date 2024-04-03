@@ -1,7 +1,7 @@
 (ns automaton-core.adapters.env-var-test
   (:require
    [automaton-core.adapters.env-variables :as sut]
-   [clojure.test :refer [deftest is testing]]))
+   [clojure.test                          :refer [deftest is testing]]))
 
 (deftest get-env-var-test
   (testing

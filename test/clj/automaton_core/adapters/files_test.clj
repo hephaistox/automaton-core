@@ -1,9 +1,9 @@
 (ns automaton-core.adapters.files-test
   (:require
-   [clojure.test :refer [deftest is testing]]
-   [babashka.fs :as fs]
-   [clojure.java.io :as io]
-   [automaton-core.adapters.files :as sut]))
+   [automaton-core.adapters.files :as sut]
+   [babashka.fs                   :as fs]
+   [clojure.java.io               :as io]
+   [clojure.test                  :refer [deftest is testing]]))
 
 (deftest copy-files-or-dir
   (let [tmp-dir (fs/create-temp-dir)]

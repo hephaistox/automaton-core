@@ -2,7 +2,7 @@
 (ns automaton-core.portal.client
   (:require
    [automaton-core.portal.common :as core-portal-common]
-   [portal.client.jvm :as p-client]))
+   [portal.client.jvm            :as p-client]))
 
 (defn- client-submit [port] (partial p-client/submit {:port port}))
 

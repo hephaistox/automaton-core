@@ -1,12 +1,12 @@
 (ns automaton-core.storage.component
   "Entrypoint to storage"
   (:require
-   [automaton-core.storage.persistent :as storage]
+   [automaton-core.configuration                :as core-conf]
+   [automaton-core.log                          :as core-log]
    [automaton-core.storage.impl.datomic.datomic :as datomic]
-   [automaton-core.storage.impl.datomic.schema :as datomic-schema]
-   [automaton-core.configuration :as core-conf]
-   [automaton-core.log :as core-log]
-   [mount.core :refer [defstate]]))
+   [automaton-core.storage.impl.datomic.schema  :as datomic-schema]
+   [automaton-core.storage.persistent           :as storage]
+   [mount.core                                  :refer [defstate]]))
 
 (defn start-storage
   []

@@ -5,7 +5,7 @@
    For more information read docs/tutorial/logging.md"
   (:require
    [automaton-core.utils.pretty-print :as pretty-print]
-   [clojure.tools.logging :as l]))
+   [clojure.tools.logging             :as l]))
 
 (defn log-fn
   [ns level & message]

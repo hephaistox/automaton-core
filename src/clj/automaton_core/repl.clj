@@ -5,13 +5,14 @@
   * This REPL is available in `automaton-core.repl` for enabling the repl for local acceptance and production
   * This namespace rely on `automaton-core.configuration`, which means no log could be done before configuration is loaded"
   (:require
-   [automaton-core.log.terminal :as core-log-terminal]
-   [automaton-core.adapters.files :as files]
-   [automaton-core.configuration :as core-conf]
-   [automaton-core.log :as core-log]
+   [automaton-core.adapters.files  :as files]
+   [automaton-core.configuration   :as core-conf]
+   [automaton-core.log             :as core-log]
+   [automaton-core.log.terminal    :as core-log-terminal]
+   [automaton-core.portal.server   :as core-portal-server]
    [automaton-core.utils.namespace :as core-namespace]
-   [automaton-core.portal.server :as core-portal-server]
-   [nrepl.server :refer [default-handler start-server stop-server]]))
+   [nrepl.server                   :refer
+                                   [default-handler start-server stop-server]]))
 
 (defn- force-option?
   [args]

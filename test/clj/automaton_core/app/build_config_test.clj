@@ -1,7 +1,7 @@
 (ns automaton-core.app.build-config-test
   (:require
    [automaton-core.app.build-config :as sut]
-   [clojure.test :refer [deftest is testing]]))
+   [clojure.test                    :refer [deftest is testing]]))
 
 (deftest load-build-config-test
   (testing "The configuration of the current project is found and valid"

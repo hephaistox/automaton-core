@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <name>automaton-core</name>
   <dependencies>
     <dependency>
@@ -55,12 +55,12 @@
     <dependency>
       <groupId>io.sentry</groupId>
       <artifactId>sentry-clj</artifactId>
-      <version>7.4.213</version>
+      <version>7.6.215</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.7.2</version>
+      <version>42.7.3</version>
     </dependency>
     <dependency>
       <groupId>com.taoensso</groupId>
@@ -70,7 +70,7 @@
     <dependency>
       <groupId>djblue</groupId>
       <artifactId>portal</artifactId>
-      <version>0.52.2</version>
+      <version>0.53.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>zprint</groupId>
       <artifactId>zprint</artifactId>
-      <version>1.2.8</version>
+      <version>1.2.9</version>
     </dependency>
     <dependency>
       <groupId>metosin</groupId>

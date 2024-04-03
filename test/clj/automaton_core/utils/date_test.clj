@@ -1,7 +1,7 @@
 (ns automaton-core.utils.date-test
   (:require
-   [clojure.test :refer [deftest is testing]]
-   [automaton-core.utils.date :as sut]))
+   [automaton-core.utils.date :as sut]
+   [clojure.test              :refer [deftest is testing]]))
 
 (deftest this-year
   (testing "Check now"

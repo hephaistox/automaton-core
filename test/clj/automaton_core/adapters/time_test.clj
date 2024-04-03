@@ -1,7 +1,7 @@
 (ns automaton-core.adapters.time-test
   (:require
-   [clojure.test :refer [deftest is testing]]
-   [automaton-core.adapters.time :as sut]))
+   [automaton-core.adapters.time :as sut]
+   [clojure.test                 :refer [deftest is testing]]))
 
 (deftest now-str
   (testing "Check date is generated"
