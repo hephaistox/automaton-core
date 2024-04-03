@@ -7,7 +7,7 @@
              [automaton-core.adapters.java-properties :as java-properties]]
        :cljs [[cljs.reader :as edn]])
    [automaton-core.configuration.protocol :as core-conf-prot]
-   [automaton-core.utils.keyword :as core-keyword]
+   [automaton-core.utils.keyword :as utils-keyword]
    [automaton-core.utils.map :as utils-map]))
 
 #?(:cljs (def ^:private nodejs? (exists? js/require)))
@@ -26,7 +26,7 @@
   "Reads config file, on purpose fn defined here to keep dependencies as small as possible."
   [f]
   (when-let [content (slurp-file f)]
-    (into {} (core-keyword/sanitize-map-keys (edn/read-string content)))))
+    (into {} (utils-keyword/sanitize-map-keys (edn/read-string content)))))
 
 (def config-file
   #?(:clj "heph-conf"

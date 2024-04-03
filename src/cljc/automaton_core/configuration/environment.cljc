@@ -4,7 +4,7 @@
    #?@(:clj [[clojure.edn :as edn]]
        :cljs [[cljs.reader :as edn] [goog.object :as obj]])
    [automaton-core.configuration.protocol :as core-conf-prot]
-   [automaton-core.utils.keyword :as core-keyword]
+   [automaton-core.utils.keyword :as utils-keyword]
    [clojure.string :as str]))
 
 #?(:cljs (def ^:private nodejs? (exists? js/require)))
@@ -15,7 +15,7 @@
   "Turns key-path ([:a :b :c] -> 'a-b-c') into environment type key."
   [key-path]
   (let [path-str (str/join "-" (map name key-path))]
-    (when-not (str/blank? path-str) (core-keyword/keywordize path-str))))
+    (when-not (str/blank? path-str) (utils-keyword/keywordize path-str))))
 
 (defn parse-number
   [^String v]
@@ -50,7 +50,7 @@
                   (let [env (.-env process)]
                     (zipmap (obj/getKeys env) (obj/getValues env)))
                   {}))
-       (map (fn [[k v]] [(core-keyword/keywordize k) v]))
+       (map (fn [[k v]] [(utils-keyword/keywordize k) v]))
        (into {})))
 
 (defrecord EnvConf [conf]

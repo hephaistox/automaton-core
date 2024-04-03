@@ -32,13 +32,3 @@
                                    :three {:two_more {:another.one 1
                                                       :normal-one :true}
                                            :ONE "hi"}})))))
-
-
-(deftest unkeywordize-test
-  (testing "Are keywords turned into string"
-    (is (= "foo" (sut/unkeywordize :foo)))
-    (is (= "foo" (sut/unkeywordize :bar/foo))))
-  (testing "Are other types returned as-is"
-    (is (= 1 (sut/unkeywordize 1)))
-    (is (= [] (sut/unkeywordize [])))
-    (is (= "bar" (sut/unkeywordize "bar")))))

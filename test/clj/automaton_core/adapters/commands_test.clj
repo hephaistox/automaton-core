@@ -43,12 +43,12 @@ And be able to watch bb log to check if results are as expected"
 
 (deftest commands-schema-test
   (testing "Accepted example"
-    (is (core-schema/validate-data sut/commands-schema [[[]]]))
-    (is (core-schema/validate-data sut/commands-schema [[["pwd"]]]))
-    (is (core-schema/validate-data sut/commands-schema [[["pwd"]] [["pwd"]]])))
+    (is (core-schema/schema-valid sut/commands-schema [[[]]]))
+    (is (core-schema/schema-valid sut/commands-schema [[["pwd"]]]))
+    (is (core-schema/schema-valid sut/commands-schema [[["pwd"]] [["pwd"]]])))
   (testing "Non accepted example"
-    (is (not (core-schema/validate-data sut/commands-schema [[["pwd" nil]]])))
-    (is (not (core-schema/validate-data sut/commands-schema
-                                        [[["pwd" nil] {} {}]])))
-    (is (not (core-schema/validate-data sut/commands-schema
-                                        [[["pwd" nil] [] {}]])))))
+    (is (not (core-schema/schema-valid sut/commands-schema [[["pwd" nil]]])))
+    (is (not (core-schema/schema-valid sut/commands-schema
+                                       [[["pwd" nil] {} {}]])))
+    (is (not (core-schema/schema-valid sut/commands-schema
+                                       [[["pwd" nil] [] {}]])))))

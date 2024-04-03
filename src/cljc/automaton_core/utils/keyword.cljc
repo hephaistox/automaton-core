@@ -21,11 +21,3 @@
                  (assoc acc new-key new-val)))
              {}
              map))
-
-(defn unkeywordize
-  "Turns a keyword into a string, return other values as-is
-
-  Params:
-  * `v` value"
-  [v]
-  (if (keyword? v) (name v) v))
