@@ -4,7 +4,7 @@
   See ADR-0015"
   (:require
    [automaton-core.adapters.schema :as core-schema]
-   [automaton-core.log :as core-log]))
+   [automaton-core.log             :as core-log]))
 
 (def ^:private test-registry-schema
   "Test registry schema"

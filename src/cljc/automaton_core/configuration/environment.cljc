@@ -4,8 +4,8 @@
    #?@(:clj [[clojure.edn :as edn]]
        :cljs [[cljs.reader :as edn] [goog.object :as obj]])
    [automaton-core.configuration.protocol :as core-conf-prot]
-   [automaton-core.utils.keyword :as utils-keyword]
-   [clojure.string :as str]))
+   [automaton-core.utils.keyword          :as utils-keyword]
+   [clojure.string                        :as str]))
 
 #?(:cljs (def ^:private nodejs? (exists? js/require)))
 

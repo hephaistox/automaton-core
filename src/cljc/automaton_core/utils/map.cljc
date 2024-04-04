@@ -1,7 +1,7 @@
 (ns automaton-core.utils.map
   "Utility for map data structure"
   (:require
-   [clojure.set :as set]
+   [clojure.set  :as set]
    [clojure.walk :as walk]))
 
 (defn idx-of

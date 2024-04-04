@@ -1,8 +1,8 @@
 (ns automaton-core.log.fe-log
   "Factory generating log function"
   (:require
-   [automaton-core.log.strategy]
    [automaton-core.log.fe-registry]
+   [automaton-core.log.strategy]
    [automaton-core.log.strategy.static-ns-level])
   #?(:cljs (:require-macros [automaton-core.log.fe-log])))
 

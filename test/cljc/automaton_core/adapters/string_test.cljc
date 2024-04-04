@@ -3,7 +3,7 @@
    #?(:clj [clojure.test :refer [deftest is testing]]
       :cljs [cljs.test :refer [deftest is testing] :include-macros true])
    [automaton-core.adapters.string :as sut]
-   [clojure.string :as str]))
+   [clojure.string                 :as str]))
 
 (deftest remove-last-character
   (testing "Remove a character"

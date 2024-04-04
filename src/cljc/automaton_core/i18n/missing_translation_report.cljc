@@ -2,7 +2,7 @@
   "Helper functions to test correctness of translation data including dictionaries"
   (:require
    [automaton-core.utils.map :as utils-map]
-   [clojure.set :refer [union]]))
+   [clojure.set              :refer [union]]))
 
 (defn language-report
   "For all keys of a dictionnary, return the list of languages set

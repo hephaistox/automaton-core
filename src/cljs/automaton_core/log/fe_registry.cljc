@@ -24,9 +24,7 @@
    ::log-registry/error-tracking-context
    {:description
     "For registering information for monitoring exceptions in the application"
-    #?@(:cljs [:impl
-               automaton-core.log.tracking.fe-error-tracking/add-context])}
+    #?@(:cljs [:impl automaton-core.log.tracking.fe-error-tracking/add-context])}
    ::log-registry/error-tracking-alert
    {:description "For alerting about monitoring exceptions in the application"
-    #?@(:cljs [:impl
-               automaton-core.log.tracking.fe-error-tracking/error-alert])}})
+    #?@(:cljs [:impl automaton-core.log.tracking.fe-error-tracking/error-alert])}})

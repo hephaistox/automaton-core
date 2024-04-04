@@ -14,11 +14,10 @@
         * This namespace is the entrypoint for both clj and cljs implementations
 "
   (:require
-   [automaton-core.configuration :as core-conf]
-   [automaton-core.log.strategy.static-ns-level
-    :as
-    log-static-ns-level-strategy]
-   [automaton-core.log.strategy :as log-strategy]
+   [automaton-core.configuration                :as core-conf]
+   [automaton-core.log.strategy                 :as log-strategy]
+   [automaton-core.log.strategy.static-ns-level :as
+                                                log-static-ns-level-strategy]
    #?(:clj [automaton-core.log.be-log]
       :cljs [automaton-core.log.fe-log]))
   #?(:cljs (:require-macros [automaton-core.log])))

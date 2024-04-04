@@ -7,8 +7,8 @@
              [automaton-core.adapters.java-properties :as java-properties]]
        :cljs [[cljs.reader :as edn]])
    [automaton-core.configuration.protocol :as core-conf-prot]
-   [automaton-core.utils.keyword :as utils-keyword]
-   [automaton-core.utils.map :as utils-map]))
+   [automaton-core.utils.keyword          :as utils-keyword]
+   [automaton-core.utils.map              :as utils-map]))
 
 #?(:cljs (def ^:private nodejs? (exists? js/require)))
 #?(:cljs (def ^:private fs (when nodejs? (js/require "fs"))))
@@ -19,7 +19,7 @@
           :cljs (when ^js (.existsSync fs f) (str ^js (.readFileSync fs f))))
        (catch #?(:clj Exception
                  :cljs js/Error)
-              _
+         _
          (println (str "Reading file " f " failed")))))
 
 (defn read-config-file
@@ -59,7 +59,7 @@
 
 (defrecord FilesConf [conf]
   core-conf-prot/Conf
-  (read-conf-param [_this key-path] (get-in conf key-path))
-  (config [_this] conf))
+    (read-conf-param [_this key-path] (get-in conf key-path))
+    (config [_this] conf))
 
 (defn make-files-conf [] (->FilesConf (read-config)))
