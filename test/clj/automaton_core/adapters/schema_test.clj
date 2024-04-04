@@ -5,7 +5,14 @@
 
 (deftest schema
   (testing "Valid schema"
-    (is (sut/schema-valid [:tuple :string :int] ["hey" 12])))
+    (is (sut/validate-data [:tuple :string :int] ["hey" 12])))
   (testing "Invalid schema, throws an exception"
-    (is (not (sut/schema-valid [:tuple :string :int] [12 12])))))
+    (is (not (sut/validate-data [:tuple :string :int] [12 12])))))
+
+(deftest schema-test-test
+  (testing "Valid schema returns true"
+    (is (nil? (sut/validate-humanize [:vector :int]))))
+  (testing "Invalid schema returns false"
+    (is (some? (sut/validate-humanize nil)))
+    (is (some? (sut/validate-humanize 12)))))
 
