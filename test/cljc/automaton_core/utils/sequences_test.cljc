@@ -3,7 +3,7 @@
    [automaton-core.utils.sequences :as sut]
    #?(:clj [clojure.test :refer [deftest is testing]]
       :cljs [cljs.test :refer [deftest is testing] :include-macros true])
-   [clojure.string :as str]))
+   [clojure.string                 :as str]))
 
 (deftest trim-leading-nil-test
   (testing "basic example"

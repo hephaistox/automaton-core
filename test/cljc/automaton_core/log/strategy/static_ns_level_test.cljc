@@ -3,8 +3,8 @@
   (:require
    #?(:clj [clojure.test :refer [deftest is testing]]
       :cljs [cljs.test :refer [deftest is testing] :include-macros true])
-   [automaton-core.log.strategy :as log-strategy]
-   [automaton-core.log.registry :as log-registry]
+   [automaton-core.log.registry                 :as log-registry]
+   [automaton-core.log.strategy                 :as log-strategy]
    [automaton-core.log.strategy.static-ns-level :as sut]))
 
 (deftest ns-rules-test

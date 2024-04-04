@@ -1,4 +1,4 @@
 {:dev {:clj-nrepl-port 8012
        :portal-port 8351}
- :test-type-arg? false
- :env :development}
+ :env :development
+ :test-type-arg? false}

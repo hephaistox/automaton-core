@@ -10,8 +10,8 @@
   See `automaton-core.log.strategy.static-ns-level/ns-rules` for rule definition details "
   (:require
    [automaton-core.log.log-levels :as log-levels]
-   [automaton-core.log.strategy :as log-strategy]
-   [automaton-core.log.registry :as log-registry]))
+   [automaton-core.log.registry   :as log-registry]
+   [automaton-core.log.strategy   :as log-strategy]))
 
 (def ns-rules
   "Decides the level of log depending on namespace

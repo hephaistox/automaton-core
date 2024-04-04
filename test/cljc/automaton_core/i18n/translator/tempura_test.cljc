@@ -2,8 +2,8 @@
   (:require
    #?(:clj [clojure.test :refer [deftest is testing]]
       :cljs [cljs.test :refer [deftest is testing] :include-macros true])
-   [automaton-core.i18n.language :as core-lang]
-   [automaton-core.i18n.translator :as core-translator]
+   [automaton-core.i18n.language           :as core-lang]
+   [automaton-core.i18n.translator         :as core-translator]
    [automaton-core.i18n.translator.tempura :as sut]))
 
 (def dict-stub

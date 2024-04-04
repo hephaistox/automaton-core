@@ -6,7 +6,7 @@
   See cust-app themselves to know what language they use"
   (:require
    [automaton-core.utils.map :as utils-map]
-   [clojure.set :as set]))
+   [clojure.set              :as set]))
 
 (defprotocol Languages
   (language [this lang-id]

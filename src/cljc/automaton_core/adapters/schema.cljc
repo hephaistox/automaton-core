@@ -2,7 +2,7 @@
   "Validate the data against the schema.
   Is a proxy for malli"
   (:require
-   [malli.core :as malli]
+   [malli.core  :as malli]
    [malli.error :as malli-error]))
 
 (defn schema-valid

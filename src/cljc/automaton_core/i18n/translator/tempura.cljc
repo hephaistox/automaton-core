@@ -4,11 +4,11 @@
   Is an adapter for translation in `automaton-core`, so no web related technology is mentionned there, even if tempura provides them.
   It will be the job of `automton-web` to provide that features"
   (:require
-   [automaton-core.i18n.dict.text :as core-dict]
+   [automaton-core.i18n.dict.text  :as core-dict]
    [automaton-core.i18n.translator :as core-translator]
-   [automaton-core.log :as core-log]
-   [automaton-core.utils.map :as utils-map]
-   [taoensso.tempura :as tempura]))
+   [automaton-core.log             :as core-log]
+   [automaton-core.utils.map       :as utils-map]
+   [taoensso.tempura               :as tempura]))
 
 (def tempura-missing-text
   "Necessary for tempura,  a missing key is expected for all languages marked with `:core-dict?` in `automaton-core.i18n.language`"

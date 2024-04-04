@@ -2,11 +2,11 @@
   (:require
    #?(:clj [clojure.test :refer [deftest is testing]]
       :cljs [cljs.test :refer [deftest is testing] :include-macros true])
-   [automaton-core.i18n.dict.text :as sut]
-   [automaton-core.i18n.language :as core-lang]
+   [automaton-core.i18n.dict.text                  :as sut]
+   [automaton-core.i18n.language                   :as core-lang]
    [automaton-core.i18n.missing-translation-report :as b-language]
-   [clojure.set :as set]
-   [clojure.string :as str]))
+   [clojure.set                                    :as set]
+   [clojure.string                                 :as str]))
 
 (deftest dict-test
   (testing

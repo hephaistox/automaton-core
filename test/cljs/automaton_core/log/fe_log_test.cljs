@@ -1,7 +1,8 @@
 (ns automaton-core.log.fe-log-test
   (:require
    [automaton-core.log.fe-log :as sut]
-   [cljs.test :refer [deftest is testing] :include-macros true]))
+   [cljs.test                 :refer          [deftest is testing]
+                              :include-macros true]))
 
 (deftest log-fatal-test
   (testing "Fatal is always printing something"
