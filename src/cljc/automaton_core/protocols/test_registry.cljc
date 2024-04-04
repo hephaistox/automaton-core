@@ -20,7 +20,7 @@
   Params:
   * `test-registry` registry to test"
   [test-registry]
-  (core-schema/schema-valid-humanize test-registry-schema test-registry))
+  (core-schema/validate-data-humanize test-registry-schema test-registry))
 
 (defn- reports*
   "Execute the tests and creates a report of tests's execution
