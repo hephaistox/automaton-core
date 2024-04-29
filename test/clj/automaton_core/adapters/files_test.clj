@@ -30,7 +30,7 @@
                         (fs/glob tmp-dir "**"))))))))
 
 (deftest relativize-test
-  (testing ""
+  (testing "Relativatization of parent directory is working"
     (is (= "automaton/automaton_build"
            (sut/relativize "../automaton/automaton_build" "..")))))
 

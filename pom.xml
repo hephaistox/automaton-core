@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>org.clojars.hephaistox</groupId>
   <artifactId>automaton-core</artifactId>
-  <version>1.2.0-la</version>
+  <version>1.2.1-2-la</version>
   <name>automaton-core</name>
   <dependencies>
     <dependency>
@@ -66,6 +66,11 @@
       <groupId>com.taoensso</groupId>
       <artifactId>tempura</artifactId>
       <version>1.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.yetanalytics</groupId>
+      <artifactId>colossal-squuid</artifactId>
+      <version>0.1.5</version>
     </dependency>
     <dependency>
       <groupId>djblue</groupId>

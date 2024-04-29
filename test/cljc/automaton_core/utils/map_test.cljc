@@ -201,3 +201,35 @@
                                {:b 5
                                 :a 3})
            {:a 2}))))
+
+(deftest keys->sequence-number-test
+  (testing "Happy path"
+    (is (= {:a 1
+            :b 2}
+           (sut/keys->sequence-number {:a 12
+                                       :b 15})
+           (sut/keys->sequence-number [[:a 12] [:b 15]]))))
+  (testing "Empty maps returns empty map"
+    (is (= {}
+           (sut/keys->sequence-number nil)
+           (sut/keys->sequence-number {})
+           (sut/keys->sequence-number [])))))
+
+(deftest translation-keys-test
+  (testing "Standard case"
+    (is (= {1 12
+            2 15}
+           (sut/translate-keys {:a 12
+                                :b 15}
+                               {:a 1
+                                :b 2}))))
+  (testing "Missing translation are not modified"
+    (is (= {:a 12
+            :b 15}
+           (sut/translate-keys {:a 12
+                                :b 15}
+                               {}))))
+  (testing "Empty maps are ok"
+    (is (= {} (sut/translate-keys nil {})))
+    (is (= {} (sut/translate-keys {} nil)))
+    (is (= {} (sut/translate-keys nil nil)))))

@@ -52,7 +52,6 @@
   [middlewares]
   (let [repl-port (get-nrepl-port-parameter)]
     (create-nrepl-files repl-port)
-    (core-portal-server/start)
     (reset! repl {:nrepl-port repl-port
                   :repl (do (core-log/info "nrepl available on port " repl-port)
                             (core-log-terminal/log "repl port is available on: "
@@ -60,16 +59,19 @@
                             (start-server :port repl-port
                                           :handler (apply default-handler
                                                           middlewares)))})
+    (core-portal-server/start)
     (.addShutdownHook
      (Runtime/getRuntime)
      (Thread. #(do (core-log-terminal/log
                     "SHUTDOWN in progress, stop repl on port `"
                     repl-port
                     "`")
+                   (shutdown-agents)
                    (stop-repl)
-                   (core-portal-server/stop)
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
-                       (files/delete-files)))))))
+                       (files/delete-files))
+                   (core-portal-server/stop)
+                   (println "SHUTDOWN ends succesfully"))))))
 
 (defn default-middleware
   []
