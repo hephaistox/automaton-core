@@ -15,4 +15,3 @@
   (testing "Invalid schema returns false"
     (is (some? (sut/validate-humanize nil)))
     (is (some? (sut/validate-humanize 12)))))
-

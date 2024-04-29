@@ -84,9 +84,7 @@
          (into {}))))
 
 (defn add-ids
-  "Add the key to all map values (which are expected to be maps)
-  Params:
-  * `m` map"
+  "Add the key to all map values (which are expected to be maps)."
   [m]
   (into {}
         (mapv (fn [[lang-id language]]
@@ -157,3 +155,22 @@
           (not e2) (recur (assoc! m k (e1 1)) (next ks))
           :else (recur m (next ks))))
       (persistent! m))))
+
+(defn keys->sequence-number
+  "Return a map associating a key of the map `m` with a number, numbered from 1 to n."
+  [m]
+  (zipmap (keys (into {} m)) (iterate inc 1)))
+
+(defn translate-keys
+  "Translate keys of map `m` thanks to the `translation`."
+  [m translation]
+  (->> m
+       (map (fn [[k v]] [(get translation k k) v]))
+       (into {})))
+
+(defn translate-vals
+  "Translate vals of map `m` thanks to the `translation`."
+  [m translation]
+  (->> m
+       (map (fn [[k v]] [k (get translation v k)]))
+       (into {})))
