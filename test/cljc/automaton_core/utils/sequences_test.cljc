@@ -29,3 +29,26 @@
     (is (= 3 (sut/index-of [1 2 3 :foo] #{:foo}))))
   (testing "Element not found in the sequence"
     (is (nil? (sut/index-of [1 2 3] :foo)))))
+
+(deftest position-by-values-test
+  (testing "Non vector are ok"
+    (is (= {1 [0]
+            2 [1]
+            3 [2]}
+           (sut/position-by-values '(1 2 3)))))
+  (testing "Empty vectors"
+    (is (= {} (sut/position-by-values [])))
+    (is (= {} (sut/position-by-values nil))))
+  (testing "Return vectors"
+    (is (every? vector?
+                (-> (sut/position-by-values [1 2 3 1 1 2])
+                    vals))))
+  (testing "Happy path"
+    (is (= {1 [0 3 4]
+            2 [1 5]
+            3 [2]}
+           (sut/position-by-values [1 2 3 1 1 2])))
+    (is (= {1 [0]
+            2 [1]
+            3 [2]}
+           (sut/position-by-values [1 2 3])))))

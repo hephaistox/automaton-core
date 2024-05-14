@@ -23,3 +23,17 @@
   * `pred` pred is a function returning true when called on the element to return the sequence of"
   [coll pred]
   (let [idx? (fn [i a] (when (pred a) i))] (first (keep-indexed idx? coll))))
+
+(defn position-by-values
+  "Returns a map which associates each value of the vector to the positions where it happens.
+
+  Params:
+  * `v`"
+  [v]
+  (reduce (fn [res i]
+            (update res
+                    (nth v i)
+                    (fn [previous]
+                      (if (empty? previous) [i] (conj previous i)))))
+          {}
+          (range (count v))))
