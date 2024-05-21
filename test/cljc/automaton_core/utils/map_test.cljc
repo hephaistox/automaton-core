@@ -233,3 +233,42 @@
     (is (= {} (sut/translate-keys nil {})))
     (is (= {} (sut/translate-keys {} nil)))
     (is (= {} (sut/translate-keys nil nil)))))
+
+(deftest get-key-or-before-test
+  (testing "Test if latest key is returned, even if doesn't exist"
+    (is (nil? (sut/get-key-or-before (into (sorted-map)
+                                           {1 :a
+                                            32 :b
+                                            2 :c})
+                                     0)))
+    (is (= 1
+           (sut/get-key-or-before (into (sorted-map)
+                                        {1 :a
+                                         32 :b
+                                         2 :c})
+                                  1)))
+    (is (= 1
+           (sut/get-key-or-before (into (sorted-map)
+                                        {1 :a
+                                         32 :b
+                                         2 :c})
+                                  1.3)))
+    (is (= 2
+           (sut/get-key-or-before (into (sorted-map)
+                                        {1 :a
+                                         32 :b
+                                         2 :c})
+                                  2)))
+    (is (= 2
+           (sut/get-key-or-before (into (sorted-map)
+                                        {1 :a
+                                         32 :b
+                                         2 :c})
+                                  30)))
+    (is (= 32
+           (sut/get-key-or-before (into (sorted-map)
+                                        {1 :a
+                                         32 :b
+                                         2 :c})
+                                  32)))
+    (is (nil? (sut/get-key-or-before (into (sorted-map) {}) 32)))))

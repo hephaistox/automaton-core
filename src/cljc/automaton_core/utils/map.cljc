@@ -174,3 +174,31 @@
   (->> m
        (map (fn [[k v]] [k (get translation v k)]))
        (into {})))
+
+(defn get-key-or-before
+  "Returns the key if it exists in the sorted-map
+
+  Note this is not an efficient way
+
+  Params:
+  * `m` the sorted map
+  * `n`"
+  [^clojure.lang.PersistentTreeMap m n]
+  (->> m
+       keys
+       (take-while (partial >= n))
+       last))
+
+(defn get-key-or-after
+  "Returns the key if it exists in the sorted-map
+
+  Note this is not an efficient way
+
+  Params:
+  * `m` the sorted map
+  * `n`"
+  [^clojure.lang.PersistentTreeMap m n]
+  (->> m
+       keys
+       (take-while (partial <= n))
+       last))
