@@ -125,6 +125,24 @@
                          :bar "foo"}))))
   (testing "Empty maps are ok" (is (= {} (sut/add-ids {})))))
 
+(deftest maps-to-k-test
+  (is (= {:b {:a :b}
+          :a {:c :d
+              :a :a}}
+         (sut/maps-to-key [{:a :b}
+                           {:c :d
+                            :a :a}]
+                          :a)))
+  (testing "Maps with no value for the key are removed."
+    (is (= {:b {:a :b}
+            :a {:c :d
+                :a :a}}
+           (sut/maps-to-key [{:a :b}
+                             {:c :d
+                              :a :a}
+                             {}]
+                            :a)))))
+
 (deftest update-kw-test
   (testing "Update is ok, non selected keys are excluded"
     (is (= {:foo "arg"
@@ -233,6 +251,21 @@
     (is (= {} (sut/translate-keys nil {})))
     (is (= {} (sut/translate-keys {} nil)))
     (is (= {} (sut/translate-keys nil nil)))))
+
+(deftest submap?
+  (testing "submap is found correctly"
+    (is (sut/submap? {:a {:b :B1}}
+                     {:a {:b :B1
+                          :c :C1}}))
+    (is (sut/submap? {:c 5}
+                     {:a {:b :B1}
+                      :c 5}))
+    (is (sut/submap? {:a 1} {:a 1}))
+    (is (sut/submap? {} {})))
+  (testing "submap is not found cases"
+    (is (false? (sut/submap? {:a {:b :B1}} {:c 5})))
+    (is (false? (sut/submap? nil {})))
+    (is (false? (sut/submap? {:c 5} nil)))))
 
 (deftest get-key-or-before-test
   (testing "Test if latest key is returned, even if doesn't exist"

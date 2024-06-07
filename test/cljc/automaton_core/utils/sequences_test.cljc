@@ -30,6 +30,12 @@
   (testing "Element not found in the sequence"
     (is (nil? (sut/index-of [1 2 3] :foo)))))
 
+(deftest concat-at-test
+  (is (= [:a :b :c :d :e :f] (sut/concat-at [:a :b :x :e :f] :x [:c :d])))
+  (testing "If replacing `kw` is not found, do nothing."
+    (is (= [:a :b :x :e :f :c :d]
+           (sut/concat-at [:a :b :x :e :f] :y [:c :d])))))
+
 (deftest position-by-values-test
   (testing "Non vector are ok"
     (is (= {1 [0]

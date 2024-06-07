@@ -24,6 +24,28 @@
   [coll pred]
   (let [idx? (fn [i a] (when (pred a) i))] (first (keep-indexed idx? coll))))
 
+(defn indexed
+  "Returns a lazy sequence of [index, item] pairs, where items come
+  from 's' and indexes count up from zero.
+
+  (indexed '(a b c d))  =>  ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
+(defn positions
+  "Returns a lazy sequence containing the positions at which pred
+   is true for items in coll."
+  [pred coll]
+  (for [[idx elt] (indexed coll) :when (pred elt)] idx))
+
+(defn concat-at
+  "Concatenate sequences `x` and `y`, `y` is inserted at position `kw`.
+  If `kw` not found, `y` is concatenated at the end of `x`."
+  [x kw y]
+  (if-let [i (first (positions #{kw} x))]
+    (concat (take i x) y (drop (inc i) x))
+    (concat x y)))
+
 (defn position-by-values
   "Returns a map which associates each value of the vector to the positions where it happens.
 
