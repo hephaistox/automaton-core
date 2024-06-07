@@ -15,3 +15,10 @@
   (testing "Invalid schema returns false"
     (is (some? (sut/validate-humanize nil)))
     (is (some? (sut/validate-humanize 12)))))
+
+(deftest add-default-test
+  (testing "Adds default values."
+    (is (sut/add-default [:map
+                          [:foo {:default "bar"}
+                           :string]]
+                         {}))))

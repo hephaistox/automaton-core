@@ -93,6 +93,13 @@
                   [lang-id language]))
               m)))
 
+(defn maps-to-key
+  "`maps` is a list of map which value matching key `k` is used as a key to store the map as a value."
+  [maps k]
+  (->> (for [m maps] [(get m k) m])
+       (filter (comp some? first))
+       (into {})))
+
 (defn update-kw
   "Update the keywords `kws` in map `m` with function `f`"
   [m kws f]
@@ -174,6 +181,13 @@
   (->> m
        (map (fn [[k v]] [k (get translation v k)]))
        (into {})))
+
+(defn submap?
+  "Is `sub` existing in `m`?"
+  [sub m]
+  (if (and (map? sub) (map? m))
+    (every? (fn [[k v]] (and (contains? m k) (submap? v (get m k)))) sub)
+    (= sub m)))
 
 (defn get-key-or-before
   "Returns the key if it exists in the sorted-map
