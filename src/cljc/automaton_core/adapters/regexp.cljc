@@ -3,7 +3,7 @@
   Seamless access to regular expressions between cljs and clj
   Managing both back and frontend to have a seamless experience"
   #?(:cljs (:require
-            [automaton-core.adapters.string :as aas])))
+            [automaton-core.adapters.string :as core-string])))
 
 (def starts-a-string
   #?(:clj "\\A"
@@ -16,7 +16,8 @@
 (defn stringify
   [re]
   #?(:clj (str re)
-     :cljs (if (string? re) re (aas/remove-first-last-character (str re)))))
+     :cljs
+       (if (string? re) re (core-string/remove-first-last-character (str re)))))
 
 (defn assemble-re
   "Assemble regular expressions together

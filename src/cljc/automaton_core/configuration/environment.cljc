@@ -2,7 +2,7 @@
   "Get environment data stored in the configuration"
   (:require
    #?@(:clj [[clojure.edn :as edn]]
-       :cljs [[cljs.reader :as edn] [goog.object :as obj]])
+       :cljs [[cljs.reader] [goog.object :as obj]])
    [automaton-core.configuration.protocol :as core-conf-prot]
    [automaton-core.utils.keyword          :as core-keyword]
    [clojure.string                        :as str]))
@@ -36,7 +36,10 @@
     (re-matches #"^(true|false)$" v) #?(:clj (Boolean/parseBoolean v)
                                         :cljs (parse-boolean v))
     (re-matches #"\w+" v) v
-    :else (try (let [parsed (edn/read-string v)] (if (symbol? parsed) v parsed))
+    :else (try (let [f #?(:clj edn/read-string
+                          :cljs cljs.reader/read-string)
+                     parsed (f v)]
+                 (if (symbol? parsed) v parsed))
                (catch #?(:clj Exception
                          :cljs js/Error)
                  _
