@@ -5,7 +5,7 @@
    #?@(:clj [[clojure.edn :as edn]
              [clojure.java.io :as io]
              [automaton-core.adapters.java-properties :as java-properties]]
-       :cljs [[cljs.reader :as edn]])
+       :cljs [[cljs.reader]])
    [automaton-core.configuration.protocol :as core-conf-prot]
    [automaton-core.utils.keyword          :as core-keyword]
    [automaton-core.utils.map              :as utils-map]))
@@ -26,7 +26,10 @@
   "Reads config file, on purpose fn defined here to keep dependencies as small as possible."
   [f]
   (when-let [content (slurp-file f)]
-    (into {} (core-keyword/sanitize-map-keys (edn/read-string content)))))
+    (into {}
+          (core-keyword/sanitize-map-keys #?(:clj (edn/read-string content)
+                                             :cljs (cljs.reader/read-string
+                                                    content))))))
 
 (def config-file
   #?(:clj "heph-conf"

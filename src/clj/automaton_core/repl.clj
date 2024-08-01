@@ -17,7 +17,6 @@
 (defn- force-option?
   [args]
   (filter some? (map #(contains? #{"-f" "--force"} %) args)))
-(force-option? "--force")
 
 (def nrepl-port-filename "Name of the `.nrepl-port` file" ".nrepl-port")
 
@@ -54,8 +53,9 @@
     (create-nrepl-files repl-port)
     (reset! repl {:nrepl-port repl-port
                   :repl (do (core-log/info "nrepl available on port " repl-port)
-                            (core-log-terminal/log "repl port is available on: "
-                                                   repl-port)
+                            (core-log-terminal/log
+                             "-> Repl port is available on: "
+                             repl-port)
                             (start-server :port repl-port
                                           :handler (apply default-handler
                                                           middlewares)))})
@@ -71,7 +71,7 @@
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
                        (files/delete-files))
                    (core-portal-server/stop)
-                   (println "SHUTDOWN ends succesfully"))))))
+                   (println "SHUTDOWN ends successfully"))))))
 
 (defn default-middleware
   []

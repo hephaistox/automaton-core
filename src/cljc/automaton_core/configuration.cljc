@@ -21,8 +21,7 @@
 
 (defn start-conf
   []
-  (try (println "Starting configuration component")
-       (let [conf (core-conf-files/make-files-conf)
+  (try (let [conf (core-conf-files/make-files-conf)
              env-conf (core-conf-env/make-env-conf)]
          [conf env-conf])
        (catch #?(:clj Throwable
