@@ -1,7 +1,7 @@
 (ns automaton-core.utils.pretty-print
   "Gathers functions related to pretty printing or pretty formatting."
   (:require
-   [automaton-core.adapters.string :as bas]
+   [automaton-core.adapters.string :as core-string]
    [clojure.pprint                 :as pp]))
 
 (defn one-liner-print
@@ -13,7 +13,7 @@
     (-> elt
         pp/pprint
         with-out-str
-        bas/remove-last-character)
+        core-string/remove-last-character)
     elt))
 
 (defn seq->string

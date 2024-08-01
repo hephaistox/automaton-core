@@ -22,13 +22,13 @@
          * All assert will return true on clojurescript
          * The `assert-protocol` function has a `:unused-binding` flag to prevent kondo warnings"
   (:require
-   #?@(:clj [[automaton-core.configuration :as core-configuration]
+   #?@(:clj [[automaton-core.configuration :as core-conf]
              [automaton-core.log :as core-log]])))
 
 #?(:clj (defmacro assert-protocols
           "Assert the `args` to check if they all match the expected type"
           [caller-fn-name asserts & body]
-          (if (core-configuration/read-param [:test-type-arg?] false)
+          (if (core-conf/read-param [:test-type-arg?] false)
             `(do ~@body)
             `(when (->> (for [[expected-type# arg#] ~asserts]
                           (cond
@@ -57,7 +57,7 @@
   * `val` value to test
   * `msg` message to display, the `%s` in the string is replaced with the value"
        [val msg & body]
-       (if (core-configuration/read-param [:test-type-arg?] false)
+       (if (core-conf/read-param [:test-type-arg?] false)
          `(do ~@body)
          `(if (and (int? ~val) (or (zero? ~val) (pos? ~val)))
             (do ~@body)
