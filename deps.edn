@@ -1,8 +1,8 @@
 {:aliases
- {:bb-deps {:extra-deps {org.clojars.hephaistox/automaton-build #:mvn{:version
-                                                                      "2.0.1-la"}}}
-  :build {:extra-deps {org.clojars.hephaistox/automaton-build #:mvn{:version
-                                                                    "2.0.1-la"}}}
+ {:bb-deps {:extra-deps {org.clojars.hephaistox/automaton-build
+                         #:mvn{:version "2.0.1-2-la"}}}
+  :build {:extra-deps {org.clojars.hephaistox/automaton-build
+                       #:mvn{:version "2.0.1-2-la"}}}
   :cljs-deps {:extra-deps {binaryage/devtools #:mvn{:version "1.0.7"}
                            com.yetanalytics/colossal-squuid {:mvn/version
                                                              "0.1.5"}
