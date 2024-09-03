@@ -7,9 +7,7 @@
    [clojure.java.io               :as io]
    [clojure.string                :as str]))
 
-(def commands-schema
-  [:vector
-   [:or [:tuple [:vector [:string]] :map] [:tuple [:vector [:string]]]]])
+(def commands-schema [:vector [:or [:tuple [:vector [:string]] :map] [:tuple [:vector [:string]]]]])
 
 (def glob-command-params
   "Command params globals"
@@ -24,8 +22,7 @@
   [command dir]
   (let [proc (babashka-process/process command
                                        {:dir dir
-                                        :shutdown
-                                        babashka-process/destroy-tree})]
+                                        :shutdown babashka-process/destroy-tree})]
     (future (with-open [rdr (io/reader (:out proc))]
               (binding [*in* rdr]
                 (loop []
@@ -72,11 +69,8 @@
               :else :inherit)
         blocking? (or (= out :string) blocking?)]
     (files/create-dirs dir)
-    (core-log/debug-format "%s - in directory `%s`"
-                           str-command
-                           (files/absolutize dir))
-    (when (and (not= out :string) filename)
-      (core-log/info "  -> output = " filename))
+    (core-log/debug-format "%s - in directory `%s`" str-command (files/absolutize dir))
+    (when (and (not= out :string) filename) (core-log/info "  -> output = " filename))
     (try (if stream?
            (stream-execute-command* command dir)
            (execute-command* command dir out file in blocking?))
@@ -86,12 +80,10 @@
          (catch clojure.lang.ExceptionInfo e
            (let [{:keys [exit type]} (ex-data e)]
              (if (= type :babashka.process/error)
-               (throw (ex-info (str "Command `" str-command
-                                    "` failed on exit code " exit)
+               (throw (ex-info (str "Command `" str-command "` failed on exit code " exit)
                                (merge execute-command-params {:exception e})))
                (throw (ex-info (str "Command `" str-command "` failed ")
-                               (merge execute-command-params
-                                      {:exception e}))))))
+                               (merge execute-command-params {:exception e}))))))
          (catch Exception e
            (throw (ex-info (str "Command `" str-command "` failed ")
                            (merge execute-command-params {:exception e})))))))

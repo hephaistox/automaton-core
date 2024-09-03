@@ -27,18 +27,12 @@
       #?(:clj (is (nil? res))
          :cljs (is res))))
   (testing "Successful assert"
-    (let [res (sut/assert-protocols "Should not be displayed" [[Bar foo]] 3)]
-      (is (= 3 res))))
+    (let [res (sut/assert-protocols "Should not be displayed" [[Bar foo]] 3)] (is (= 3 res))))
   (testing "Failing assert"
-    (let [res (sut/assert-protocols "This assertion is expected to fail"
-                                    [[Bar 10.0]]
-                                    5)]
+    (let [res (sut/assert-protocols "This assertion is expected to fail" [[Bar 10.0]] 5)]
       #?(:clj (is (nil? res))
          :cljs (is res))))
   (testing "If only one arg fail, all of them fail"
-    (let [res (sut/assert-protocols "This assertion is expected to fail"
-                                    [[Bar 10.0]]
-                                    [Bar foo]
-                                    4)]
+    (let [res (sut/assert-protocols "This assertion is expected to fail" [[Bar 10.0]] [Bar foo] 4)]
       #?(:clj (is (nil? res))
          :cljs (is res)))))

@@ -12,9 +12,7 @@
     (apply merge-with
            union
            (map (fn [[language dict-map]]
-                  (into {}
-                        (map (fn [v] [v #{language}])
-                             (keys (utils-map/crush dict-map)))))
+                  (into {} (map (fn [v] [v #{language}]) (keys (utils-map/crush dict-map)))))
                 filtered-dictionary))))
 
 (defn key-with-missing-languages
@@ -23,7 +21,5 @@
   `expected-languages` is the languages the report is limited to"
   [dictionary expected-languages key-exceptions]
   (let [key-set-exceptions (into #{} key-exceptions)]
-    (filter (fn [[k v]]
-              (and (not (contains? key-set-exceptions k))
-                   (not= v expected-languages)))
+    (filter (fn [[k v]] (and (not (contains? key-set-exceptions k)) (not= v expected-languages)))
             (language-report dictionary expected-languages))))

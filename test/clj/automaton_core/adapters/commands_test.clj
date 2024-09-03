@@ -7,10 +7,7 @@ And be able to watch bb log to check if results are as expected"
    [automaton-core.adapters.schema   :as core-schema]
    [clojure.test                     :refer [deftest is testing]]))
 
-(defn check-exit-code
-  "Check the process return code is 0"
-  [proc]
-  (= 0 (:exit proc)))
+(defn check-exit-code "Check the process return code is 0" [proc] (= 0 (:exit proc)))
 
 (deftest execute-command-test
   (testing "Simple command is ok"
@@ -48,7 +45,5 @@ And be able to watch bb log to check if results are as expected"
     (is (core-schema/validate-data sut/commands-schema [[["pwd"]] [["pwd"]]])))
   (testing "Non accepted example"
     (is (not (core-schema/validate-data sut/commands-schema [[["pwd" nil]]])))
-    (is (not (core-schema/validate-data sut/commands-schema
-                                        [[["pwd" nil] {} {}]])))
-    (is (not (core-schema/validate-data sut/commands-schema
-                                        [[["pwd" nil] [] {}]])))))
+    (is (not (core-schema/validate-data sut/commands-schema [[["pwd" nil] {} {}]])))
+    (is (not (core-schema/validate-data sut/commands-schema [[["pwd" nil] [] {}]])))))

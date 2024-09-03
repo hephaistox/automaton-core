@@ -1,5 +1,4 @@
-(ns automaton-core.adapters.string
-  "String manipulation usable both in clj and cljs")
+(ns automaton-core.adapters.string "String manipulation usable both in clj and cljs")
 
 (defn remove-last-character
   "Remove the last character of a string"
@@ -9,9 +8,7 @@
 (defn remove-first-last-character
   "Remove the first and last character of a string"
   [s]
-  (let [s (str s)
-        count-s (count s)]
-    (if (< 2 count-s) (subs s 1 (max 0 (- (count s) 1))) "")))
+  (let [s (str s) count-s (count s)] (if (< 2 count-s) (subs s 1 (max 0 (- (count s) 1))) "")))
 
 (def ellipsis "...")
 
@@ -27,13 +24,11 @@
      (if (<= (count line) limit)
        line
        (do (on-ellipsis s)
-           (apply
-            str
-            (concat
-             prefix
-             (take (- limit (count ellipsis) (count prefix) (count suffix)) s)
-             ellipsis
-             suffix)))))))
+           (apply str
+                  (concat prefix
+                          (take (- limit (count ellipsis) (count prefix) (count suffix)) s)
+                          ellipsis
+                          suffix)))))))
 
 (defn remove-trailing-character
   "Remove last character if it is matching char

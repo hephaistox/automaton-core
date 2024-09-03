@@ -28,8 +28,7 @@
   (when-let [content (slurp-file f)]
     (into {}
           (core-keyword/sanitize-map-keys #?(:clj (edn/read-string content)
-                                             :cljs (cljs.reader/read-string
-                                                    content))))))
+                                             :cljs (cljs.reader/read-string content))))))
 
 (def config-file
   #?(:clj "heph-conf"

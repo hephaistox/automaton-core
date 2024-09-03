@@ -6,10 +6,7 @@
 
 (def deps-edn "deps.edn")
 
-(defn load-deps
-  "Load the current project `deps.edn` files"
-  []
-  (edn-utils/read-edn deps-edn))
+(defn load-deps "Load the current project `deps.edn` files" [] (edn-utils/read-edn deps-edn))
 
 (defn extract-paths
   "Extracts the `:paths` and `:extra-paths` from a given `deps.edn`
@@ -21,11 +18,9 @@
      :as _deps-edn}
     excluded-aliases]
    (let [selected-aliases (apply dissoc aliases excluded-aliases)
-         alias-paths
-         (mapcat (fn [[_alias-name paths]]
-                   (apply concat
-                          (vals (select-keys paths [:extra-paths :paths]))))
-          selected-aliases)]
+         alias-paths (mapcat (fn [[_alias-name paths]]
+                               (apply concat (vals (select-keys paths [:extra-paths :paths]))))
+                      selected-aliases)]
      (->> alias-paths
           (concat paths)
           sort
@@ -43,8 +38,7 @@
    excluded-aliases]
   (let [selected-aliases (apply dissoc aliases excluded-aliases)]
     (->> selected-aliases
-         (map (fn [[_ alias-defs]]
-                (vals (select-keys alias-defs [:extra-deps :deps]))))
+         (map (fn [[_ alias-defs]] (vals (select-keys alias-defs [:extra-deps :deps]))))
          (apply concat)
          (into {})
          (concat deps)
@@ -101,10 +95,9 @@
   [base-dir alias-map]
   (cond-> alias-map
     (contains? alias-map :extra-deps)
-    (update :extra-deps
-            #(update-vals % (partial update-dep-local-root base-dir)))
-    (contains? alias-map :deps)
-    (update :deps #(update-vals % (partial update-dep-local-root base-dir)))))
+    (update :extra-deps #(update-vals % (partial update-dep-local-root base-dir)))
+    (contains? alias-map :deps) (update :deps
+                                        #(update-vals % (partial update-dep-local-root base-dir)))))
 
 (defn update-aliases-local-root
   "Update all aliases local root to be relative starting from base-dir

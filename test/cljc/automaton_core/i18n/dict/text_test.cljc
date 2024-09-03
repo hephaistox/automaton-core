@@ -9,16 +9,12 @@
    [clojure.string                                 :as str]))
 
 (deftest dict-test
-  (testing
-    (apply
-     str
-     "Dictionary is matching all expected languages. List of languages to expect: "
-     (str/join " " core-lang/dict-core-languages-ids))
+  (testing (apply str
+                  "Dictionary is matching all expected languages. List of languages to expect: "
+                  (str/join " " core-lang/dict-core-languages-ids))
     (is (= []
-           (b-language/key-with-missing-languages
-            sut/dict
-            core-lang/dict-core-languages-ids
-            #{:tongue/missing-key}))))
+           (b-language/key-with-missing-languages sut/dict
+                                                  core-lang/dict-core-languages-ids
+                                                  #{:tongue/missing-key}))))
   (testing "All languages are known languages"
-    (is (empty? (set/difference (set (keys sut/dict))
-                                core-lang/get-core-languages-id)))))
+    (is (empty? (set/difference (set (keys sut/dict)) core-lang/get-core-languages-id)))))

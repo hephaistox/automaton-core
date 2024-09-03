@@ -22,8 +22,7 @@
          * All assert will return true on clojurescript
          * The `assert-protocol` function has a `:unused-binding` flag to prevent kondo warnings"
   (:require
-   #?@(:clj [[automaton-core.configuration :as core-conf]
-             [automaton-core.log :as core-log]])))
+   #?@(:clj [[automaton-core.configuration :as core-conf] [automaton-core.log :as core-log]])))
 
 #?(:clj (defmacro assert-protocols
           "Assert the `args` to check if they all match the expected type"
@@ -32,18 +31,16 @@
             `(do ~@body)
             `(when (->> (for [[expected-type# arg#] ~asserts]
                           (cond
-                            (nil? arg#)
-                            (do (core-log/error-format
-                                 "Protocol `%s`, expects `%s` - found `nil`"
-                                 ~caller-fn-name
-                                 (:on expected-type#))
-                                true)
+                            (nil? arg#) (do (core-log/error-format
+                                             "Protocol `%s`, expects `%s` - found `nil`"
+                                             ~caller-fn-name
+                                             (:on expected-type#))
+                                            true)
                             (not (extends? expected-type# (type arg#)))
-                            (do (core-log/error-format
-                                 "Protocol `%s` expects `%s` - found `%s`"
-                                 ~caller-fn-name
-                                 (:on expected-type#)
-                                 (type arg#))
+                            (do (core-log/error-format "Protocol `%s` expects `%s` - found `%s`"
+                                                       ~caller-fn-name
+                                                       (:on expected-type#)
+                                                       (type arg#))
                                 true)
                             :else nil))
                         (every? nil?))

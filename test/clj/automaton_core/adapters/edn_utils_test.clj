@@ -19,13 +19,10 @@
 (deftest read-edn-test
   (testing "Malformed files are detected "
     (is (nil? (sut/read-edn "non-used-file-name" (fn [_] "1.1.1 (+ 1 1)")))))
-  (testing "Non existing files are detected "
-    (is (nil? (sut/read-edn "not existing file"))))
-  (testing "Non existing files are skipped"
-    (is (nil? (sut/read-edn "non existing file" slurp))))
+  (testing "Non existing files are detected " (is (nil? (sut/read-edn "not existing file"))))
+  (testing "Non existing files are skipped" (is (nil? (sut/read-edn "non existing file" slurp))))
   (testing "Resource file found"
-    (is (= "test1-content"
-           (sut/read-edn (io/resource "resource-test-copy-dir/test1"))))))
+    (is (= "test1-content" (sut/read-edn (io/resource "resource-test-copy-dir/test1"))))))
 
 (deftest read-edn-or-nil-test
   (testing "Skip non existing files and return nil"

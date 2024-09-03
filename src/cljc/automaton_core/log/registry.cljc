@@ -11,5 +11,4 @@
    ::error-tracking-context
    {:description
     "Strategy for exception monitoring logging type, that gathers context of upcoming error alerts"}
-   ::error-tracking-alert {:description
-                           "Strategy for alerting about existing problem."}})
+   ::error-tracking-alert {:description "Strategy for alerting about existing problem."}})
