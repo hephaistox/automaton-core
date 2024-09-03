@@ -14,9 +14,7 @@
     (is (= 1 (sut/idx-of v "b")))
     (is (= 2 (sut/idx-of v "c"))))
   (testing "not found values return nil" (is (nil? (sut/idx-of v "z"))))
-  (testing "nil values are ok"
-    (is (nil? (sut/idx-of v nil)))
-    (is (nil? (sut/idx-of nil "v")))))
+  (testing "nil values are ok" (is (nil? (sut/idx-of v nil))) (is (nil? (sut/idx-of nil "v")))))
 
 (def v2 [{:foo :bar} {:foo :bar2}])
 

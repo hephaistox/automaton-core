@@ -16,8 +16,7 @@
 (defn stringify
   [re]
   #?(:clj (str re)
-     :cljs
-       (if (string? re) re (core-string/remove-first-last-character (str re)))))
+     :cljs (if (string? re) re (core-string/remove-first-last-character (str re)))))
 
 (defn assemble-re
   "Assemble regular expressions together
@@ -47,7 +46,5 @@
           assembled ""]
      (let [re (stringify re)
            assembled-re (str assembled (if optional? (str re "?") re))]
-       (if nexts
-         (recur nexts assembled-re)
-         (re-pattern (str prefix assembled-re suffix))))))
+       (if nexts (recur nexts assembled-re) (re-pattern (str prefix assembled-re suffix))))))
   ([res] (assemble-re-optional res nil nil)))

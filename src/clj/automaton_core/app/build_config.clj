@@ -27,13 +27,9 @@
   * `root-dir`
   Returns the list of directories with `build_config.edn` in it"
   [root-dir]
-  (->> (files/search-files root-dir
-                           (str "{"
-                                build-config-filename
-                                ",*/"
-                                build-config-filename
-                                ",*/*/"
-                                build-config-filename
-                                "}"))
-       flatten
-       (filterv (comp not nil?))))
+  (->>
+    (files/search-files
+     root-dir
+     (str "{" build-config-filename ",*/" build-config-filename ",*/*/" build-config-filename "}"))
+    flatten
+    (filterv (comp not nil?))))

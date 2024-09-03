@@ -11,41 +11,27 @@
    [automaton-core.log.terminal    :as core-log-terminal]
    [automaton-core.portal.server   :as core-portal-server]
    [automaton-core.utils.namespace :as core-namespace]
-   [nrepl.server                   :refer
-                                   [default-handler start-server stop-server]]))
+   [nrepl.server                   :refer [default-handler start-server stop-server]]))
 
-(defn- force-option?
-  [args]
-  (filter some? (map #(contains? #{"-f" "--force"} %) args)))
+(defn- force-option? [args] (filter some? (map #(contains? #{"-f" "--force"} %) args)))
 
 (def nrepl-port-filename "Name of the `.nrepl-port` file" ".nrepl-port")
 
 (def repl "Store the repl instance in the atom" (atom {}))
 
-(defn get-nrepl-port-parameter
-  []
-  (core-conf/read-param [:dev :clj-nrepl-port] 8000))
+(defn get-nrepl-port-parameter [] (core-conf/read-param [:dev :clj-nrepl-port] 8000))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(defn get-active-nrepl-port
-  "Retrieve the nrepl port, available for REPL"
-  []
-  (:nrepl-port @repl))
+(defn get-active-nrepl-port "Retrieve the nrepl port, available for REPL" [] (:nrepl-port @repl))
 
-(defn- stop-repl
-  "Stop the repl"
-  []
-  (stop-server (:repl @repl))
-  (reset! repl {}))
+(defn- stop-repl "Stop the repl" [] (stop-server (:repl @repl)) (reset! repl {}))
 
 (defn create-nrepl-files
   "Consider all deps.edn files as the root of a clojure project and creates a .nrepl-port file next to it"
   [repl-port]
   (let [build-configs (files/search-files "" "**build_config.edn")
-        nrepl-ports (map #(files/file-in-same-dir % nrepl-port-filename)
-                         build-configs)]
-    (doseq [nrepl-port nrepl-ports]
-      (files/write-file nrepl-port (str repl-port)))))
+        nrepl-ports (map #(files/file-in-same-dir % nrepl-port-filename) build-configs)]
+    (doseq [nrepl-port nrepl-ports] (files/write-file nrepl-port (str repl-port)))))
 
 (defn- start-repl*
   [middlewares]
@@ -53,19 +39,13 @@
     (create-nrepl-files repl-port)
     (reset! repl {:nrepl-port repl-port
                   :repl (do (core-log/info "nrepl available on port " repl-port)
-                            (core-log-terminal/log
-                             "-> Repl port is available on: "
-                             repl-port)
+                            (core-log-terminal/log "-> Repl port is available on: " repl-port)
                             (start-server :port repl-port
-                                          :handler (apply default-handler
-                                                          middlewares)))})
+                                          :handler (apply default-handler middlewares)))})
     (core-portal-server/start)
     (.addShutdownHook
      (Runtime/getRuntime)
-     (Thread. #(do (core-log-terminal/log
-                    "SHUTDOWN in progress, stop repl on port `"
-                    repl-port
-                    "`")
+     (Thread. #(do (core-log-terminal/log "SHUTDOWN in progress, stop repl on port `" repl-port "`")
                    (shutdown-agents)
                    (stop-repl)
                    (-> (files/search-files "" (str "**" nrepl-port-filename))
@@ -75,10 +55,8 @@
 
 (defn default-middleware
   []
-  (let [cider-middlewares (core-namespace/try-require
-                           'cider.nrepl/cider-middleware)
-        nrepl-middleware (core-namespace/try-require
-                          'refactor-nrepl.middleware/wrap-refactor)]
+  (let [cider-middlewares (core-namespace/try-require 'cider.nrepl/cider-middleware)
+        nrepl-middleware (core-namespace/try-require 'refactor-nrepl.middleware/wrap-refactor)]
     (cond-> []
       cider-middlewares (concat @(resolve cider-middlewares))
       nrepl-middleware (conj nrepl-middleware)
@@ -96,6 +74,5 @@
           [automaton-core.dev :refer :all]))
        :started
        (catch Exception e
-         (core-log/error (ex-info "Failed to start, relaunch with -force option"
-                                  {:error e}))
+         (core-log/error (ex-info "Failed to start, relaunch with -force option" {:error e}))
          nil)))

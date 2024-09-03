@@ -15,8 +15,7 @@
     (is (= "uk" (sut/extract-tld-from-host "hephaistox.co.uk")))
     (is (= "fr" (sut/extract-tld-from-host "http://hephaistox.fr"))))
   (testing "Compatible with multiple domaines"
-    (is (= "fr"
-           (sut/extract-tld-from-host "http://www.subdomain.hephaistox.fr"))))
+    (is (= "fr" (sut/extract-tld-from-host "http://www.subdomain.hephaistox.fr"))))
   (testing "Localhost are compatible"
     (is (nil? (sut/extract-tld-from-host "localhost")))
     (is (nil? (sut/extract-tld-from-host "192.168.0.01")))))
@@ -29,13 +28,11 @@
                                "http://www.hephaistox.com/foo'bar?lang=en"
                                "http://www.hephaistox.com/foo'bar?lang=en")))
   (testing "Exact same are discarded"
-    (is (not (sut/compare-locations
-              "http://www.hephaistox.com/foo'bar?lang=en"
-              "http://www.hephaistox.com/foo'bar?lang=fr"
-              "http://www.hephaistox.com/foo'bar?lang=en"))))
+    (is (not (sut/compare-locations "http://www.hephaistox.com/foo'bar?lang=en"
+                                    "http://www.hephaistox.com/foo'bar?lang=fr"
+                                    "http://www.hephaistox.com/foo'bar?lang=en"))))
   (testing "Compare relative and fullpath"
-    (is (sut/compare-locations "http://www.hephaistox.com/foo'bar?lang=en"
-                               "/foo'bar?lang=en"))))
+    (is (sut/compare-locations "http://www.hephaistox.com/foo'bar?lang=en" "/foo'bar?lang=en"))))
 
 (deftest parse-queries-test
   (testing "Simple params"
@@ -50,5 +47,4 @@
   (testing "Complete url analysis"
     (is (= {:par "foo"
             :bar "barfoo"}
-           (sut/parse-queries
-            "http://hephaistox.com:3000?par=foo&bar=barfoo#foobar")))))
+           (sut/parse-queries "http://hephaistox.com:3000?par=foo&bar=barfoo#foobar")))))

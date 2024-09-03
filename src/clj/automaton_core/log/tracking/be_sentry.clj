@@ -27,8 +27,7 @@
     (when message (.setMessage breadcrumb message))
     (when category (.setCategory breadcrumb category))
     (when data
-      (doseq [[k v] (utils-map/map-util-hashmappify-vals data
-                                                         #(HashMap. ^Map %))]
+      (doseq [[k v] (utils-map/map-util-hashmappify-vals data #(HashMap. ^Map %))]
         (.setData breadcrumb k v)))
     breadcrumb))
 
@@ -36,8 +35,7 @@
   "Sends breadcrumb, which will not be shown in sentry until event is sent.
    You can read more here: https://docs.sentry.io/platforms/java/enriching-events/breadcrumbs/"
   [{:keys [message level context]}]
-  (Sentry/addBreadcrumb (map->breadcrumb {:message (pretty-print/seq->string
-                                                    message)
+  (Sentry/addBreadcrumb (map->breadcrumb {:message (pretty-print/seq->string message)
                                           :level level
                                           :data context})))
 

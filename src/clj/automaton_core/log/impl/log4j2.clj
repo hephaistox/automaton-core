@@ -7,6 +7,4 @@
    [automaton-core.utils.pretty-print :as pretty-print]
    [clojure.tools.logging             :as l]))
 
-(defn log-fn
-  [ns level & message]
-  (l/log ns level nil (pretty-print/seq->string message)))
+(defn log-fn [ns level & message] (l/log ns level nil (pretty-print/seq->string message)))

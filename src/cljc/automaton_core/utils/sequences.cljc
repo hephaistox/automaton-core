@@ -9,9 +9,7 @@
    (loop [aseq aseq
           i 40] ;; For security reason
      (when-not (pos? i) (throw (ex-info "Infinite loop detected" {})))
-     (if (and (seq aseq) (nil-fn (last aseq)))
-       (recur (butlast aseq) (dec i))
-       aseq)))
+     (if (and (seq aseq) (nil-fn (last aseq))) (recur (butlast aseq) (dec i)) aseq)))
   ([aseq] (trim-leading-nil aseq nil?)))
 
 (defn index-of
@@ -53,9 +51,6 @@
   * `v`"
   [v]
   (reduce (fn [res i]
-            (update res
-                    (nth v i)
-                    (fn [previous]
-                      (if (empty? previous) [i] (conj previous i)))))
+            (update res (nth v i) (fn [previous] (if (empty? previous) [i] (conj previous i)))))
           {}
           (range (count v))))

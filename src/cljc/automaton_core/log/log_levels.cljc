@@ -1,5 +1,4 @@
-(ns automaton-core.log.log-levels
-  "Defines the possible log levels and their sequence")
+(ns automaton-core.log.log-levels "Defines the possible log levels and their sequence")
 
 (def levels-sequence
   "List error levels in our app, first is more detailed, last is least detailed"

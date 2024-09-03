@@ -6,19 +6,13 @@
                                    :production {}}
                              :frontend {:run-aliases [:browser-test :ltest]}
                              :license {}
-                             :repo
-                             "git@github.com:hephaistox/automaton-core.git"}
+                             :repo "git@github.com:hephaistox/automaton-core.git"}
                :repl-aliases [:common-test :env-development-repl :build]}
- :tasks {:clean {:dirs [".cpcache/"
-                        ".clj-kondo/.cache/"
-                        "tmp/"
-                        "target/"
-                        "node_modules/"
-                        ".shadow-cljs/builds/"]}
-         :lfe-test {}
-         :lfe-watch {}
-         :reports {:forbiddenwords-words #{"automaton-build" "automaton-web"
-                                           "landing" "tap>"}}
-         :update-deps {:exclude-libs
-                       #{"com.taoensso/encore"
-                         "org.clojars.hephaistox/automaton-build@*-*"}}}}
+ :tasks
+ {:clean
+  {:dirs [".cpcache/" ".clj-kondo/.cache/" "tmp/" "target/" "node_modules/" ".shadow-cljs/builds/"]}
+  :lfe-test {}
+  :lfe-watch {}
+  :reports {:forbiddenwords-words #{"automaton-build" "automaton-web" "landing" "tap>"}}
+  :update-deps {:exclude-libs #{"com.taoensso/encore"
+                                "org.clojars.hephaistox/automaton-build@*-*"}}}}

@@ -16,16 +16,14 @@
   (:require
    [automaton-core.configuration                :as core-conf]
    [automaton-core.log.strategy                 :as log-strategy]
-   [automaton-core.log.strategy.static-ns-level :as
-                                                log-static-ns-level-strategy]
+   [automaton-core.log.strategy.static-ns-level :as log-static-ns-level-strategy]
    #?(:clj [automaton-core.log.be-log]
       :cljs [automaton-core.log.fe-log]))
   #?(:cljs (:require-macros [automaton-core.log])))
 
 (def stgy
   "Decides which strategy implementation to use for choosing the loggers."
-  (log-static-ns-level-strategy/make-static-ns-level-strategy
-   {:env (core-conf/read-param [:env])}))
+  (log-static-ns-level-strategy/make-static-ns-level-strategy {:env (core-conf/read-param [:env])}))
 
 (defn cljs-env?
   "Take the &env from a macro, and tell whether we are expanding into cljs."
@@ -35,8 +33,7 @@
 (defmacro trace
   "Records all of the application's behaviour details. Its purpose is primarily diagnostic, and it is more granular and finer than the DEBUG log level. When you need to know what happened in your application or the third-party libraries you're using, utilise this log level. The TRACE log level can be used to query code parameters or analyse algorithm steps."
   [& message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log ~logger-id# :trace ~@message)
       `(automaton-core.log.be-log/log ~logger-id# :trace ~@message))))
@@ -44,13 +41,9 @@
 (defmacro trace-exception
   "Like trace, but focused on exceptions."
   [exception & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :trace
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :trace ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :trace
                                                 ~exception
@@ -59,23 +52,15 @@
 (defmacro trace-data
   "Like trace, but first argument is expected to be a map with usefull more detailed data."
   [data & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :trace
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :trace
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :trace ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :trace ~data ~@additional-message))))
 
 (defmacro trace-format
   "Like trace, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
   [fmt & args]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :trace)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log-format ~logger-id# :trace ~fmt ~@args)
       `(automaton-core.log.be-log/log-format ~logger-id# :trace ~fmt ~@args))))
@@ -83,8 +68,7 @@
 (defmacro debug
   "You are providing diagnostic information in a thorough manner with DEBUG. It's long and contains more information than you'll need when gg using the application. The DEBUG logging level is used to retrieve data that is required to debug, troubleshoot, or test an application. This guarantees that the application runs smoothly."
   [& message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log ~logger-id# :debug ~@message)
       `(automaton-core.log.be-log/log ~logger-id# :debug ~@message))))
@@ -92,13 +76,9 @@
 (defmacro debug-exception
   "Like debug, but focused on exceptions."
   [exception & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :debug
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :debug ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :debug
                                                 ~exception
@@ -107,23 +87,15 @@
 (defmacro debug-data
   "Like debug, but first argument is expected to be a map with usefull more detailed data."
   [data & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :debug
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :debug
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :debug ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :debug ~data ~@additional-message))))
 
 (defmacro debug-format
   "Like debug, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
   [fmt & args]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :debug)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log-format ~logger-id# :debug ~fmt ~@args)
       `(automaton-core.log.be-log/log-format ~logger-id# :debug ~fmt ~@args))))
@@ -141,10 +113,7 @@
   [exception & additional-message]
   (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :info)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :info
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :info ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :info
                                                 ~exception
@@ -155,14 +124,8 @@
   [data & additional-message]
   (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :info)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :info
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :info
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :info ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :info ~data ~@additional-message))))
 
 (defmacro info-format
   "Like info, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
@@ -185,10 +148,7 @@
   [exception & additional-message]
   (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :warn)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :warn
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :warn ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :warn
                                                 ~exception
@@ -199,14 +159,8 @@
   [data & additional-message]
   (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :warn)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :warn
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :warn
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :warn ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :warn ~data ~@additional-message))))
 
 (defmacro warn-format
   "Like warn, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
@@ -219,8 +173,7 @@
 (defmacro error
   "This ERROR indicates that something critical in your application has failed. This log level is used when a serious issue is preventing the application's functionalities from functioning properly. The application will continue to run for the most part, but it will need to be handled at some point."
   [& message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log ~logger-id# :error ~@message)
       `(automaton-core.log.be-log/log ~logger-id# :error ~@message))))
@@ -228,13 +181,9 @@
 (defmacro error-exception
   "Like error, but focused on exceptions."
   [exception & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :error
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :error ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :error
                                                 ~exception
@@ -243,23 +192,15 @@
 (defmacro error-data
   "Like error, but first argument is expected to be a map with usefull more detailed data."
   [data & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :error
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :error
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :error ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :error ~data ~@additional-message))))
 
 (defmacro error-format
   "Like error, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
   [fmt & args]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :error)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log-format ~logger-id# :error ~fmt ~@args)
       `(automaton-core.log.be-log/log-format ~logger-id# :error ~fmt ~@args))))
@@ -267,8 +208,7 @@
 (defmacro fatal
   "FATAL indicates that the application is about to prevent a major problem or corruption. The FATAL level of logging indicates that the application's situation is critical, such as when a critical function fails. If the application is unable to connect to the data store, for example, you can utilise the FATAL log level."
   [& message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log ~logger-id# :fatal ~@message)
       `(automaton-core.log.be-log/log ~logger-id# :fatal ~@message))))
@@ -276,13 +216,9 @@
 (defmacro fatal-exception
   "Like fatal, but focused on exceptions."
   [exception & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-exception ~logger-id#
-                                                :fatal
-                                                ~exception
-                                                ~@additional-message)
+      `(automaton-core.log.fe-log/log-exception ~logger-id# :fatal ~exception ~@additional-message)
       `(automaton-core.log.be-log/log-exception ~logger-id#
                                                 :fatal
                                                 ~exception
@@ -291,23 +227,15 @@
 (defmacro fatal-data
   "Like fatal, but first argument is expected to be a map with usefull more detailed data."
   [data & additional-message]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
     (if (cljs-env? &env)
-      `(automaton-core.log.fe-log/log-data ~logger-id#
-                                           :fatal
-                                           ~data
-                                           ~@additional-message)
-      `(automaton-core.log.be-log/log-data ~logger-id#
-                                           :fatal
-                                           ~data
-                                           ~@additional-message))))
+      `(automaton-core.log.fe-log/log-data ~logger-id# :fatal ~data ~@additional-message)
+      `(automaton-core.log.be-log/log-data ~logger-id# :fatal ~data ~@additional-message))))
 
 (defmacro fatal-format
   "Like fatal, but uses clojure format function, so first argument is string to translate and rest is arguments to supply it with."
   [fmt & args]
-  (let [logger-id#
-        (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
+  (let [logger-id# (automaton-core.log.strategy/apply-strategy stgy *ns* :fatal)]
     (if (cljs-env? &env)
       `(automaton-core.log.fe-log/log-format ~logger-id# :fatal ~fmt ~@args)
       `(automaton-core.log.be-log/log-format ~logger-id# :fatal ~fmt ~@args))))
