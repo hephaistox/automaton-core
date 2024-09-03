@@ -32,20 +32,15 @@
   [file-list]
   (doseq [file file-list]
     (if (fs/directory? file)
-      (do (core-log/trace "Directory " (absolutize file) " is deleted")
-          (fs/delete-tree file))
-      (do (core-log/trace "File " (absolutize file) " is deleted")
-          (fs/delete-if-exists file)))))
+      (do (core-log/trace "Directory " (absolutize file) " is deleted") (fs/delete-tree file))
+      (do (core-log/trace "File " (absolutize file) " is deleted") (fs/delete-if-exists file)))))
 
 (defn- copy-files-or-dir-validate
   "Internal function to validate data aof copy files or dir"
   [files]
-  (when-not (and (sequential? files)
-                 (every? #(or (string? %) (= java.net.URL (class %))) files))
-    (throw
-     (ex-info
-      "The `files` parameter should be a sequence of string or `java.net.URL`"
-      {:files files}))))
+  (when-not (and (sequential? files) (every? #(or (string? %) (= java.net.URL (class %))) files))
+    (throw (ex-info "The `files` parameter should be a sequence of string or `java.net.URL`"
+                    {:files files}))))
 
 (defn copy-files-or-dir
   "Copy the files, even if they are directories to the target
@@ -54,29 +49,26 @@
   [files target-dir]
   (core-log/debug "Copy files from `" files "` to `" target-dir "`")
   (copy-files-or-dir-validate files)
-  (try (fs/create-dirs target-dir)
-       (doseq [file files]
-         (core-log/debug "Copy from " file " to " target-dir)
-         (if (fs/directory? file)
-           (do (core-log/trace (format "Copy `%s` to `%s`"
-                                       (absolutize file)
-                                       (absolutize target-dir)))
-               (fs/copy-tree file
-                             target-dir
-                             {:replace-existing true
-                              :copy-attributes true}))
-           (do (core-log/trace (format "Copy `%s` to `%s`"
-                                       (absolutize file)
-                                       (absolutize target-dir)))
-               (fs/copy file
-                        target-dir
-                        {:replace-existing true
-                         :copy-attributes true}))))
-       (catch Exception e
-         (throw (ex-info "Unexpected exception during copy"
-                         {:exception e
-                          :files files
-                          :target-dir target-dir})))))
+  (try
+    (fs/create-dirs target-dir)
+    (doseq [file files]
+      (core-log/debug "Copy from " file " to " target-dir)
+      (if (fs/directory? file)
+        (do (core-log/trace (format "Copy `%s` to `%s`" (absolutize file) (absolutize target-dir)))
+            (fs/copy-tree file
+                          target-dir
+                          {:replace-existing true
+                           :copy-attributes true}))
+        (do (core-log/trace (format "Copy `%s` to `%s`" (absolutize file) (absolutize target-dir)))
+            (fs/copy file
+                     target-dir
+                     {:replace-existing true
+                      :copy-attributes true}))))
+    (catch Exception e
+      (throw (ex-info "Unexpected exception during copy"
+                      {:exception e
+                       :files files
+                       :target-dir target-dir})))))
 
 (defn directory-exists?
   "Check directory existance"
@@ -97,19 +89,15 @@
   "Create a directory"
   [dir]
   (when (is-existing-file? dir)
-    (throw
-     (ex-info
-      (format
-       "Can't create a directory `%s` as a file already exists with that name"
-       (absolutize dir))
-      {:dir dir})))
+    (throw (ex-info (format "Can't create a directory `%s` as a file already exists with that name"
+                            (absolutize dir))
+                    {:dir dir})))
   (when-not (fs/exists? dir)
     (try (fs/create-dirs dir)
          (catch Exception e
-           (throw (ex-info
-                   (format "The parameter is not a valid directory: `%s`" dir)
-                   {:dir (absolutize dir)
-                    :exception e})))))
+           (throw (ex-info (format "The parameter is not a valid directory: `%s`" dir)
+                           {:dir (absolutize dir)
+                            :exception e})))))
   true)
 
 (defn remove-trailing-separator
@@ -136,8 +124,7 @@
   "Creates a path with the list of parameters.
   Removes the empty strings, add needed separators, including the trailing ones"
   [& dirs]
-  (when-let [file-path (apply create-file-path dirs)]
-    (str file-path directory-separator)))
+  (when-let [file-path (apply create-file-path dirs)] (str file-path directory-separator)))
 
 (defn search-files
   "Search files.
@@ -188,10 +175,7 @@
   "Use the relative-name to create in file in the same directory than source-file"
   [source-file relative-name]
   (let [source-subdirs (fs/components source-file)
-        subdirs (mapv str
-                      (if (fs/directory? source-file)
-                        source-subdirs
-                        (butlast source-subdirs)))
+        subdirs (mapv str (if (fs/directory? source-file) source-subdirs (butlast source-subdirs)))
         new-name (conj subdirs relative-name)]
     (apply create-file-path new-name)))
 
@@ -202,8 +186,7 @@
   (when-not (str/blank? filename)
     (if (fs/directory? filename)
       filename
-      (str (when (= (str directory-separator) (str (first filename)))
-             directory-separator)
+      (str (when (= (str directory-separator) (str (first filename))) directory-separator)
            (->> filename
                 fs/components
                 butlast
@@ -301,14 +284,10 @@
                   pattern-replacement
                   "`")
   (let [pattern (remove-trailing-separator (str pattern))
-        pattern-replacement (remove-trailing-separator (str
-                                                        pattern-replacement))]
+        pattern-replacement (remove-trailing-separator (str pattern-replacement))]
     (loop [iterations-left 30]
       (if (> iterations-left 0)
-        (when (rename-recursively-attempt target-dir
-                                          file-filter
-                                          pattern
-                                          pattern-replacement)
+        (when (rename-recursively-attempt target-dir file-filter pattern pattern-replacement)
           (recur (dec iterations-left)))
         (core-log/warn "Infinite loop detected during renaming")))))
 
@@ -380,10 +359,7 @@
   [dir]
   (boolean (and (fs/directory? dir) (empty? (fs/list-dir dir)))))
 
-(defn file-name
-  "Return the file name without the path"
-  [path]
-  (fs/file-name path))
+(defn file-name "Return the file name without the path" [path] (fs/file-name path))
 
 (defn relativize
   "Turn the `path` into a relative directory starting from `root-dir`"

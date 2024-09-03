@@ -2,8 +2,7 @@
   "List of all known frontend strategies"
   (:require
    [automaton-core.log.registry :as log-registry]
-   #?@(:cljs [[automaton-core.log.impl.print]
-              [automaton-core.log.tracking.fe-error-tracking]])))
+   #?@(:cljs [[automaton-core.log.impl.print] [automaton-core.log.tracking.fe-error-tracking]])))
 
 (defn no-op-fn [& _] nil)
 
@@ -22,8 +21,7 @@
    ::log-registry/no-op {:description "Deactivate that log"
                          :impl no-op-fn}
    ::log-registry/error-tracking-context
-   {:description
-    "For registering information for monitoring exceptions in the application"
+   {:description "For registering information for monitoring exceptions in the application"
     #?@(:cljs [:impl automaton-core.log.tracking.fe-error-tracking/add-context])}
    ::log-registry/error-tracking-alert
    {:description "For alerting about monitoring exceptions in the application"

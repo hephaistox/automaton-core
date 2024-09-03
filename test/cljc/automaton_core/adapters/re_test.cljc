@@ -7,8 +7,7 @@
 (deftest assemble-re-test
   (testing "Test assembly of strings"
     (is (= "abc" (sut/stringify (sut/assemble-re ["a" "b" "c"])))))
-  (testing "Test assembly of re"
-    (is (= "abc" (sut/stringify (sut/assemble-re [#"a" #"b" #"c"])))))
+  (testing "Test assembly of re" (is (= "abc" (sut/stringify (sut/assemble-re [#"a" #"b" #"c"])))))
   (testing "Test assembly of mixed"
     (is (= "abc" (sut/stringify (sut/assemble-re [#"a" "b" #"c"]))))))
 
@@ -20,11 +19,8 @@
 (deftest assemble-re-optional-test
   (testing "Check optionality is added"
     (is (= "foo?barfoo2"
-           (sut/stringify (sut/assemble-re-optional
-                           [#"foo" true "bar" false "foo2" false])))))
+           (sut/stringify (sut/assemble-re-optional [#"foo" true "bar" false "foo2" false])))))
   (testing "Test prefix and suffix"
     (is (= "afoo?barfoo2b"
-           (sut/stringify (sut/assemble-re-optional
-                           [#"foo" true "bar" false "foo2" false]
-                           "a"
-                           "b"))))))
+           (sut/stringify
+            (sut/assemble-re-optional [#"foo" true "bar" false "foo2" false] "a" "b"))))))

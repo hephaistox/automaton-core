@@ -16,9 +16,7 @@
   (update map-schema
           1
           (fn [schema-params]
-            (if (map? schema-params)
-              (assoc schema-params :closed true)
-              schema-params))))
+            (if (map? schema-params) (assoc schema-params :closed true) schema-params))))
 
 (defn validate-data
   "Return true if the data is matching the schema
@@ -79,5 +77,5 @@
   [schema data]
   (malli/decode schema
                 data
-                (malli-transform/default-value-transformer
-                 {::malli-transform/add-optional-keys true})))
+                (malli-transform/default-value-transformer {::malli-transform/add-optional-keys
+                                                            true})))

@@ -50,8 +50,7 @@
   []
   (->> #?(:clj (System/getenv)
           :cljs (if process
-                  (let [env (.-env process)]
-                    (zipmap (obj/getKeys env) (obj/getValues env)))
+                  (let [env (.-env process)] (zipmap (obj/getKeys env) (obj/getValues env)))
                   {}))
        (map (fn [[k v]] [(core-keyword/keywordize k) v]))
        (into {})))

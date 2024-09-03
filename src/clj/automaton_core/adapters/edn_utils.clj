@@ -27,14 +27,10 @@
    (let [edn-filename (files/absolutize edn-filename)
          edn-content (try (loader-fn edn-filename)
                           (catch Exception _
-                            (core-log/warn (format
-                                            "Unable to load the file `%s`"
-                                            edn-filename))))]
+                            (core-log/warn (format "Unable to load the file `%s`" edn-filename))))]
      (try (edn/read-string edn-content)
           (catch Exception e
-            (core-log/warn-exception e
-                                     (format "File `%s` is not an edn"
-                                             edn-filename))
+            (core-log/warn-exception e (format "File `%s` is not an edn" edn-filename))
             nil))))
   ([edn-filename] (read-edn edn-filename files/read-file)))
 
@@ -69,15 +65,13 @@
   Note: the content will be formatted thanks to `automaton.core.adapters.code-formatter`
   "
   ([edn-filename update-fn header]
-   (let [bb-config (read-edn edn-filename)]
-     (spit-edn edn-filename (update-fn bb-config) header)))
+   (let [bb-config (read-edn edn-filename)] (spit-edn edn-filename (update-fn bb-config) header)))
   ([edn-filename update-fn] (update-edn-content edn-filename update-fn nil)))
 
 (defn create-tmp-edn
   "Create a temporary file directory string with edn extension"
   []
   (let [edn-file (files/create-file-path (files/create-temp-dir)
-                                         (str (uuid-gen/time-based-uuid)
-                                              ".edn"))]
+                                         (str (uuid-gen/time-based-uuid) ".edn"))]
     (files/create-dirs (files/extract-path edn-file))
     edn-file))

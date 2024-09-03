@@ -24,8 +24,7 @@
         get-stubbed-rule (fn [rule-id] (rule-id ns-rules-map-stub))]
     (testing "ns outside the scope are rejected"
       (is (nil? (sut/apply-ns-rule "other ns" (get-stubbed-rule :default))))
-      (is (nil? (sut/apply-ns-rule "automaton-core"
-                                   (get-stubbed-rule :ac-edn-tuils)))))
+      (is (nil? (sut/apply-ns-rule "automaton-core" (get-stubbed-rule :ac-edn-tuils)))))
     (testing "ns matching the scope are accepted"
       (is (map? (sut/apply-ns-rule "automaton-core.adapters.edn-utils"
                                    (get-stubbed-rule :ac-edn-utils))))
@@ -36,8 +35,7 @@
   (let [ns-chooser-stub (sut/make-static-ns-level-strategy sut/ns-rules)
         apply-strategy* (partial log-strategy/apply-strategy ns-chooser-stub)]
     (testing "One matching is returning the expected match"
-      (is (= [:automaton-core.log.registry/text-based]
-             (apply-strategy* "automaton-core" :fatal))))
+      (is (= [:automaton-core.log.registry/text-based] (apply-strategy* "automaton-core" :fatal))))
     (testing "Among many matches the first one is returned"
       (is (= [:automaton-core.log.registry/text-based]
              (apply-strategy* "automaton-core.adapters.edn-utils" :fatal))))

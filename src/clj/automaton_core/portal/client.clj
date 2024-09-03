@@ -14,5 +14,4 @@
   ([] (start (core-portal-common/default-port)))
   ([port]
    (add-tap (client-submit port))
-   (tap> (format "Client connected for app `%s`"
-                 (core-portal-common/app-name)))))
+   (tap> (format "Client connected for app `%s`" (core-portal-common/app-name)))))

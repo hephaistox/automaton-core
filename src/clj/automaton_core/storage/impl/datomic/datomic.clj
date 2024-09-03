@@ -18,8 +18,7 @@
 (defrecord DatomicAccess []
   storage/PersistentStorageAccess
     (upsert [_ storage add-schema] (d/transact storage add-schema))
-    (select [_ storage {:keys [schema values]}]
-      (apply d/q schema (d/db storage) values))
+    (select [_ storage {:keys [schema values]}] (apply d/q schema (d/db storage) values))
     (delete [_ storage delete-schema] (d/transact storage delete-schema)))
 
 (defn make-datomic-client

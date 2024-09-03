@@ -15,8 +15,7 @@
   * `tuple-size` Number of elements in the tuple to build (i.e. 2 returns pairs, 3 triples ....)
   * `nb-iterations` Number of tuple that a returnd"
   [values tuple-size nb-iterations]
-  (repeatedly nb-iterations
-              #((apply juxt (repeat tuple-size rand-nth)) values)))
+  (repeatedly nb-iterations #((apply juxt (repeat tuple-size rand-nth)) values)))
 
 (defn reflexive
   "Does the binary operator is reflexive? See [wikipedia article](https://en.wikipedia.org/wiki/Reflexive_relation)
@@ -25,13 +24,12 @@
   * `binary-opeartor` to test
   * `values-to-test` values to test"
   [binary-operator values-to-test]
-  {::reflexive {:msg (str "Operator "
-                          (namespace-kw-to-operator-name binary-operator)
-                          " is not reflexive")
-                :result (->> values-to-test
-                             (map #(binary-operator % %))
-                             (filter false?))
-                :expect-fn empty?}})
+  {::reflexive
+   {:msg (str "Operator " (namespace-kw-to-operator-name binary-operator) " is not reflexive")
+    :result (->> values-to-test
+                 (map #(binary-operator % %))
+                 (filter false?))
+    :expect-fn empty?}})
 
 (defn strongly-connected
   "Is `binary-operator` strongly-connected , as defined in [wiki page](https://en.wikipedia.org/wiki/Connected_relation)
@@ -43,13 +41,11 @@
   * `nb-iterations` number of random pairs to pick in `values-to-test` to test the efficiency of it"
   [binary-operator values-to-test nb-iterations]
   {::totally-comparable
-   {:msg (str "Operator "
-              (namespace-kw-to-operator-name binary-operator)
-              " is not totally comparable")
+   {:msg
+    (str "Operator " (namespace-kw-to-operator-name binary-operator) " is not totally comparable")
     :result (->> (pick-random-tuple values-to-test 2 nb-iterations)
                  (map (fn [[date1 date2]]
-                        (if (or (binary-operator date1 date2)
-                                (binary-operator date2 date1))
+                        (if (or (binary-operator date1 date2) (binary-operator date2 date1))
                           false
                           [date1 date2])))
                  (filterv sequential?))
@@ -65,18 +61,15 @@
   * `nb-iterations` number of random pairs to pick in `values-to-test` to test the efficiency of it"
   [binary-operator values-to-test nb-iterations]
   {::totally-comparable
-   {:msg (str "Operator "
-              (namespace-kw-to-operator-name binary-operator)
-              " is not totally comparable")
+   {:msg
+    (str "Operator " (namespace-kw-to-operator-name binary-operator) " is not totally comparable")
     :result (->> (pick-random-tuple values-to-test 3 nb-iterations)
                  (map (fn [triple]
                         (let [[date1 date2 date3] (sort (#?(:clj var-get
                                                             :cljs identity)
                                                          binary-operator)
                                                         triple)]
-                          (if (binary-operator date1 date3)
-                            false
-                            [date1 date2 date3]))))
+                          (if (binary-operator date1 date3) false [date1 date2 date3]))))
                  (filterv sequential?))
     :expect []}})
 
@@ -94,8 +87,7 @@
                 :result (->> (pick-random-tuple values-to-test 2 nb-iterations)
                              (map (fn [[date1 date2]]
                                     (if (not (and (binary-operator date1 date2)
-                                                  (binary-operator date2
-                                                                   date1)))
+                                                  (binary-operator date2 date1)))
                                       false
                                       [date1 date2])))
                              (filterv sequential?))
@@ -111,16 +103,15 @@
   * `nb-iterations` number of random pairs to pick in `values-to-test` to test the efficiency of it"
   [binary-operator values-to-test nb-iterations]
   {::asymetric {:msg (str "Operator " binary-operator " is not asymetric")
-                :result
-                (->> (pick-random-tuple values-to-test 2 nb-iterations)
-                     (map (fn [[date1 date2]]
-                            (if (or (and (binary-operator date1 date2)
-                                         (not (binary-operator date2 date1)))
-                                    (and (binary-operator date2 date1)
-                                         (not (binary-operator date1 date2))))
-                              [date1 date2]
-                              false)))
-                     (filterv sequential?))
+                :result (->> (pick-random-tuple values-to-test 2 nb-iterations)
+                             (map (fn [[date1 date2]]
+                                    (if (or (and (binary-operator date1 date2)
+                                                 (not (binary-operator date2 date1)))
+                                            (and (binary-operator date2 date1)
+                                                 (not (binary-operator date1 date2))))
+                                      [date1 date2]
+                                      false)))
+                             (filterv sequential?))
                 :expect []}})
 
 (defn antisymmetric
@@ -138,9 +129,7 @@
                              (map (fn [[date1 date2]]
                                     (when (and (binary-operator date1 date2)
                                                (binary-operator date2 date1))
-                                      (if (equality-operator date1 date2)
-                                        false
-                                        [date1 date2]))))
+                                      (if (equality-operator date1 date2) false [date1 date2]))))
                              (filterv sequential?))
                 :expect []}})
 
@@ -155,10 +144,7 @@
   [binary-operator equality-operator values-to-test nb-iterations]
   (merge (reflexive binary-operator values-to-test)
          (transitive binary-operator values-to-test nb-iterations)
-         (antisymmetric binary-operator
-                        equality-operator
-                        values-to-test
-                        nb-iterations)
+         (antisymmetric binary-operator equality-operator values-to-test nb-iterations)
          (strongly-connected binary-operator values-to-test nb-iterations)))
 
 (defn equivalence

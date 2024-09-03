@@ -12,9 +12,8 @@
 
 (defn- sentry-data
   [ns level & message]
-  (let [context (if (map? (first message))
-                  (merge (first message) (when ns {:ns ns}))
-                  (when ns {:ns ns}))
+  (let [context
+        (if (map? (first message)) (merge (first message) (when ns {:ns ns})) (when ns {:ns ns}))
         message (if (map? (first message)) (rest message) message)]
     {:message message
      :level level
@@ -22,10 +21,8 @@
 
 (defn add-context
   [ns level & message]
-  (core-log-tracking-be-sentry/send-breadcrumb!
-   (apply sentry-data ns level message)))
+  (core-log-tracking-be-sentry/send-breadcrumb! (apply sentry-data ns level message)))
 
 (defn error-alert
   [ns level & message]
-  (core-log-tracking-be-sentry/send-event!
-   (apply sentry-data ns level message)))
+  (core-log-tracking-be-sentry/send-event! (apply sentry-data ns level message)))

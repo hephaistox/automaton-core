@@ -17,13 +17,9 @@
   "Based on logger-id chooses from registered strategies which logging function to use."
   [logger-ids]
   (reduce (fn [acc logger-id]
-            (if-let [logger-strategy (get-in log-be-registry/strategies-registry
-                                             [logger-id :impl])]
+            (if-let [logger-strategy (get-in log-be-registry/strategies-registry [logger-id :impl])]
               (conj acc logger-strategy)
-              (do (core-log-terminal/log
-                   "WARN: Logging strategy is nil for id: "
-                   logger-id)
-                  acc)))
+              (do (core-log-terminal/log "WARN: Logging strategy is nil for id: " logger-id) acc)))
           []
           logger-ids))
 

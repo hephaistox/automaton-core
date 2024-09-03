@@ -85,18 +85,14 @@
   "Returns coll1 rules that doesn't have a logger in rules from coll2"
   [coll1 coll2]
   (filter (fn [coll1-rule]
-            (every? (fn [coll2-rule]
-                      (not= (:logger coll1-rule) (:logger coll2-rule)))
-                    coll2))
+            (every? (fn [coll2-rule] (not= (:logger coll1-rule) (:logger coll2-rule))) coll2))
           coll1))
 
 (defn- rules-seq-loggers
   "Returns vector of loggers from sequences with rules.
    If there is no rules with loggers, returns empty vector."
   [& rules-seq]
-  (reduce (fn [loggers rule] (conj loggers (:logger rule)))
-          []
-          (into [] (apply concat rules-seq))))
+  (reduce (fn [loggers rule] (conj loggers (:logger rule))) [] (into [] (apply concat rules-seq))))
 
 (defn filter-rules-by-env
   [rules env]
@@ -120,13 +116,10 @@
             matching-ns-rules (-> ns-rules
                                   (filter-rules-by-ns ns)
                                   filter-rules-by-unique-loggers)
-            default-loggers-rules-kept (filter-rules-loggers-not-in
-                                        default-loggers-rules-accepted
-                                        matching-ns-rules)
-            matching-ns-rules-kept (filter-rules-by-level matching-ns-rules
-                                                          level)
-            loggers (rules-seq-loggers default-loggers-rules-kept
-                                       matching-ns-rules-kept)
+            default-loggers-rules-kept (filter-rules-loggers-not-in default-loggers-rules-accepted
+                                                                    matching-ns-rules)
+            matching-ns-rules-kept (filter-rules-by-level matching-ns-rules level)
+            loggers (rules-seq-loggers default-loggers-rules-kept matching-ns-rules-kept)
             loggers* (if (empty? loggers) [::log-registry/no-op] loggers)]
         loggers*))
     (rule-ids [_]
