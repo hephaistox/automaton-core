@@ -8,4 +8,6 @@
           :name "metosin/malli"}
          {:doc "Updating any of taoensso libs results in cljs warnings comming from taoensso/timbre"
           :name "com.taoensso/tempura"
-          :version "1.5.3"}]}}
+          :version "1.5.3"}]}
+ :frontend {:run-aliases [:browser-test :ltest]}
+ :publication {:as-lib org.clojars.hephaistox/automaton-core}}
