@@ -129,7 +129,7 @@
     </dependency>
   </dependencies>
   <build>
-    <sourceDirectory>src/clj/</sourceDirectory>
+    <sourceDirectory>env/development/src/cljc</sourceDirectory>
   </build>
   <repositories>
     <repository>
