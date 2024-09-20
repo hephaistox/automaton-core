@@ -10,4 +10,13 @@
           :name "com.taoensso/tempura"
           :version "1.5.3"}]}
  :frontend {:run-aliases [:browser-test :ltest]}
- :publication {:as-lib org.clojars.hephaistox/automaton-core}}
+ :publication {:as-lib org.clojars.hephaistox/automaton-core
+               :base-branch "main"
+               :clojars true
+               :compile-jar true
+               :excluded-aliases
+               [:antq :codox :env-development-repl :env-development-test :common-test :deploy]
+               :la-branch "la"
+               :pom-xml-license {:name "CC BY-NC 4.0"
+                                 :url "https://creativecommons.org/licenses/by-nc/4.0/deed.en"}
+               :repo-url "git@github.com:hephaistox/automaton-core.git"}}
