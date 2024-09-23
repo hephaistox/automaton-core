@@ -13,7 +13,6 @@
  :publication {:as-lib org.clojars.hephaistox/automaton-core
                :base-branch "main"
                :clojars true
-               :compile-jar true
                :excluded-aliases
                [:antq :codox :env-development-repl :env-development-test :common-test :deploy]
                :la-branch "la"
