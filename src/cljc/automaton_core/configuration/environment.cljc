@@ -27,7 +27,6 @@
          _
          v)))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn parse-system-env
   "Turns string type into number. In case of failure in parsing it's returned in a format as it was (a string)."
   [v]

@@ -70,7 +70,7 @@
        (catch #?(:clj Exception
                  :cljs :default)
          _
-         (str "Schema not valid: " (str schema)))))
+         (str "Schema not valid: " schema))))
 
 (defn add-default
   "Adds to `data` default values defined in the `schema`."

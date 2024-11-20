@@ -73,7 +73,6 @@
                  (filterv sequential?))
     :expect []}})
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn asymmetric
   "Is the `binary-operator` asymetric, as defined in [wiki page](https://en.wikipedia.org/wiki/Asymmetric_relation)
   Returns the list of pair of values from `values-to-test` which are not fullfilling the asymmetric definition
@@ -133,7 +132,6 @@
                              (filterv sequential?))
                 :expect []}})
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn total-order
   "Is the `binary-operator` total order, as defined in [wiki page](https://en.wikipedia.org/wiki/Total_order)
   Returns the list of pair of values from `values-to-test` which are not fullfilling the total order definition
