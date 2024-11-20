@@ -22,7 +22,6 @@
            (re-find #".*(?:\.([a-zA-Z]\w{1,2}))(?::\d{1,4})?$")
            second))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (def url-delims
   "According to [RFC3986 page 12](https://www.ietf.org/rfc/rfc3986.txt):
    gen-delims  = : / ? #  [ ] @

@@ -6,7 +6,6 @@
 
 (defn- client-submit [port] (partial p-client/submit {:port port}))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn start
   "Connects to existing portal (start fn).
    Params:
