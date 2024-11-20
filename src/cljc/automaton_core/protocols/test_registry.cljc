@@ -66,7 +66,6 @@
     (when-not (empty? res) (core-log/error-data res "Some tests have failed:"))
     res))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn build-report
   "Validate the `test-registry` and returns the failed tests as a report
 

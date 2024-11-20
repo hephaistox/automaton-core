@@ -5,9 +5,7 @@
        :cljs [[cljs.test :refer [deftest is testing] :include-macros true]])))
 
 (defprotocol Bar
-  #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
   (a [_])
-  #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
   (b [_]))
 
 (defrecord Foo [int]

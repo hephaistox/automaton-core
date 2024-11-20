@@ -6,5 +6,4 @@
    [clj-memory-meter.core :as mm]))
 
 ;; See https://github.com/clojure-goes-fast/clj-memory-meter, for details
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn measure-time-sample [] (mm/measure "hello world"))

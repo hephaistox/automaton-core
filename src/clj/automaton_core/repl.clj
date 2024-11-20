@@ -21,7 +21,6 @@
 
 (defn get-nrepl-port-parameter [] (core-conf/read-param [:dev :clj-nrepl-port] 8000))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn get-active-nrepl-port "Retrieve the nrepl port, available for REPL" [] (:nrepl-port @repl))
 
 (defn- stop-repl "Stop the repl" [] (stop-server (:repl @repl)) (reset! repl {}))

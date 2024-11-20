@@ -19,7 +19,6 @@
                  (clj->js {:level level
                            :message message
                            :extra context})))
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn init-sentry!
   "Initialize sentry for frontend (js), which is recording browser/js unhandled exceptions that happens inside and enables to send events manually.
   'development' as an environment is ignored, so no event is sent from it."

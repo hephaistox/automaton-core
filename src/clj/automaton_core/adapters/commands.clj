@@ -75,7 +75,7 @@
            (stream-execute-command* command dir)
            (execute-command* command dir out file in blocking?))
          (catch java.io.IOException e
-           (throw (ex-info (str "Directory does not exist")
+           (throw (ex-info "Directory does not exist"
                            (merge {:exception e} execute-command-params))))
          (catch clojure.lang.ExceptionInfo e
            (let [{:keys [exit type]} (ex-data e)]
