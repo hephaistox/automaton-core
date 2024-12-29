@@ -8,13 +8,13 @@
   "version": "1.0.0",
   "author": "Hephaistox <info@hephaistox.com>",
   "dependencies": {
-    "@sentry/browser": "^8.39.0"
+    "@sentry/browser": "^8.47.0"
   },
   "workspaces": [],
   "devDependencies": {
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-cljs-test": "^0.1.0",
-    "shadow-cljs": "^2.28.19"
+    "shadow-cljs": "^2.28.20"
   }
 }
