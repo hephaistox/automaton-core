@@ -44,6 +44,7 @@
         babashka/process #:mvn{:version "0.5.22"}
         com.clojure-goes-fast/clj-memory-meter #:mvn{:version "0.3.0"}
         com.datomic/peer {:mvn/version "1.0.7260"}
+        com.hypirion/clj-xchart {:mvn/version "0.2.0"}
         com.taoensso/encore #:mvn{:version "3.132.0"}
         com.taoensso/tempura #:mvn{:version "1.5.4"}
         com.yetanalytics/colossal-squuid {:mvn/version "0.1.5"}
